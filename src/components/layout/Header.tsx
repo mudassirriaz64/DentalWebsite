@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { Menu, Phone } from 'lucide-react';
 import { navLinks } from '@/data/navLinks';
 import { siteConfig } from '@/data/siteConfig';
+import Logo from '../ui/Logo';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import MobileMenu from './MobileMenu';
@@ -40,11 +41,9 @@ export const Header: React.FC = () => {
         )}
       >
         <Container className="flex items-center justify-between">
-          {/* Logo - Teal rounded-square icon + wordmark in Libre Caslon Text */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-serif font-bold text-xl shadow-sm group-hover:scale-105 transition-transform duration-300">
-              D
-            </div>
+          {/* Logo - Teal vector icon + wordmark in Libre Caslon Text */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <Logo className="w-12 h-12 group-hover:scale-105 transition-transform duration-300" />
             <div className="flex flex-col">
               <span className="font-serif font-bold text-primary tracking-tight text-xl sm:text-2xl leading-none">
                 Dental Cosmetic

@@ -13,6 +13,7 @@ import {
 import { footerLinks } from '@/data/footerLinks';
 import { siteConfig } from '@/data/siteConfig';
 import Container from '../ui/Container';
+import Logo from '../ui/Logo';
 
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -38,10 +39,8 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-white/10">
           {/* Brand Info Column */}
           <div className="flex flex-col gap-5">
-            <Link href="/" className="flex items-center gap-2.5 group w-fit">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white font-serif font-extrabold text-lg shadow-md">
-                D
-              </div>
+            <Link href="/" className="flex items-center gap-2 group w-fit">
+              <Logo variant="dark" />
               <div className="flex flex-col">
                 <span className="font-serif font-bold text-primary-light text-base sm:text-lg leading-tight">
                   Dental Cosmetic
