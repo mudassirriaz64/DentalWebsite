@@ -1,26 +1,150 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Design Tokens - Colors */
+  --color-primary: #005252;
+  --color-primary-light: #A6EFEF;
+  --color-primary-soft: #8BD3D2;
+  --color-accent: #B51E47;
+  --color-accent-soft: #FFD9DC;
+  --color-accent-dark: #5F001E;
+  --color-bg: #F9F9FF;
+  --color-bg-alt: #F0F3FF;
+  --color-bg-blue-soft: #E7EEFF;
+  --color-dark: #273141;
+  --color-dark-text: #121C2C;
+  --color-body-text: #3F4948;
+  --color-body-text-dark: #D9E3F9;
+  --color-border: #BEC9C8;
+
+  /* About Page Specific Design Tokens */
+  --color-hero-badge-bg: #FFD9DC;
+  --color-hero-badge-text: #5F001E;
+  --color-stat-card-bg: #FE5778;
+  --color-milestone-border-top: #005252;
+  --color-milestone-year-text: #B51E47;
+  --color-tech-card-bg-blue: #E7EEFF;
+  --color-tech-card-bg-pink: #FFD9DC;
+  --color-tech-card-bg-gray: #DBE4E4;
+  --color-tech-card-bg-dark: #1A6B6B;
+  --color-doctor-overlay-hover: rgba(0, 82, 82, 0.2);
+
+  /* Theme mappings for styling consistency */
+  --background: var(--color-bg);
+  --foreground: var(--color-dark-text);
+  
+  --primary: var(--color-primary);
+  --primary-hover: #003d3d;
+  --accent: var(--color-accent);
+  --accent-hover: #961639;
+  --dark: var(--color-dark);
+  --dark-hover: #1f2733;
+
+  --border: var(--color-border);
+  --input: var(--color-border);
+  --ring: var(--color-primary);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-light: var(--color-primary-light);
+  --color-primary-soft: var(--color-primary-soft);
+  --color-accent: var(--color-accent);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-accent-dark: var(--color-accent-dark);
+  --color-bg: var(--color-bg);
+  --color-bg-alt: var(--color-bg-alt);
+  --color-bg-blue-soft: var(--color-bg-blue-soft);
+  --color-dark: var(--color-dark);
+  --color-dark-text: var(--color-dark-text);
+  --color-body-text: var(--color-body-text);
+  --color-body-text-dark: var(--color-body-text-dark);
+  --color-border: var(--color-border);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-hero-badge-bg: var(--color-hero-badge-bg);
+  --color-hero-badge-text: var(--color-hero-badge-text);
+  --color-stat-card-bg: var(--color-stat-card-bg);
+  --color-milestone-border-top: var(--color-milestone-border-top);
+  --color-milestone-year-text: var(--color-milestone-year-text);
+  --color-tech-card-bg-blue: var(--color-tech-card-bg-blue);
+  --color-tech-card-bg-pink: var(--color-tech-card-bg-pink);
+  --color-tech-card-bg-gray: var(--color-tech-card-bg-gray);
+  --color-tech-card-bg-dark: var(--color-tech-card-bg-dark);
+  --color-doctor-overlay-hover: var(--color-doctor-overlay-hover);
+
+  --shadow-card: 0px 10px 30px rgba(26, 107, 107, 0.08);
+
+  --font-sans: var(--font-sans), system-ui, sans-serif;
+  --font-serif: var(--font-serif), Georgia, serif;
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in: fade-in 0.4s ease-out forwards;
+  --animate-scale-in: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-in-right: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes slide-in-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
   }
 }
 
+/* Custom styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-dark-text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Diagonal Stripe Hover Effect (pill hover premium design) */
+.btn-diagonal-stripe {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-diagonal-stripe::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: left 0.75s ease;
+  z-index: -1;
+}
+
+.btn-diagonal-stripe:hover::before {
+  left: 150%;
 }
