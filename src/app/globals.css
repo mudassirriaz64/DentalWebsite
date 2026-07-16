@@ -29,6 +29,17 @@
   --color-tech-card-bg-dark: #1A6B6B;
   --color-doctor-overlay-hover: rgba(0, 82, 82, 0.2);
 
+  /* Team Page Specific Design Tokens */
+  --color-hero-badge-bg-mint: #A6EFEF;
+  --color-hero-badge-text-dark: #002020;
+  --color-heading-highlight: rgba(181, 30, 71, 0.2);
+  --color-hero-heading-dark: #121C2C;
+  --color-specialty-card-border: rgba(190, 201, 200, 0.2);
+  --color-video-section-bg: #005252;
+  --color-play-button-bg: #B51E47;
+  --color-faq-border: rgba(190, 201, 200, 0.3);
+  --color-cta-input-bg: #F0F3FF;
+
   /* Theme mappings for styling consistency */
   --background: var(--color-bg);
   --foreground: var(--color-dark-text);
@@ -71,6 +82,16 @@
   --color-tech-card-bg-gray: var(--color-tech-card-bg-gray);
   --color-tech-card-bg-dark: var(--color-tech-card-bg-dark);
   --color-doctor-overlay-hover: var(--color-doctor-overlay-hover);
+
+  --color-hero-badge-bg-mint: var(--color-hero-badge-bg-mint);
+  --color-hero-badge-text-dark: var(--color-hero-badge-text-dark);
+  --color-heading-highlight: var(--color-heading-highlight);
+  --color-hero-heading-dark: var(--color-hero-heading-dark);
+  --color-specialty-card-border: var(--color-specialty-card-border);
+  --color-video-section-bg: var(--color-video-section-bg);
+  --color-play-button-bg: var(--color-play-button-bg);
+  --color-faq-border: var(--color-faq-border);
+  --color-cta-input-bg: var(--color-cta-input-bg);
 
   --shadow-card: 0px 10px 30px rgba(26, 107, 107, 0.08);
 

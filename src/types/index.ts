@@ -65,6 +65,17 @@ export interface TeamMember {
   education?: string[];
 }
 
+export interface Doctor {
+  id: string;
+  name: string;
+  role: 'department-head' | 'core-team' | 'visionary';
+  title: string;
+  bio: string;
+  imagePath: string;
+  specialties?: string[];
+  education?: string[];
+}
+
 export interface Testimonial {
   id: string;
   author: string;

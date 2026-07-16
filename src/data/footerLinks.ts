@@ -6,7 +6,7 @@ export const footerLinks: FooterSection[] = [
     links: [
       { label: 'Home', href: '/' },
       { label: 'Services', href: '/services' },
-      { label: 'Our Team', href: '/our-team' },
+      { label: 'Team', href: '/team' },
       { label: 'Privacy Policy', href: '/privacy' },
       { label: 'Terms of Service', href: '/terms' },
     ],

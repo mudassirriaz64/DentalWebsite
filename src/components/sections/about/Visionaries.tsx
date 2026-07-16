@@ -5,9 +5,16 @@ import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { doctors } from '@/data/aboutData';
+import { getDoctorsByRole } from '@/data/doctors';
+import { Doctor } from '@/types';
 
 export const Visionaries: React.FC = () => {
+  const [visionaries, setVisionaries] = React.useState<Doctor[]>([]);
+
+  React.useEffect(() => {
+    getDoctorsByRole('visionary').then(setVisionaries);
+  }, []);
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -46,7 +53,7 @@ export const Visionaries: React.FC = () => {
           viewport={{ once: true, margin: '-100px' }}
           className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full"
         >
-          {doctors.map((doc, idx) => (
+          {visionaries.map((doc, idx) => (
             <motion.div
               key={idx}
               variants={cardVariants}

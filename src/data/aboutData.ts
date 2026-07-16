@@ -10,12 +10,6 @@ export interface TechFeature {
   style: 'large-image-card' | 'light-blue-card' | 'pink-card' | 'gray-card';
 }
 
-export interface Doctor {
-  name: string;
-  title: string;
-  bio: string;
-  imagePath: string;
-}
 
 export const milestones: Milestone[] = [
   {
@@ -63,23 +57,3 @@ export const techFeatures: TechFeature[] = [
   },
 ];
 
-export const doctors: Doctor[] = [
-  {
-    name: 'Dr. Elena Sterling',
-    title: 'Founder & Lead Cosmetic Surgeon',
-    bio: 'Specializing in full-mouth rehabilitation and smile design with over 25 years of experience.',
-    imagePath: '/images/home/doctor-elena.png',
-  },
-  {
-    name: 'Dr. Marcus Vance',
-    title: 'Chief Implantologist',
-    bio: 'A pioneer in robotic-assisted dental implants and bone grafting procedures.',
-    imagePath: '/images/home/doctor-marcus.png',
-  },
-  {
-    name: 'Dr. Sarah Chen',
-    title: 'Orthodontic Specialist',
-    bio: 'Expert in invisible alignment systems and adult aesthetic orthodontics.',
-    imagePath: '/images/home/doctor-sarah.png',
-  },
-];
