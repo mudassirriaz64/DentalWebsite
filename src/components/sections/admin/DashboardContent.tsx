@@ -18,6 +18,8 @@ import {
   ExternalLink
 } from 'lucide-react';
 
+import ServiceForm from './ServiceForm';
+
 interface DashboardContentProps {
   username: string;
 }
@@ -143,11 +145,22 @@ export default function DashboardContent({ username }: DashboardContentProps) {
     const method = editingItem ? 'PATCH' : 'POST';
     const url = editingItem ? `/api/admin/${activeTab}/${editingItem.id}` : `/api/admin/${activeTab}`;
 
+    let payload = { ...formFields };
+    if (activeTab === 'services') {
+      if (!payload.description || !payload.description.trim()) {
+        payload.description = payload.shortDescription;
+      }
+      if (!payload.slug || !payload.slug.trim()) {
+        payload.slug = payload.title.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
+      }
+      payload.bullets = (payload.bullets || []).map((b: string) => b.trim()).filter(Boolean);
+    }
+
     try {
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formFields),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to submit form');
@@ -522,101 +535,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
 
               {/* SERVICES FORM */}
               {activeTab === 'services' && (
-                <>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Title</label>
-                    <input
-                      type="text"
-                      required
-                      value={formFields.title}
-                      onChange={(e) => setFormFields({ ...formFields, title: e.target.value })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Slug (lowercase, no spaces)</label>
-                    <input
-                      type="text"
-                      required
-                      value={formFields.slug}
-                      onChange={(e) => setFormFields({ ...formFields, slug: e.target.value })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary font-mono"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Short Description</label>
-                    <textarea
-                      required
-                      rows={2}
-                      value={formFields.shortDescription}
-                      onChange={(e) => setFormFields({ ...formFields, shortDescription: e.target.value })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Full Description</label>
-                    <textarea
-                      required
-                      rows={4}
-                      value={formFields.description}
-                      onChange={(e) => setFormFields({ ...formFields, description: e.target.value })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-bold text-dark-text">Icon Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={formFields.iconName}
-                        onChange={(e) => setFormFields({ ...formFields, iconName: e.target.value })}
-                        className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-bold text-dark-text">Variant Card Theme</label>
-                      <select
-                        value={formFields.variant}
-                        onChange={(e) => setFormFields({ ...formFields, variant: e.target.value })}
-                        className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                      >
-                        <option value="white-card">White Card</option>
-                        <option value="large-image-card">Large Image Card</option>
-                        <option value="dark-teal-card">Dark Teal Card</option>
-                        <option value="accent-pink-card">Accent Pink Card</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Image Path (Optional)</label>
-                    <input
-                      type="text"
-                      value={formFields.imagePath || ''}
-                      onChange={(e) => setFormFields({ ...formFields, imagePath: e.target.value })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Cta Label (Optional)</label>
-                    <input
-                      type="text"
-                      value={formFields.ctaLabel || ''}
-                      onChange={(e) => setFormFields({ ...formFields, ctaLabel: e.target.value })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Bullets list (comma separated)</label>
-                    <input
-                      type="text"
-                      value={Array.isArray(formFields.bullets) ? formFields.bullets.join(', ') : ''}
-                      onChange={(e) => setFormFields({ ...formFields, bullets: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                      placeholder="Fluoride, Veneers, Cleanings"
-                    />
-                  </div>
-                </>
+                <ServiceForm fields={formFields} onChange={setFormFields} />
               )}
 
               {/* DOCTORS FORM */}

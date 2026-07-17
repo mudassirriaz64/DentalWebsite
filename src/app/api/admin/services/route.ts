@@ -54,12 +54,34 @@ export async function POST(request: Request) {
     const data = result.data;
     const bulletsJson = JSON.stringify(data.bullets || []);
 
+    // Resolve slug collisions automatically
+    let baseSlug = data.slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
+    if (!baseSlug) {
+      baseSlug = data.title.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
+    }
+
+    let resolvedSlug = baseSlug;
+    let isUnique = false;
+    let suffix = 0;
+
+    while (!isUnique) {
+      const existing = await prisma.service.findUnique({
+        where: { slug: resolvedSlug }
+      });
+      if (!existing) {
+        isUnique = true;
+      } else {
+        suffix++;
+        resolvedSlug = `${baseSlug}-${suffix}`;
+      }
+    }
+
     const newService = await prisma.service.create({
       data: {
         title: data.title,
         shortDescription: data.shortDescription,
         description: data.description,
-        slug: data.slug,
+        slug: resolvedSlug,
         iconName: data.iconName,
         imagePath: data.imagePath || null,
         variant: data.variant || null,
