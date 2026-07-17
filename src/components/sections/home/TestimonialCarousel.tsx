@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { testimonials as staticTestimonials } from '@/data/testimonials';
+import { Testimonial } from '@/types';
 
 const testimonialImages = [
   '/images/home/patient-avatar.png',
@@ -15,7 +16,7 @@ const testimonialImages = [
 ];
 
 interface TestimonialCarouselProps {
-  initialTestimonials?: any[];
+  initialTestimonials?: Testimonial[];
 }
 
 export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ initialTestimonials }) => {
@@ -50,7 +51,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ initia
     setIndex((prevIndex) => (prevIndex - 1 + displayTestimonials.length) % displayTestimonials.length);
   };
 
-  const currentTestimonial = displayTestimonials[index] || displayTestimonials[0] || { id: 'fallback', author: '', role: '', rating: 5, text: '' };
+  const currentTestimonial: Testimonial = displayTestimonials[index] ?? displayTestimonials[0] ?? { id: 'fallback', author: '', role: '', rating: 5, text: '' };
   const currentImage = testimonialImages[index] || testimonialImages[0];
 
   return (
@@ -92,7 +93,7 @@ export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ initia
                 <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-primary-soft shadow-md bg-slate-100 shrink-0">
                   <Image
                     src={currentImage}
-                    alt={currentTestimonial.author}
+                    alt={currentTestimonial.author ? `${currentTestimonial.author}'s photo` : 'Patient photo'}
                     fill
                     sizes="80px"
                     className="object-cover"

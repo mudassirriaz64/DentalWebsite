@@ -5,15 +5,21 @@ import ServicesBento from '@/components/sections/home/ServicesBento';
 import StatsBar from '@/components/sections/home/StatsBar';
 import TestimonialCarousel from '@/components/sections/home/TestimonialCarousel';
 import FinalCTA from '@/components/sections/home/FinalCTA';
-
-import prisma from '@/lib/prisma';
+import { getApprovedReviews } from '@/lib/reviews';
+import { Testimonial } from '@/types';
 
 export default async function Home() {
-  let dbReviews: any[] = [];
+  let mappedTestimonials: Testimonial[] = [];
   try {
-    dbReviews = await prisma.review.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
+    const dbReviews = await getApprovedReviews({ page: 1, pageSize: 6 });
+    mappedTestimonials = dbReviews.map((r) => ({
+      id:     r.id,
+      author: r.patientName,
+      role:   r.treatmentType ?? r.category,
+      rating: r.rating,
+      text:   r.body,
+      date:   r.createdAt,
+    }));
   } catch (error) {
     console.warn('Database query failed for reviews on homepage:', error);
   }
@@ -24,7 +30,7 @@ export default async function Home() {
       <Philosophy />
       <ServicesBento />
       <StatsBar />
-      <TestimonialCarousel initialTestimonials={dbReviews.length > 0 ? dbReviews : undefined} />
+      <TestimonialCarousel initialTestimonials={mappedTestimonials.length > 0 ? mappedTestimonials : undefined} />
       <FinalCTA />
     </>
   );
