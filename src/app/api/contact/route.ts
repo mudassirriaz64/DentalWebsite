@@ -1,37 +1,28 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import prisma from '@/lib/prisma';
+import { submitContactForm } from '@/lib/contact';
 
-const contactSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
-  phone: z.string().optional().nullable(),
-  message: z.string().min(10, 'Message must be at least 10 characters long'),
+const contactFormSchema = z.object({
+  fullName: z.string().min(2, 'Full Name must be at least 2 characters long').max(100),
+  serviceInterest: z.string().min(1, 'Please select a service of interest'),
+  email: z.string().email('Please enter a valid email address'),
+  phone: z.string().min(10, 'Phone number must be at least 10 characters long'),
+  message: z.string().max(1000).optional(),
 });
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const result = contactSchema.safeParse(body);
+    const result = contactFormSchema.safeParse(body);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error.issues[0].message }, { status: 400 });
     }
 
-    const data = result.data;
-    const submission = await prisma.contactSubmission.create({
-      data: {
-        name: data.name,
-        email: data.email,
-        phone: data.phone || null,
-        message: data.message,
-      },
-    });
-
-    console.log('Stored contact submission in database:', submission);
-    return NextResponse.json({ success: true, id: submission.id });
+    const newSubmission = await submitContactForm(result.data);
+    return NextResponse.json({ success: true, id: newSubmission.id });
   } catch (error) {
-    console.error('Public contact API error:', error);
-    return NextResponse.json({ error: 'Failed to process message' }, { status: 500 });
+    console.error('API contact submit error:', error);
+    return NextResponse.json({ error: 'Failed to submit query. Please try again.' }, { status: 500 });
   }
 }

@@ -1,4 +1,5 @@
 import { FooterSection } from '@/types';
+import { services } from './services';
 
 export const footerLinks: FooterSection[] = [
   {
@@ -8,15 +9,14 @@ export const footerLinks: FooterSection[] = [
       { label: 'About Us', href: '/about' },
       { label: 'Services', href: '/services' },
       { label: 'Our Team', href: '/team' },
+      { label: 'Reviews & Stories', href: '/reviews' },
     ],
   },
   {
-    title: 'Specialties',
-    links: [
-      { label: 'Dental Implants', href: '/services#implants' },
-      { label: 'Veneers & Whitening', href: '/services#veneers' },
-      { label: 'Emergency Care', href: '/services#emergency' },
-      { label: 'Orthodontics', href: '/services#orthodontics' },
-    ],
+    title: 'Services',
+    links: services.map((s) => ({
+      label: s.title,
+      href: `/services#${s.id}`,
+    })),
   },
 ];

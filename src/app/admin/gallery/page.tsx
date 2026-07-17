@@ -22,21 +22,55 @@ export default async function AdminGalleryPage() {
       orderBy: { displayOrder: 'asc' },
     });
 
-    items = dbItems.map((item) => ({
-      id: item.id,
-      variant: item.variant,
-      title: item.title,
-      description: item.description,
-      category: item.category,
-      images: JSON.parse(item.imagesJson || '{}'),
-      tags: JSON.parse(item.tagsJson || '[]'),
-      isVerifiedPatient: item.isVerifiedPatient,
-      featured: item.featured,
-      status: item.status,
-      displayOrder: item.displayOrder,
-      createdAt: item.createdAt.toISOString(),
-      updatedAt: item.updatedAt.toISOString(),
-    }));
+    items = dbItems.map((item) => {
+      const images: any = {};
+      if (item.beforeImageUrl) {
+        images.before = {
+          publicId: item.beforeImageId || '',
+          url: item.beforeImageUrl,
+          altText: item.beforeImageAlt || '',
+        };
+      }
+      if (item.afterImageUrl) {
+        images.after = {
+          publicId: item.afterImageId || '',
+          url: item.afterImageUrl,
+          altText: item.afterImageAlt || '',
+        };
+      }
+      if (item.mainImageUrl) {
+        images.main = {
+          publicId: item.mainImageId || '',
+          url: item.mainImageUrl,
+          altText: item.mainImageAlt || '',
+        };
+      }
+
+      let tags: string[] = [];
+      if (item.tags) {
+        try {
+          tags = JSON.parse(item.tags);
+        } catch {
+          tags = item.tags.split(',').map((t) => t.trim()).filter(Boolean);
+        }
+      }
+
+      return {
+        id: item.id,
+        variant: item.variant,
+        title: item.title,
+        description: item.description,
+        category: item.category,
+        images,
+        tags,
+        isVerifiedPatient: item.isVerifiedPatient,
+        featured: item.featured,
+        status: item.status,
+        displayOrder: item.displayOrder,
+        createdAt: item.createdAt.toISOString(),
+        updatedAt: item.updatedAt.toISOString(),
+      };
+    });
   } catch (err) {
     console.error('Error fetching admin gallery cases:', err);
   }

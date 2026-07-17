@@ -3,7 +3,7 @@
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText } from 'lucide-react';
+import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText, Settings as SettingsIcon, BarChart as BarChartIcon } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -23,12 +23,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const menuItems = [
-    { label: 'Appointments', href: '/admin', tab: 'appointments', icon: Calendar },
-    { label: 'Submissions', href: '/admin?tab=contacts', tab: 'contacts', icon: FileText },
-    { label: 'Gallery', href: '/admin/gallery', tab: 'gallery', icon: ImageIcon },
-    { label: 'Services', href: '/admin?tab=services', tab: 'services', icon: Sparkles },
-    { label: 'Doctors', href: '/admin?tab=doctors', tab: 'doctors', icon: Users },
-    { label: 'Testimonials', href: '/admin?tab=reviews', tab: 'reviews', icon: MessageSquare },
+    { label: 'Appointments', href: '/admin', path: '/admin', exact: true, icon: Calendar },
+    { label: 'Submissions', href: '/admin/submissions', path: '/admin/submissions', icon: FileText },
+    { label: 'Reviews', href: '/admin/reviews', path: '/admin/reviews', icon: MessageSquare },
+    { label: 'Gallery', href: '/admin/gallery', path: '/admin/gallery', icon: ImageIcon },
+    { label: 'Services', href: '/admin?tab=services', path: '/admin?tab=services', icon: Sparkles },
+    { label: 'Doctors', href: '/admin?tab=doctors', path: '/admin?tab=doctors', icon: Users },
+    { label: 'Stats', href: '/admin/settings/stats', path: '/admin/settings/stats', icon: BarChartIcon },
+    { label: 'Settings', href: '/admin/settings/clinic', path: '/admin/settings/clinic', icon: SettingsIcon },
   ];
 
   return (
@@ -51,21 +53,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {menuItems.map((item) => {
             const Icon = item.icon;
             
-            // Check if active (exact match for gallery, or tab matching for index routes)
-            let isActive = false;
-            if (item.tab === 'gallery') {
-              isActive = pathname === '/admin/gallery';
-            } else {
-              if (pathname === '/admin') {
-                if (typeof window !== 'undefined') {
-                  const urlParams = new URLSearchParams(window.location.search);
-                  const activeTab = urlParams.get('tab') || 'appointments';
-                  isActive = activeTab === item.tab;
-                } else {
-                  isActive = item.tab === 'appointments';
-                }
-              }
-            }
+            const isActive = item.exact 
+              ? pathname === item.path 
+              : pathname?.startsWith(item.path);
 
             return (
               <Link

@@ -219,37 +219,130 @@ async function main() {
   // 4. Seed Reviews
   const reviewsData = [
     {
-      author: 'Sarah Jenkins',
-      role: 'Porcelain Veneers Patient',
+      patientName: 'Eleanor Vance',
       rating: 5,
-      text: 'Dr. Evelyn Sterling completely transformed my smile with porcelain veneers! The process was comfortable and the results are incredibly natural. I couldn’t be happier.',
-      date: '2026-06-15',
+      title: 'Brighter teeth in one visit',
+      body: 'Bespoke veneers completely transformed my smile and confidence. The aesthetic precision of Dr. Sterling is unparalleled. The entire team was incredibly calming and professional.',
+      category: 'Cosmetic',
+      treatmentType: 'Porcelain Veneers',
+      isVerifiedPatient: true,
+      status: 'approved',
+      featured: true,
+      displayOrder: 1,
     },
     {
-      author: 'James Miller',
-      role: 'Dental Implants Patient',
+      patientName: 'Robert Harrison',
       rating: 5,
-      text: 'Getting dental implants here was the best decision of my life. The titanium precision and surgical care were top-notch, and the new teeth feel exactly like my own.',
-      date: '2026-07-02',
+      title: 'Amazing robotic guided implant',
+      body: 'I was terrified of implant surgery, but the 3D computer-guided procedure was completely painless. Dr. Marcus Vance explained everything clearly. Unbeatable stability.',
+      category: 'Implants',
+      treatmentType: 'Dental Implants',
+      isVerifiedPatient: true,
+      status: 'approved',
+      featured: false,
+      displayOrder: 2,
     },
     {
-      author: 'Evelyn Carter',
-      role: 'Smile Makeover Patient',
+      patientName: 'Linda Cooper',
       rating: 5,
-      text: 'The absolute gold standard of dentistry! The calming atmosphere, sedation options, and Dr. Sterling\'s aesthetic artistry made my smile alignment project a absolute joy.',
-      date: '2026-07-10',
+      title: 'Relaxing hygiene therapy',
+      body: 'The hygiene treatment was so gentle and thorough. The spa-like environment made me forget I was at a dental practice. Highly recommended for nervous patients.',
+      category: 'General Care',
+      treatmentType: 'Hygiene Therapy',
+      isVerifiedPatient: true,
+      status: 'approved',
+      featured: false,
+      displayOrder: 3,
+    },
+    {
+      patientName: 'Clara Thorne',
+      rating: 5,
+      title: 'Professional whitening results',
+      body: 'My teeth are several shades brighter after the laser whitening session. Fast, clean, and zero post-treatment sensitivity. Wonderful cosmetic care.',
+      category: 'Cosmetic',
+      treatmentType: 'Laser Whitening',
+      isVerifiedPatient: true,
+      status: 'approved',
+      featured: false,
+      displayOrder: 4,
+    },
+    {
+      patientName: 'James Miller',
+      rating: 5,
+      title: 'Full arch restoration',
+      body: 'The hybrid implant arch has given me my life back. I can eat normally again. Dr. Marcus and his surgical team are absolute legends in implant dentistry.',
+      category: 'Implants',
+      treatmentType: 'Hybrid Implant Arch',
+      isVerifiedPatient: true,
+      status: 'approved',
+      featured: false,
+      displayOrder: 5,
+    },
+    {
+      patientName: 'David Wilson',
+      rating: 4,
+      title: 'Great routine checkup',
+      body: 'Very modern clinic, short wait times, and friendly staff. The diagnostic 3D scan was really interesting to see.',
+      category: 'General Care',
+      treatmentType: 'Routine Diagnostics',
+      isVerifiedPatient: false,
+      status: 'pending',
+      featured: false,
+      displayOrder: 6,
+    },
+    {
+      patientName: 'Jessica Taylor',
+      rating: 5,
+      title: 'Beautiful bonding work',
+      body: 'Had some minor chipping fixed with cosmetic bonding. It blends in perfectly with my natural teeth. Amazing detail!',
+      category: 'Cosmetic',
+      treatmentType: 'Composite Bonding',
+      isVerifiedPatient: true,
+      status: 'pending',
+      featured: false,
+      displayOrder: 7,
+    },
+    {
+      patientName: 'Spam User',
+      rating: 1,
+      title: 'Buy cheap coins',
+      body: 'Check out our website for cheap game coins online!',
+      category: 'General Care',
+      treatmentType: 'Unknown',
+      isVerifiedPatient: false,
+      status: 'rejected',
+      featured: false,
+      displayOrder: 8,
     },
   ];
 
   for (const r of reviewsData) {
     const existing = await prisma.review.findFirst({
-      where: { author: r.author, text: r.text },
+      where: { patientName: r.patientName, title: r.title },
     });
     if (!existing) {
       await prisma.review.create({ data: r });
     }
   }
   console.log('Reviews seeded.');
+
+  // 5. Seed Site Stats for Reviews page
+  const statsData = [
+    { page: 'reviews', label: 'Five Star Reviews', value: '2,500+', displayOrder: 1 },
+    { page: 'reviews', label: 'Happy Patients', value: '15k+', displayOrder: 2 },
+    { page: 'reviews', label: 'Awards Won', value: '12+', displayOrder: 3 },
+    { page: 'reviews', label: 'Success Rate', value: '99%', displayOrder: 4 },
+  ];
+
+  for (const s of statsData) {
+    const existing = await prisma.siteStat.findFirst({
+      where: { page: s.page, label: s.label },
+    });
+    if (!existing) {
+      await prisma.siteStat.create({ data: s });
+    }
+  }
+  console.log('Site stats seeded.');
 
   // 6. Seed Gallery Cases
   const galleryData = [
@@ -259,19 +352,13 @@ async function main() {
       title: 'Bespoke Veneers Transformation',
       description: 'Complete cosmetic rehabilitation utilizing custom hand-layered porcelain veneers.',
       category: 'Veneers',
-      imagesJson: JSON.stringify({
-        before: {
-          publicId: 'home/about-hero.png',
-          url: '/images/home/about-hero.png',
-          altText: 'Teeth before veneers alignment',
-        },
-        after: {
-          publicId: 'home/cosmetic-smile.png',
-          url: '/images/home/cosmetic-smile.png',
-          altText: 'Teeth after veneers alignment',
-        },
-      }),
-      tagsJson: JSON.stringify(['Veneers', 'Smile Makeover', 'Porcelain']),
+      beforeImageId: 'home/about-hero.png',
+      beforeImageUrl: '/images/home/about-hero.png',
+      beforeImageAlt: 'Teeth before veneers alignment',
+      afterImageId: 'home/cosmetic-smile.png',
+      afterImageUrl: '/images/home/cosmetic-smile.png',
+      afterImageAlt: 'Teeth after veneers alignment',
+      tags: JSON.stringify(['Veneers', 'Smile Makeover', 'Porcelain']),
       isVerifiedPatient: true,
       featured: true,
       status: 'published',
@@ -283,14 +370,10 @@ async function main() {
       title: 'Robotic Guided Implant Roster',
       description: 'Surgical rehabilitation of posterior tooth area with 3D digital precision.',
       category: 'Implants',
-      imagesJson: JSON.stringify({
-        main: {
-          publicId: 'home/dental-implants.png',
-          url: '/images/home/dental-implants.png',
-          altText: 'Surgical implant restoration details',
-        },
-      }),
-      tagsJson: JSON.stringify(['Implants', 'Computer-Guided', '3D Scanned']),
+      mainImageId: 'home/dental-implants.png',
+      mainImageUrl: '/images/home/dental-implants.png',
+      mainImageAlt: 'Surgical implant restoration details',
+      tags: JSON.stringify(['Implants', 'Computer-Guided', '3D Scanned']),
       isVerifiedPatient: true,
       featured: false,
       status: 'published',
@@ -302,14 +385,10 @@ async function main() {
       title: 'Laser Bright Enhancement',
       description: 'Clinical photo showing shade brightness improvement after dynamic whitening treatment.',
       category: 'Whitening',
-      imagesJson: JSON.stringify({
-        main: {
-          publicId: 'home/dental-tech.png',
-          url: '/images/home/dental-tech.png',
-          altText: 'Whitening laser therapy procedure',
-        },
-      }),
-      tagsJson: JSON.stringify(['Whitening', 'Laser', 'Teeth Bleaching']),
+      mainImageId: 'home/dental-tech.png',
+      mainImageUrl: '/images/home/dental-tech.png',
+      mainImageAlt: 'Whitening laser therapy procedure',
+      tags: JSON.stringify(['Whitening', 'Laser', 'Teeth Bleaching']),
       isVerifiedPatient: true,
       featured: false,
       status: 'published',
@@ -321,14 +400,10 @@ async function main() {
       title: 'Clear Alignment, Real Results',
       description: 'Invisalign clear aligner correction to fix orthodontic crowded bite configuration.',
       category: 'Invisalign',
-      imagesJson: JSON.stringify({
-        main: {
-          publicId: 'home/orthodontics.png',
-          url: '/images/home/orthodontics.png',
-          altText: 'Invisalign clear orthodontic aligners',
-        },
-      }),
-      tagsJson: JSON.stringify(['Invisalign', 'Orthodontics', 'Clear Aligners']),
+      mainImageId: 'home/orthodontics.png',
+      mainImageUrl: '/images/home/orthodontics.png',
+      mainImageAlt: 'Invisalign clear orthodontic aligners',
+      tags: JSON.stringify(['Invisalign', 'Orthodontics', 'Clear Aligners']),
       isVerifiedPatient: true,
       featured: false,
       status: 'published',
@@ -340,14 +415,10 @@ async function main() {
       title: 'Digital Smile Design',
       description: 'Preview of clinical digital impressions and planning for cosmetic restorations.',
       category: 'Full Mouth',
-      imagesJson: JSON.stringify({
-        main: {
-          publicId: 'home/hero-dentist.png',
-          url: '/images/home/hero-dentist.png',
-          altText: 'Digital smile design screen mockup',
-        },
-      }),
-      tagsJson: JSON.stringify(['Digital Smile Design', '3D Scan', 'Rehabilitation']),
+      mainImageId: 'home/hero-dentist.png',
+      mainImageUrl: '/images/home/hero-dentist.png',
+      mainImageAlt: 'Digital smile design screen mockup',
+      tags: JSON.stringify(['Digital Smile Design', '3D Scan', 'Rehabilitation']),
       isVerifiedPatient: true,
       featured: false,
       status: 'published',
@@ -364,6 +435,68 @@ async function main() {
     }
   }
   console.log('Gallery cases seeded.');
+
+  // 7. Seed Clinic Settings (Singleton)
+  const settingsId = 'clinic-settings-singleton';
+  const existingSettings = await prisma.clinicSettings.findUnique({
+    where: { id: settingsId },
+  });
+
+  if (!existingSettings) {
+    await prisma.clinicSettings.create({
+      data: {
+        id: settingsId,
+        address: '4517 Washington Ave. Manchester, Kentucky 39495',
+        phone: '(502) 555-0107',
+        phoneNote: 'Mon-Fri, 9am - 5pm',
+        email: 'office@dentalcosmetic.com',
+        emergencyPhone: '(502) 999-0000',
+        mapDirectionsUrl: 'https://maps.google.com',
+        openingHours: {
+          create: [
+            { label: 'Mon - Thu', hours: '09:00 - 18:00', isEmergencyNote: false, isDimmed: false, displayOrder: 1 },
+            { label: 'Friday', hours: '09:00 - 16:00', isEmergencyNote: false, isDimmed: false, displayOrder: 2 },
+            { label: 'Saturday', hours: 'Emergency Only', isEmergencyNote: true, isDimmed: false, displayOrder: 3 },
+            { label: 'Sunday', hours: 'Closed', isEmergencyNote: false, isDimmed: true, displayOrder: 4 },
+          ],
+        },
+      },
+    });
+    console.log('Clinic settings and opening hours seeded.');
+  }
+
+  // 8. Seed Contact Submissions
+  const submissionsData = [
+    {
+      fullName: 'Alice Johnson',
+      serviceInterest: 'Dental Implants',
+      email: 'alice@example.com',
+      phone: '(555) 019-2834',
+      message: 'Looking to schedule a single tooth replacement consultation.',
+      status: 'new',
+      isRead: false,
+    },
+    {
+      fullName: 'Bob Smith',
+      serviceInterest: 'Veneers & Whitening',
+      email: 'bob@example.com',
+      phone: '(555) 014-9912',
+      message: 'Do you offer virtual smile preview design consults?',
+      status: 'contacted',
+      isRead: true,
+      internalNote: 'Called Bob on Thursday. Sent cosmetic services pamphlet.',
+    },
+  ];
+
+  for (const s of submissionsData) {
+    const existing = await prisma.contactSubmission.findFirst({
+      where: { email: s.email, serviceInterest: s.serviceInterest },
+    });
+    if (!existing) {
+      await prisma.contactSubmission.create({ data: s });
+    }
+  }
+  console.log('Sample contact submissions seeded.');
 
   console.log('Database seeded successfully!');
 }

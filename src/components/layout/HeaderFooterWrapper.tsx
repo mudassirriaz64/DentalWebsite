@@ -7,9 +7,10 @@ import Footer from './Footer';
 
 interface HeaderFooterWrapperProps {
   children: React.ReactNode;
+  settings: any;
 }
 
-export default function HeaderFooterWrapper({ children }: HeaderFooterWrapperProps) {
+export default function HeaderFooterWrapper({ children, settings }: HeaderFooterWrapperProps) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith('/admin');
 
@@ -21,7 +22,7 @@ export default function HeaderFooterWrapper({ children }: HeaderFooterWrapperPro
     <>
       <Header />
       <main className="flex-grow flex flex-col w-full">{children}</main>
-      <Footer />
+      <Footer settings={settings} />
     </>
   );
 }

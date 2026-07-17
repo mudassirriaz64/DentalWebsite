@@ -15,13 +15,25 @@ model AdminUser {
   updatedAt    DateTime @updatedAt
 }
 
+enum SubmissionStatus {
+  new
+  contacted
+  scheduled
+  closed
+}
+
 model ContactSubmission {
-  id        String   @id @default(uuid())
-  name      String
-  email     String
-  phone     String?
-  message   String
-  createdAt DateTime @default(now())
+  id              String           @id @default(cuid())
+  fullName        String
+  serviceInterest String
+  email           String
+  phone           String
+  message         String?
+  status          SubmissionStatus @default(new)
+  isRead          Boolean          @default(false)
+  internalNote    String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }
 
 model Service {
@@ -68,29 +80,95 @@ model Doctor {
   updatedAt       DateTime @updatedAt
 }
 
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+}
+
 model Review {
-  id        String   @id @default(uuid())
-  author    String
-  role      String?
-  rating    Int      @default(5)
-  text      String
-  date      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                String       @id @default(cuid())
+  patientName       String
+  patientAvatarUrl  String?
+  rating            Int          // 1-5
+  title             String
+  body              String
+  category          String       // "Implants" | "Cosmetic" | "General Care"
+  treatmentType     String?      // e.g. "Cosmetic Dentistry"
+  isVerifiedPatient Boolean      @default(false)
+  status            ReviewStatus @default(pending)
+  featured          Boolean      @default(false)
+  displayOrder      Int          @default(0)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model SiteStat {
+  id           String   @id @default(cuid())
+  page         String   // e.g. "reviews"
+  label        String   // "Five Star Reviews"
+  value        String   // "2,500+"
+  displayOrder Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
+enum GalleryVariant {
+  comparison
+  vertical
+  square
+  wideSplit
+  small
+}
+
+enum ContentStatus {
+  draft
+  published
 }
 
 model GalleryItem {
-  id                String   @id @default(uuid())
-  variant           String   // "comparison" | "vertical" | "square" | "wideSplit" | "small"
+  id                String         @id @default(cuid())
+  variant           GalleryVariant
   title             String
   description       String
   category          String
-  imagesJson        String   // Serialized JSON of images { before: { publicId, url, altText }, after: {...}, main: {...} }
-  tagsJson          String   @default("[]") // Serialized JSON array of strings
-  isVerifiedPatient Boolean  @default(false)
-  featured          Boolean  @default(false)
-  status            String   @default("draft") // "published" | "draft"
-  displayOrder      Int      @default(0)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  beforeImageId     String?
+  beforeImageUrl    String?
+  beforeImageAlt    String?
+  afterImageId      String?
+  afterImageUrl     String?
+  afterImageAlt     String?
+  mainImageId       String?
+  mainImageUrl      String?
+  mainImageAlt      String?
+  tags              String?        // comma-separated or JSON string
+  isVerifiedPatient Boolean        @default(false)
+  featured          Boolean        @default(false)
+  status            ContentStatus  @default(draft)
+  displayOrder      Int            @default(0)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model OpeningHoursEntry {
+  id                String         @id @default(cuid())
+  label             String
+  hours             String
+  isEmergencyNote   Boolean        @default(false)
+  isDimmed          Boolean        @default(false)
+  displayOrder      Int            @default(0)
+  clinicSettingsId  String
+  clinicSettings    ClinicSettings @relation(fields: [clinicSettingsId], references: [id], onDelete: Cascade)
+}
+
+model ClinicSettings {
+  id               String              @id @default(cuid())
+  address          String
+  phone            String
+  phoneNote        String?
+  email            String
+  emergencyPhone   String?
+  mapImageUrl      String?
+  mapDirectionsUrl String?
+  openingHours     OpeningHoursEntry[]
+  updatedAt        DateTime            @updatedAt
 }

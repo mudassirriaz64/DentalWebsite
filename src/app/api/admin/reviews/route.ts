@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import prisma from '@/lib/prisma';
+import { getAllReviewsForAdmin, createReview } from '@/lib/admin/reviews';
 import { getSession } from '@/lib/auth';
 
-const reviewSchema = z.object({
-  author: z.string().min(1, 'Author name is required'),
-  role: z.string().nullable().optional(),
+const reviewAdminSchema = z.object({
+  patientName: z.string().min(2, 'Patient Name must be at least 2 characters long').max(100),
+  patientAvatarUrl: z.string().nullable().optional(),
   rating: z.number().int().min(1).max(5),
-  text: z.string().min(1, 'Review text is required'),
-  date: z.string().nullable().optional(),
+  title: z.string().min(3, 'Title is required').max(100),
+  body: z.string().min(10, 'Review body text must be at least 10 characters').max(1000),
+  category: z.enum(['Implants', 'Cosmetic', 'General Care']),
+  treatmentType: z.string().nullable().optional(),
+  isVerifiedPatient: z.boolean(),
+  status: z.enum(['pending', 'approved', 'rejected']),
+  featured: z.boolean(),
+  displayOrder: z.number().optional(),
 });
 
 export async function GET() {
@@ -18,12 +24,15 @@ export async function GET() {
   }
 
   try {
-    const reviews = await prisma.review.findMany({
-      orderBy: { createdAt: 'desc' },
-    });
-    return NextResponse.json(reviews);
+    const reviews = await getAllReviewsForAdmin();
+    const formatted = reviews.map((r) => ({
+      ...r,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    }));
+    return NextResponse.json(formatted);
   } catch (error) {
-    console.error('Fetch reviews error:', error);
+    console.error('API GET admin reviews error:', error);
     return NextResponse.json({ error: 'Failed to fetch reviews' }, { status: 500 });
   }
 }
@@ -36,26 +45,16 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const result = reviewSchema.safeParse(body);
+    const result = reviewAdminSchema.safeParse(body);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error.issues[0].message }, { status: 400 });
     }
 
-    const data = result.data;
-    const newReview = await prisma.review.create({
-      data: {
-        author: data.author,
-        role: data.role || null,
-        rating: data.rating,
-        text: data.text,
-        date: data.date || new Date().toISOString().split('T')[0],
-      },
-    });
-
-    return NextResponse.json(newReview);
+    const review = await createReview(result.data);
+    return NextResponse.json(review);
   } catch (error) {
-    console.error('Create review error:', error);
+    console.error('API POST admin create review error:', error);
     return NextResponse.json({ error: 'Failed to create review' }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Manrope, Libre_Caslon_Text } from 'next/font/google';
 import { siteConfig } from '@/data/siteConfig';
 import HeaderFooterWrapper from '@/components/layout/HeaderFooterWrapper';
+import { getClinicSettings } from '@/lib/contact';
 import './globals.css';
 
 const sans = Manrope({
@@ -36,15 +37,17 @@ export const metadata: Metadata = {
   authors: [{ name: 'Dental Cosmetics & Implant Centre' }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getClinicSettings();
+
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}>
       <body className="min-h-full flex flex-col antialiased text-foreground bg-bg font-sans">
-        <HeaderFooterWrapper>{children}</HeaderFooterWrapper>
+        <HeaderFooterWrapper settings={settings}>{children}</HeaderFooterWrapper>
       </body>
     </html>
   );

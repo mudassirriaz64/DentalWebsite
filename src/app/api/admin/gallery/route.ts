@@ -37,11 +37,45 @@ export async function GET() {
       orderBy: { displayOrder: 'asc' },
     });
 
-    const parsedItems = items.map((item) => ({
-      ...item,
-      images: JSON.parse(item.imagesJson || '{}'),
-      tags: JSON.parse(item.tagsJson || '[]'),
-    }));
+    const parsedItems = items.map((item) => {
+      const images: any = {};
+      if (item.beforeImageUrl) {
+        images.before = {
+          publicId: item.beforeImageId || '',
+          url: item.beforeImageUrl,
+          altText: item.beforeImageAlt || '',
+        };
+      }
+      if (item.afterImageUrl) {
+        images.after = {
+          publicId: item.afterImageId || '',
+          url: item.afterImageUrl,
+          altText: item.afterImageAlt || '',
+        };
+      }
+      if (item.mainImageUrl) {
+        images.main = {
+          publicId: item.mainImageId || '',
+          url: item.mainImageUrl,
+          altText: item.mainImageAlt || '',
+        };
+      }
+
+      let tags: string[] = [];
+      if (item.tags) {
+        try {
+          tags = JSON.parse(item.tags);
+        } catch {
+          tags = item.tags.split(',').map((t) => t.trim()).filter(Boolean);
+        }
+      }
+
+      return {
+        ...item,
+        images,
+        tags,
+      };
+    });
 
     return NextResponse.json(parsedItems);
   } catch (error) {
@@ -100,8 +134,16 @@ export async function POST(request: Request) {
         title: data.title,
         description: data.description,
         category: data.category,
-        imagesJson: JSON.stringify(data.images),
-        tagsJson: JSON.stringify(data.tags || []),
+        beforeImageId: data.images.before?.publicId || null,
+        beforeImageUrl: data.images.before?.url || null,
+        beforeImageAlt: data.images.before?.altText || null,
+        afterImageId: data.images.after?.publicId || null,
+        afterImageUrl: data.images.after?.url || null,
+        afterImageAlt: data.images.after?.altText || null,
+        mainImageId: data.images.main?.publicId || null,
+        mainImageUrl: data.images.main?.url || null,
+        mainImageAlt: data.images.main?.altText || null,
+        tags: JSON.stringify(data.tags || []),
         isVerifiedPatient: !!data.isVerifiedPatient,
         featured: !!data.featured,
         status: data.status,
