@@ -61,3 +61,31 @@ export const services: Service[] = [
     ctaLabel: 'Learn More',
   },
 ];
+
+import prisma from '@/lib/prisma';
+
+export async function getServices(): Promise<Service[]> {
+  try {
+    const dbServices = await prisma.service.findMany({
+      orderBy: { createdAt: 'asc' },
+    });
+    if (dbServices.length > 0) {
+      return dbServices.map((s) => ({
+        id: s.id,
+        title: s.title,
+        shortDescription: s.shortDescription,
+        description: s.description,
+        slug: s.slug,
+        iconName: s.iconName,
+        imagePath: s.imagePath || undefined,
+        variant: s.variant as any || undefined,
+        ctaLabel: s.ctaLabel || undefined,
+        bullets: JSON.parse(s.bulletsJson || '[]'),
+      }));
+    }
+  } catch (error) {
+    console.warn('Database fetch failed in getServices, falling back to static data:', error);
+  }
+  return services;
+}
+

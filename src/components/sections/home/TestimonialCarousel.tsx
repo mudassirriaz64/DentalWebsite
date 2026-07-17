@@ -6,7 +6,7 @@ import { motion, AnimatePresence, Variants } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { testimonials } from '@/data/testimonials';
+import { testimonials as staticTestimonials } from '@/data/testimonials';
 
 const testimonialImages = [
   '/images/home/patient-avatar.png',
@@ -14,7 +14,12 @@ const testimonialImages = [
   '/images/home/doctor-elena.png',
 ];
 
-export const TestimonialCarousel: React.FC = () => {
+interface TestimonialCarouselProps {
+  initialTestimonials?: any[];
+}
+
+export const TestimonialCarousel: React.FC<TestimonialCarouselProps> = ({ initialTestimonials }) => {
+  const displayTestimonials = initialTestimonials || staticTestimonials;
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
@@ -37,15 +42,15 @@ export const TestimonialCarousel: React.FC = () => {
 
   const handleNext = () => {
     setDirection(1);
-    setIndex((prevIndex) => (prevIndex + 1) % testimonials.length);
+    setIndex((prevIndex) => (prevIndex + 1) % displayTestimonials.length);
   };
 
   const handlePrev = () => {
     setDirection(-1);
-    setIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length);
+    setIndex((prevIndex) => (prevIndex - 1 + displayTestimonials.length) % displayTestimonials.length);
   };
 
-  const currentTestimonial = testimonials[index];
+  const currentTestimonial = displayTestimonials[index] || displayTestimonials[0] || { id: 'fallback', author: '', role: '', rating: 5, text: '' };
   const currentImage = testimonialImages[index] || testimonialImages[0];
 
   return (
@@ -118,7 +123,7 @@ export const TestimonialCarousel: React.FC = () => {
           </button>
           {/* Dots Indicator */}
           <div className="flex items-center gap-2">
-            {testimonials.map((_, i) => (
+            {displayTestimonials.map((_, i) => (
               <button
                 key={i}
                 onClick={() => {

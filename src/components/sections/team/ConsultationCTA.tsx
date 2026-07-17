@@ -34,11 +34,30 @@ export const ConsultationCTA: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      console.log('Free Consultation Submission Payload:', formData);
-      setIsSubmitted(true);
+      try {
+        const res = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: `Interested in: ${formData.service}`,
+          }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || 'Failed to submit request');
+        }
+
+        setIsSubmitted(true);
+      } catch (err: any) {
+        alert(err.message || 'An error occurred. Please try again.');
+      }
     }
   };
 

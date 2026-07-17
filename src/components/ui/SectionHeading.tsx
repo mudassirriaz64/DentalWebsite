@@ -6,7 +6,7 @@ interface SectionHeadingProps extends React.HTMLAttributes<HTMLDivElement> {
   eyebrow?: string;
   title: string;
   highlightedText?: string;
-  highlightColor?: 'primary' | 'accent';
+  highlightColor?: 'primary' | 'accent' | 'teal-clean';
   subtitle?: string;
   align?: 'left' | 'center' | 'right';
   showDots?: boolean;
@@ -39,6 +39,19 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
     }
 
     const parts = title.split(highlightedText);
+
+    if (highlightColor === 'teal-clean') {
+      return (
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold font-serif text-[#121C2C] leading-tight tracking-tight">
+          {parts[0]}
+          <span className="text-primary">
+            {highlightedText}
+          </span>
+          {parts[1]}
+        </h2>
+      );
+    }
+
     const highlightClass = highlightColor === 'primary' ? 'text-primary' : 'text-accent';
 
     return (

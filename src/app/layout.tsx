@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { Manrope, Libre_Caslon_Text } from 'next/font/google';
 import { siteConfig } from '@/data/siteConfig';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import HeaderFooterWrapper from '@/components/layout/HeaderFooterWrapper';
 import './globals.css';
 
 const sans = Manrope({
@@ -45,9 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}>
       <body className="min-h-full flex flex-col antialiased text-foreground bg-bg font-sans">
-        <Header />
-        <main className="flex-grow flex flex-col w-full">{children}</main>
-        <Footer />
+        <HeaderFooterWrapper>{children}</HeaderFooterWrapper>
       </body>
     </html>
   );

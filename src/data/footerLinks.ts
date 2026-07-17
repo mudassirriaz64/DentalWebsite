@@ -5,10 +5,9 @@ export const footerLinks: FooterSection[] = [
     title: 'Company',
     links: [
       { label: 'Home', href: '/' },
+      { label: 'About Us', href: '/about' },
       { label: 'Services', href: '/services' },
-      { label: 'Team', href: '/team' },
-      { label: 'Privacy Policy', href: '/privacy' },
-      { label: 'Terms of Service', href: '/terms' },
+      { label: 'Our Team', href: '/team' },
     ],
   },
   {

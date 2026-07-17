@@ -43,7 +43,7 @@ export const Header: React.FC = () => {
         <Container className="flex items-center justify-between">
           {/* Logo - Teal vector icon + wordmark in Libre Caslon Text */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Logo className="w-12 h-12 group-hover:scale-105 transition-transform duration-300" />
+            <Logo className="w-14 h-14 group-hover:scale-105 transition-transform duration-300" />
             <div className="flex flex-col">
               <span className="font-serif font-bold text-primary tracking-tight text-xl sm:text-2xl leading-none">
                 Dental Cosmetic

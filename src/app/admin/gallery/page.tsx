@@ -1,0 +1,49 @@
+import React, { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/auth';
+import prisma from '@/lib/prisma';
+import GalleryAdminContent from '@/components/sections/admin/GalleryAdminContent';
+
+export const metadata = {
+  title: 'Gallery Management - Admin Panel',
+  description: 'Manage clinic case transformations, layouts, re-ordering, and visibility.',
+};
+
+export default async function AdminGalleryPage() {
+  const session = await getSession();
+  if (!session) {
+    redirect('/admin/login');
+  }
+
+  // Fetch all gallery items sorted by displayOrder
+  let items: any[] = [];
+  try {
+    const dbItems = await prisma.galleryItem.findMany({
+      orderBy: { displayOrder: 'asc' },
+    });
+
+    items = dbItems.map((item) => ({
+      id: item.id,
+      variant: item.variant,
+      title: item.title,
+      description: item.description,
+      category: item.category,
+      images: JSON.parse(item.imagesJson || '{}'),
+      tags: JSON.parse(item.tagsJson || '[]'),
+      isVerifiedPatient: item.isVerifiedPatient,
+      featured: item.featured,
+      status: item.status,
+      displayOrder: item.displayOrder,
+      createdAt: item.createdAt.toISOString(),
+      updatedAt: item.updatedAt.toISOString(),
+    }));
+  } catch (err) {
+    console.error('Error fetching admin gallery cases:', err);
+  }
+
+  return (
+    <Suspense fallback={<div className="p-6 text-slate-500 font-sans">Loading gallery workspace...</div>}>
+      <GalleryAdminContent initialItems={items} />
+    </Suspense>
+  );
+}

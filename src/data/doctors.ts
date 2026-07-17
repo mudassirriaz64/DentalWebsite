@@ -80,12 +80,30 @@ export const doctors: Doctor[] = [
   },
 ];
 
-/**
- * Shared getter function to filter doctors by role.
- * This abstracts data access so that transitioning to server-side DB fetches later
- * only requires swapping the implementation inside this function.
- */
+import prisma from '@/lib/prisma';
+
 export async function getDoctorsByRole(role: Doctor['role']): Promise<Doctor[]> {
-  // Currently returns filtered static data, ready for Prisma client queries later.
+  try {
+    const dbDoctors = await prisma.doctor.findMany({
+      where: { role },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    if (dbDoctors.length > 0) {
+      return dbDoctors.map((doc) => ({
+        id: doc.id,
+        name: doc.name,
+        role: doc.role as Doctor['role'],
+        title: doc.title,
+        bio: doc.bio,
+        imagePath: doc.imagePath,
+        specialties: JSON.parse(doc.specialtiesJson || '[]'),
+        education: JSON.parse(doc.educationJson || '[]'),
+      }));
+    }
+  } catch (error) {
+    console.warn('Database fetch failed in getDoctorsByRole, falling back to static data:', error);
+  }
+
   return doctors.filter((doc) => doc.role === role);
 }

@@ -1,0 +1,96 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Service {
+  id               String        @id @default(uuid())
+  title            String
+  shortDescription String
+  description      String
+  slug             String        @unique
+  iconName         String
+  imagePath        String?
+  variant          String?       // "large-image-card" | "dark-teal-card" | "white-card" | "accent-pink-card"
+  ctaLabel         String?
+  bulletsJson      String        @default("[]") // Serialized JSON array of strings
+  appointments     Appointment[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model Appointment {
+  id            String   @id @default(uuid())
+  name          String
+  email         String
+  phone         String
+  preferredDate DateTime
+  preferredTime String
+  message       String?
+  status        String   @default("pending") // "pending" | "confirmed" | "cancelled"
+  serviceId     String
+  service       Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Doctor {
+  id              String   @id @default(uuid())
+  name            String
+  role            String
+  title           String
+  specialtiesJson String   @default("[]") // Serialized JSON array of strings
+  bio             String
+  imagePath       String
+  educationJson   String   @default("[]") // Serialized JSON array of strings
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Review {
+  id        String   @id @default(uuid())
+  author    String
+  role      String?
+  rating    Int      @default(5)
+  text      String
+  date      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryItem {
+  id                String   @id @default(uuid())
+  variant           String   // "comparison" | "vertical" | "square" | "wideSplit" | "small"
+  title             String
+  description       String
+  category          String
+  imagesJson        String   // Serialized JSON of images { before: { publicId, url, altText }, after: {...}, main: {...} }
+  tagsJson          String   @default("[]") // Serialized JSON array of strings
+  isVerifiedPatient Boolean  @default(false)
+  featured          Boolean  @default(false)
+  status            String   @default("draft") // "published" | "draft"
+  displayOrder      Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

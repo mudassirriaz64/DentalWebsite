@@ -15,7 +15,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import Container from '@/components/ui/Container';
-import { services } from '@/data/services';
+import { services as staticServices } from '@/data/services';
 import { Service } from '@/types';
 
 const iconMap = {
@@ -26,7 +26,12 @@ const iconMap = {
   PhoneCall: <PhoneCall className="w-6 h-6" />,
 };
 
-export const ServicesGrid: React.FC = () => {
+interface ServicesGridProps {
+  initialServices?: Service[];
+}
+
+export const ServicesGrid: React.FC<ServicesGridProps> = ({ initialServices }) => {
+  const displayServices = initialServices || staticServices;
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -233,7 +238,7 @@ export const ServicesGrid: React.FC = () => {
           viewport={{ once: true, margin: '-100px' }}
           className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full"
         >
-          {services.map((service) => renderCard(service))}
+          {displayServices.map((service) => renderCard(service))}
         </motion.div>
       </Container>
     </section>

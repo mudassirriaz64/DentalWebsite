@@ -6,14 +6,25 @@ import StatsBar from '@/components/sections/home/StatsBar';
 import TestimonialCarousel from '@/components/sections/home/TestimonialCarousel';
 import FinalCTA from '@/components/sections/home/FinalCTA';
 
-export default function Home() {
+import prisma from '@/lib/prisma';
+
+export default async function Home() {
+  let dbReviews: any[] = [];
+  try {
+    dbReviews = await prisma.review.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  } catch (error) {
+    console.warn('Database query failed for reviews on homepage:', error);
+  }
+
   return (
     <>
       <Hero />
       <Philosophy />
       <ServicesBento />
       <StatsBar />
-      <TestimonialCarousel />
+      <TestimonialCarousel initialTestimonials={dbReviews.length > 0 ? dbReviews : undefined} />
       <FinalCTA />
     </>
   );

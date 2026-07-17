@@ -149,3 +149,13 @@ Follow the structure established in `/src` — do not invent parallel structures
 - Verify animations respect `prefers-reduced-motion` and don't jank on scroll.
 - Do not silently skip requirements from the prompt — if something is ambiguous or an asset
   is missing, ask or flag it rather than guessing silently.
+
+---
+
+## 11. Backend & Database Rules
+
+- **Database Client**: Use the Prisma client singleton exported from `@/lib/prisma` — never initialize duplicate `new PrismaClient()` instances inside handlers or server components.
+- **SQLite Serialization**: Because SQLite does not support array types, data arrays (e.g. bullets, specialties, education) must be stored in the database as string columns of serialized JSON (e.g. `bulletsJson` storing `JSON.stringify(array)`) and parsed back using `JSON.parse(column || '[]')` in the query layer.
+- **Administrative Protection**: All API handlers under `/api/admin/*` must protect mutation and collection read operations using the `getSession` session validation helper from `@/lib/auth.ts`, returning a `401 Unauthorized` response if authentication checks fail.
+- **Dynamic Seeding**: Maintain default static arrays as hardcoded fallbacks inside `src/data/*.ts` so the application degrades gracefully and loads default seed data if database queries fail.
+

@@ -12,15 +12,15 @@ export const Logo: React.FC<LogoProps> = ({ className, variant = 'light' }) => {
     return (
       <div
         className={cn(
-          'w-12 h-12 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md select-none flex-shrink-0',
+          'w-14 h-14 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md select-none flex-shrink-0',
           className
         )}
       >
         <Image
           src="/logo.png"
           alt="Dental Cosmetics Logo"
-          width={36}
-          height={36}
+          width={44}
+          height={44}
           priority
           className="object-contain"
         />
@@ -29,13 +29,13 @@ export const Logo: React.FC<LogoProps> = ({ className, variant = 'light' }) => {
   }
 
   return (
-    <div className={cn('relative w-12 h-12 select-none flex-shrink-0', className)}>
+    <div className={cn('relative w-14 h-14 select-none flex-shrink-0', className)}>
       <Image
         src="/logo.png"
         alt="Dental Cosmetics Logo"
         fill
         priority
-        sizes="48px"
+        sizes="56px"
         className="object-contain"
       />
     </div>
