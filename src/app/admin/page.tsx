@@ -8,15 +8,24 @@ export const metadata = {
   description: 'Manage clinic services, doctors, testimonials, and review user submissions.',
 };
 
-export default async function AdminDashboardPage() {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function AdminDashboardPage({ searchParams }: PageProps) {
   const session = await getSession();
   if (!session) {
     redirect('/admin/login');
   }
 
+  const resolvedParams = await searchParams;
+  if (!resolvedParams.tab) {
+    redirect('/admin/submissions');
+  }
+
   return (
     <Suspense fallback={<div className="p-6 text-slate-500 font-sans">Loading panel workspace...</div>}>
-      <DashboardContent username={session.username} />
+      <DashboardContent username={resolvedParams.username as string || session.username} />
     </Suspense>
   );
 }

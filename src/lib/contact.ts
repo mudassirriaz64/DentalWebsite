@@ -11,6 +11,7 @@ export async function submitContactForm(data: ContactFormInput) {
       serviceInterest: data.serviceInterest,
       email: data.email,
       phone: data.phone,
+      whatsapp: data.whatsapp,
       message: data.message || '',
       status: 'new',
       isRead: false,

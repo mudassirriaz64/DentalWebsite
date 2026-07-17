@@ -12,7 +12,6 @@ function AdminSidebarNav() {
   const tab = searchParams.get('tab');
 
   const menuItems = [
-    { label: 'Appointments', href: '/admin', path: '/admin', exact: true, icon: Calendar },
     { label: 'Submissions', href: '/admin/submissions', path: '/admin/submissions', icon: FileText },
     { label: 'Reviews', href: '/admin/reviews', path: '/admin/reviews', icon: MessageSquare },
     { label: 'Gallery', href: '/admin/gallery', path: '/admin/gallery', icon: ImageIcon },
@@ -31,8 +30,8 @@ function AdminSidebarNav() {
         if (item.href.includes('?tab=')) {
           const targetTab = item.href.split('?tab=')[1];
           isActive = pathname === '/admin' && tab === targetTab;
-        } else if (item.exact) {
-          isActive = pathname === item.path && !tab;
+        } else if (item.href === '/admin/submissions') {
+          isActive = pathname === '/admin/submissions' || (pathname === '/admin' && !tab);
         } else {
           isActive = pathname?.startsWith(item.path);
         }

@@ -12,6 +12,8 @@ export const ConsultationCTA: React.FC = () => {
     service: services[0]?.title || '',
     email: '',
     phone: '',
+    whatsapp: '',
+    whatsappSameAsPhone: true,
   });
 
   const [errors, setErrors] = React.useState<Record<string, string>>({});
@@ -30,6 +32,9 @@ export const ConsultationCTA: React.FC = () => {
     } else if (!/^\+?[0-9\s-]{7,15}$/.test(formData.phone)) {
       newErrors.phone = 'Invalid phone number format';
     }
+    if (!formData.whatsappSameAsPhone && !formData.whatsapp.trim()) {
+      newErrors.whatsapp = 'WhatsApp number is required';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -38,15 +43,19 @@ export const ConsultationCTA: React.FC = () => {
     e.preventDefault();
     if (validate()) {
       try {
+        const payload = {
+          fullName: formData.name,
+          serviceInterest: formData.service,
+          email: formData.email,
+          phone: formData.phone,
+          whatsapp: formData.whatsappSameAsPhone ? formData.phone : formData.whatsapp,
+          message: `Booking requested via team page.`,
+        };
+
         const res = await fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: `Interested in: ${formData.service}`,
-          }),
+          body: JSON.stringify(payload),
         });
 
         if (!res.ok) {
@@ -205,6 +214,51 @@ export const ConsultationCTA: React.FC = () => {
                       </div>
                     </div>
 
+                    {/* Row 3: WhatsApp */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="flex flex-col items-start w-full">
+                        <div className="flex justify-between items-center w-full mb-2">
+                          <label
+                            htmlFor="cta-whatsapp"
+                            className="text-xs font-bold uppercase text-hero-heading-dark"
+                          >
+                            WhatsApp Number *
+                          </label>
+                          <label className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={formData.whatsappSameAsPhone}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  whatsappSameAsPhone: e.target.checked,
+                                  whatsapp: e.target.checked ? '' : formData.whatsapp
+                                });
+                              }}
+                              className="rounded border-slate-300 text-primary focus:ring-primary w-3.5 h-3.5"
+                            />
+                            Same as phone
+                          </label>
+                        </div>
+                        <input
+                          id="cta-whatsapp"
+                          type="tel"
+                          disabled={formData.whatsappSameAsPhone}
+                          value={formData.whatsappSameAsPhone ? formData.phone : formData.whatsapp}
+                          onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
+                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F3FF] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60 ${
+                            errors.whatsapp && !formData.whatsappSameAsPhone
+                              ? 'border-accent/40 focus:ring-accent'
+                              : 'border-transparent'
+                          }`}
+                          placeholder="WhatsApp (with country code)"
+                        />
+                        {errors.whatsapp && !formData.whatsappSameAsPhone && (
+                          <span className="text-xs text-accent mt-1">{errors.whatsapp}</span>
+                        )}
+                      </div>
+                    </div>
+
                     <button
                       type="submit"
                       className="mt-4 w-full sm:w-fit inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-sm px-8 py-3.5 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer self-start"
@@ -248,6 +302,8 @@ export const ConsultationCTA: React.FC = () => {
                         service: services[0]?.title || '',
                         email: '',
                         phone: '',
+                        whatsapp: '',
+                        whatsappSameAsPhone: true,
                       });
                       setIsSubmitted(false);
                     }}

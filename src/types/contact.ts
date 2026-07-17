@@ -6,6 +6,7 @@ export interface ContactSubmission {
   serviceInterest: string;
   email: string;
   phone: string;
+  whatsapp: string | null;
   message: string | null;
   status: SubmissionStatus;
   isRead: boolean;
@@ -19,5 +20,6 @@ export interface ContactFormInput {
   serviceInterest: string;
   email: string;
   phone: string;
+  whatsapp: string;
   message?: string;
 }

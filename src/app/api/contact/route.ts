@@ -6,7 +6,8 @@ const contactFormSchema = z.object({
   fullName: z.string().min(2, 'Full Name must be at least 2 characters long').max(100),
   serviceInterest: z.string().min(1, 'Please select a service of interest'),
   email: z.string().email('Please enter a valid email address'),
-  phone: z.string().min(10, 'Phone number must be at least 10 characters long'),
+  phone: z.string().min(7, 'Phone number must be at least 7 characters long'),
+  whatsapp: z.string().min(7, 'WhatsApp number must be at least 7 characters long'),
   message: z.string().max(1000).optional(),
 });
 

@@ -28,23 +28,17 @@ export default function DashboardContent({ username }: DashboardContentProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
-  const [activeTab, setActiveTab] = useState<'appointments' | 'contacts' | 'services' | 'doctors' | 'reviews'>('appointments');
+  const [activeTab, setActiveTab] = useState<'services' | 'doctors'>('services');
 
   useEffect(() => {
-    if (tabParam === 'contacts') setActiveTab('contacts');
-    else if (tabParam === 'services') setActiveTab('services');
-    else if (tabParam === 'doctors') setActiveTab('doctors');
-    else if (tabParam === 'reviews') setActiveTab('reviews');
-    else setActiveTab('appointments');
+    if (tabParam === 'doctors') setActiveTab('doctors');
+    else setActiveTab('services');
   }, [tabParam]);
   const [loading, setLoading] = useState(true);
 
   // Data states
-  const [appointments, setAppointments] = useState<any[]>([]);
-  const [contacts, setContacts] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<any[]>([]);
-  const [reviews, setReviews] = useState<any[]>([]);
 
   // Editing / creation states
   const [editingItem, setEditingItem] = useState<any | null>(null);
@@ -62,11 +56,8 @@ export default function DashboardContent({ username }: DashboardContentProps) {
       const res = await fetch(`/api/admin/${activeTab}`);
       if (!res.ok) throw new Error(`Failed to fetch ${activeTab}`);
       const data = await res.json();
-      if (activeTab === 'appointments') setAppointments(data);
-      else if (activeTab === 'contacts') setContacts(data);
-      else if (activeTab === 'services') setServices(data);
+      if (activeTab === 'services') setServices(data);
       else if (activeTab === 'doctors') setDoctors(data);
-      else if (activeTab === 'reviews') setReviews(data);
     } catch (err: any) {
       setErrorMessage(err.message || 'An error occurred fetching data');
     } finally {
@@ -84,20 +75,6 @@ export default function DashboardContent({ username }: DashboardContentProps) {
     router.refresh();
   };
 
-  // Appointments actions
-  const updateAppointmentStatus = async (id: string, status: 'confirmed' | 'cancelled') => {
-    try {
-      const res = await fetch(`/api/admin/appointments/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status }),
-      });
-      if (!res.ok) throw new Error('Failed to update status');
-      setAppointments(appointments.map(a => a.id === id ? { ...a, status } : a));
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
 
   const deleteItem = async (id: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
@@ -120,8 +97,6 @@ export default function DashboardContent({ username }: DashboardContentProps) {
       setFormFields({ title: '', shortDescription: '', description: '', slug: '', iconName: 'Sparkles', variant: 'white-card', bullets: [''] });
     } else if (activeTab === 'doctors') {
       setFormFields({ name: '', role: 'core-team', title: '', bio: '', imagePath: '/images/home/doctor-elena.png', specialties: [''], education: [''] });
-    } else if (activeTab === 'reviews') {
-      setFormFields({ author: '', role: '', rating: 5, text: '', date: new Date().toISOString().split('T')[0] });
     }
     setIsFormOpen(true);
   };
@@ -132,8 +107,6 @@ export default function DashboardContent({ username }: DashboardContentProps) {
     if (activeTab === 'services') {
       setFormFields({ ...item });
     } else if (activeTab === 'doctors') {
-      setFormFields({ ...item });
-    } else if (activeTab === 'reviews') {
       setFormFields({ ...item });
     }
     setIsFormOpen(true);
@@ -177,9 +150,9 @@ export default function DashboardContent({ username }: DashboardContentProps) {
       <main className="flex-grow flex flex-col overflow-y-auto">
         <header className="bg-white border-b border-slate-100 p-6 flex justify-between items-center">
           <h2 className="text-xl font-bold font-sans text-dark-text capitalize">
-            {activeTab === 'contacts' ? 'Contact Submissions' : `${activeTab} Management`}
+            {activeTab} Management
           </h2>
-          {['services', 'doctors', 'reviews'].includes(activeTab) && (
+          {['services', 'doctors'].includes(activeTab) && (
             <button
               onClick={openCreateForm}
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold bg-[#B51E47] text-white hover:bg-accent-hover transition cursor-pointer shadow-sm"
@@ -202,128 +175,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
               {/* TABLE RENDERERS */}
 
-              {/* 1. APPOINTMENTS */}
-              {activeTab === 'appointments' && (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead>
-                      <tr className="bg-bg-alt text-body-text font-bold text-xs uppercase border-b border-slate-100">
-                        <th className="p-4 pl-6">Client</th>
-                        <th className="p-4">Contact</th>
-                        <th className="p-4">Service</th>
-                        <th className="p-4">Date & Time</th>
-                        <th className="p-4">Message</th>
-                        <th className="p-4">Status</th>
-                        <th className="p-4 pr-6 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                      {appointments.length === 0 ? (
-                        <tr>
-                          <td colSpan={7} className="p-6 text-center text-body-text">No appointments found.</td>
-                        </tr>
-                      ) : (
-                        appointments.map((a) => (
-                          <tr key={a.id} className="hover:bg-slate-50/50">
-                            <td className="p-4 pl-6 font-bold text-dark-text">{a.name}</td>
-                            <td className="p-4 text-xs text-body-text">
-                              <div>{a.email}</div>
-                              <div className="mt-0.5">{a.phone}</div>
-                            </td>
-                            <td className="p-4 text-xs font-semibold text-primary">{a.service?.title || 'Unknown'}</td>
-                            <td className="p-4 text-xs text-dark-text">
-                              <div className="font-bold">{new Date(a.preferredDate).toLocaleDateString()}</div>
-                              <div className="text-body-text mt-0.5">{a.preferredTime}</div>
-                            </td>
-                            <td className="p-4 text-xs text-body-text max-w-xs truncate" title={a.message}>{a.message || '—'}</td>
-                            <td className="p-4">
-                              <span className={`inline-flex px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                                a.status === 'confirmed' ? 'bg-primary-light text-[#002020]' :
-                                a.status === 'cancelled' ? 'bg-accent-soft text-accent-dark' :
-                                'bg-slate-100 text-slate-600'
-                              }`}>
-                                {a.status}
-                              </span>
-                            </td>
-                            <td className="p-4 pr-6 text-right flex justify-end gap-1.5 mt-1.5">
-                              {a.status === 'pending' && (
-                                <>
-                                  <button
-                                    onClick={() => updateAppointmentStatus(a.id, 'confirmed')}
-                                    className="p-1.5 rounded-lg bg-primary-light text-primary hover:bg-primary-light/80 cursor-pointer"
-                                    title="Confirm"
-                                  >
-                                    <Check className="w-4 h-4" />
-                                  </button>
-                                  <button
-                                    onClick={() => updateAppointmentStatus(a.id, 'cancelled')}
-                                    className="p-1.5 rounded-lg bg-accent-soft text-accent hover:bg-accent-soft/80 cursor-pointer"
-                                    title="Cancel"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </button>
-                                </>
-                              )}
-                              <button
-                                onClick={() => deleteItem(a.id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-accent cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              )}
 
-              {/* 2. SUBMISSIONS */}
-              {activeTab === 'contacts' && (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead>
-                      <tr className="bg-bg-alt text-body-text font-bold text-xs uppercase border-b border-slate-100">
-                        <th className="p-4 pl-6">Sender</th>
-                        <th className="p-4">Contact</th>
-                        <th className="p-4">Message</th>
-                        <th className="p-4">Date Submitted</th>
-                        <th className="p-4 pr-6 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                      {contacts.length === 0 ? (
-                        <tr>
-                          <td colSpan={5} className="p-6 text-center text-body-text">No submissions found.</td>
-                        </tr>
-                      ) : (
-                        contacts.map((c) => (
-                          <tr key={c.id} className="hover:bg-slate-50/50">
-                            <td className="p-4 pl-6 font-bold text-dark-text">{c.name}</td>
-                            <td className="p-4 text-xs text-body-text">
-                              <div>{c.email}</div>
-                              <div className="mt-0.5">{c.phone || '—'}</div>
-                            </td>
-                            <td className="p-4 text-xs text-body-text whitespace-pre-wrap max-w-md">{c.message}</td>
-                            <td className="p-4 text-xs text-dark-text">{new Date(c.createdAt).toLocaleDateString()}</td>
-                            <td className="p-4 pr-6 text-right">
-                              <button
-                                onClick={() => deleteItem(c.id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-accent cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              )}
 
               {/* 3. SERVICES */}
               {activeTab === 'services' && (
@@ -455,59 +307,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                 </div>
               )}
 
-              {/* 5. REVIEWS */}
-              {activeTab === 'reviews' && (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-sm">
-                    <thead>
-                      <tr className="bg-bg-alt text-body-text font-bold text-xs uppercase border-b border-slate-100">
-                        <th className="p-4 pl-6">Reviewer</th>
-                        <th className="p-4">Rating</th>
-                        <th className="p-4">Review Text</th>
-                        <th className="p-4">Date</th>
-                        <th className="p-4 pr-6 text-right">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-50">
-                      {reviews.length === 0 ? (
-                        <tr>
-                          <td colSpan={5} className="p-6 text-center text-body-text">No reviews found.</td>
-                        </tr>
-                      ) : (
-                        reviews.map((r) => (
-                          <tr key={r.id} className="hover:bg-slate-50/50">
-                            <td className="p-4 pl-6">
-                              <div className="font-bold text-dark-text">{r.author}</div>
-                              <div className="text-xs text-body-text mt-0.5">{r.role || '—'}</div>
-                            </td>
-                            <td className="p-4 text-xs font-bold text-amber-500">{'★'.repeat(r.rating)}</td>
-                            <td className="p-4 text-xs text-body-text max-w-sm truncate" title={r.text}>{r.text}</td>
-                            <td className="p-4 text-xs text-dark-text">{r.date || '—'}</td>
-                            <td className="p-4 pr-6 text-right">
-                              <div className="flex justify-end gap-1">
-                                <button
-                                  onClick={() => openEditForm(r)}
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-primary cursor-pointer"
-                                  title="Edit"
-                                >
-                                  <Edit3 className="w-4 h-4" />
-                                </button>
-                                <button
-                                  onClick={() => deleteItem(r.id)}
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-accent cursor-pointer"
-                                  title="Delete"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              )}
+
             </div>
           )}
         </div>
@@ -617,67 +417,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                 </>
               )}
 
-              {/* REVIEWS FORM */}
-              {activeTab === 'reviews' && (
-                <>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-bold text-dark-text">Reviewer Name</label>
-                      <input
-                        type="text"
-                        required
-                        value={formFields.author}
-                        onChange={(e) => setFormFields({ ...formFields, author: e.target.value })}
-                        className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-bold text-dark-text">Patient Description</label>
-                      <input
-                        type="text"
-                        value={formFields.role || ''}
-                        onChange={(e) => setFormFields({ ...formFields, role: e.target.value })}
-                        className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                        placeholder="Invisalign Patient"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-bold text-dark-text">Star Rating (1 - 5)</label>
-                      <input
-                        type="number"
-                        min={1}
-                        max={5}
-                        required
-                        value={formFields.rating}
-                        onChange={(e) => setFormFields({ ...formFields, rating: parseInt(e.target.value) || 5 })}
-                        className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="font-bold text-dark-text">Date Posted</label>
-                      <input
-                        type="date"
-                        required
-                        value={formFields.date}
-                        onChange={(e) => setFormFields({ ...formFields, date: e.target.value })}
-                        className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-dark-text">Review Text Body</label>
-                    <textarea
-                      required
-                      rows={4}
-                      value={formFields.text}
-                      onChange={(e) => setFormFields({ ...formFields, text: e.target.value })}
-                      className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                </>
-              )}
+
 
               <footer className="pt-4 border-t border-slate-100 flex justify-end gap-3 mt-4">
                 <button

@@ -17,6 +17,8 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
   const [serviceInterest, setServiceInterest] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [whatsappSameAsPhone, setWhatsappSameAsPhone] = useState(true);
   const [message, setMessage] = useState('');
 
   // Status states
@@ -33,8 +35,12 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
     if (!fullName.trim()) return setErrorMsg('Full Name is required.');
     if (!serviceInterest) return setErrorMsg('Please select a service of interest.');
     if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) return setErrorMsg('Please enter a valid email address.');
-    if (!phone.trim() || phone.replace(/\D/g, '').length < 10) {
-      return setErrorMsg('Please enter a valid 10-digit phone number.');
+    if (!phone.trim() || phone.replace(/\D/g, '').length < 7) {
+      return setErrorMsg('Please enter a valid phone number (min 7 digits).');
+    }
+    const resolvedWhatsapp = whatsappSameAsPhone ? phone : whatsapp;
+    if (!resolvedWhatsapp.trim() || resolvedWhatsapp.replace(/\D/g, '').length < 7) {
+      return setErrorMsg('Please enter a valid WhatsApp number (min 7 digits).');
     }
 
     setLoading(true);
@@ -48,6 +54,7 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
           serviceInterest,
           email,
           phone,
+          whatsapp: resolvedWhatsapp,
           message,
         }),
       });
@@ -63,6 +70,8 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
       setServiceInterest('');
       setEmail('');
       setPhone('');
+      setWhatsapp('');
+      setWhatsappSameAsPhone(true);
       setMessage('');
     } catch (err: any) {
       setErrorMsg(err.message || 'An error occurred during submission.');
@@ -166,6 +175,38 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="(555) 000-0000"
                       className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* WhatsApp */}
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-bold text-[#2A3738] uppercase">WhatsApp Number *</label>
+                      <label className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={whatsappSameAsPhone}
+                          onChange={(e) => {
+                            setWhatsappSameAsPhone(e.target.checked);
+                            if (e.target.checked) {
+                              setWhatsapp('');
+                            }
+                          }}
+                          className="rounded border-slate-300 text-primary focus:ring-primary w-3 h-3"
+                        />
+                        Same as Phone
+                      </label>
+                    </div>
+                    <input
+                      type="tel"
+                      required
+                      disabled={whatsappSameAsPhone}
+                      value={whatsappSameAsPhone ? phone : whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      placeholder="WhatsApp (with country code)"
+                      className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs disabled:opacity-60"
                     />
                   </div>
                 </div>
