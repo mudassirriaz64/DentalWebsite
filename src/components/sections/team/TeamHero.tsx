@@ -1,12 +1,35 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Container from '@/components/ui/Container';
 import HighlightText from './HighlightText';
 
+interface SpotlightData {
+  name: string;
+  title: string;
+  imagePath: string;
+}
+
+const fallback: SpotlightData = {
+  name: 'Dr. Sarah Jane',
+  title: 'Chief Cosmetic Specialist',
+  imagePath: '/images/home/hero-dentist.png',
+};
+
 export const TeamHero: React.FC = () => {
+  const [spotlight, setSpotlight] = useState<SpotlightData>(fallback);
+
+  useEffect(() => {
+    fetch('/api/founder-spotlight')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.name) setSpotlight(data);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="relative pt-36 pb-20 md:pt-40 md:pb-24 overflow-hidden bg-bg flex flex-col justify-center items-center text-center">
       <Container className="flex flex-col items-center">
@@ -48,8 +71,8 @@ export const TeamHero: React.FC = () => {
           className="w-full max-w-4xl rounded-[24px] overflow-hidden shadow-card border border-slate-100 aspect-[848/400] relative bg-slate-100 group"
         >
           <Image
-            src="/images/home/hero-dentist.png"
-            alt="Dental Cosmetics Team"
+            src={spotlight.imagePath}
+            alt={spotlight.name}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 848px"
@@ -62,10 +85,10 @@ export const TeamHero: React.FC = () => {
           {/* Bottom-Left Caption */}
           <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8 z-20 text-left">
             <h3 className="font-serif font-bold text-lg md:text-xl text-white leading-tight">
-              Dr. Sarah Jane
+              {spotlight.name}
             </h3>
             <p className="text-xs md:text-sm text-body-text-dark/95 font-sans font-normal mt-1">
-              Chief Cosmetic Specialist
+              {spotlight.title}
             </p>
           </div>
         </motion.div>

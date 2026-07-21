@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import ServiceForm from './ServiceForm';
+import FounderSpotlightForm from './FounderSpotlightForm';
 
 interface DashboardContentProps {
   username: string;
@@ -19,12 +20,19 @@ interface DashboardContentProps {
 export default function DashboardContent({ username: _username }: DashboardContentProps) {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
+  const viewParam = searchParams.get('view');
   const [activeTab, setActiveTab] = useState<'services' | 'doctors'>('services');
+  const [doctorView, setDoctorView] = useState<'list' | 'spotlight'>('list');
 
   useEffect(() => {
-    if (tabParam === 'doctors') setActiveTab('doctors');
-    else setActiveTab('services');
-  }, [tabParam]);
+    if (tabParam === 'doctors') {
+      setActiveTab('doctors');
+      setDoctorView(viewParam === 'spotlight' ? 'spotlight' : 'list');
+    } else {
+      setActiveTab('services');
+      setDoctorView('list');
+    }
+  }, [tabParam, viewParam]);
   const [loading, setLoading] = useState(true);
 
   // Data states
@@ -161,39 +169,77 @@ export default function DashboardContent({ username: _username }: DashboardConte
           <header className="flex justify-between items-center mb-8">
             <div>
               <h1 className="text-2xl font-bold font-sans tracking-tight text-slate-900">
-                {activeTab === 'services' ? 'Services Management' : 'Doctors Management'}
+                {activeTab === 'services'
+                  ? 'Services Management'
+                  : doctorView === 'spotlight'
+                    ? 'Founder Spotlight'
+                    : 'Doctors Management'}
               </h1>
               <p className="text-xs text-slate-500 mt-1">
                 {activeTab === 'services'
                   ? 'Manage treatment offerings, procedure highlights, and homepage featured services.'
-                  : 'Manage specialist profiles, display order, and professional credentials.'}
+                  : doctorView === 'spotlight'
+                    ? 'The featured doctor displayed in the Team page hero section. Only one record exists.'
+                    : 'Manage specialist profiles, display order, and professional credentials.'}
               </p>
             </div>
-            <button
-              onClick={openCreateForm}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-primary text-white hover:bg-primary-hover transition shadow-sm cursor-pointer"
-            >
-              <Plus className="w-4 h-4" /> Add New
-            </button>
+            {activeTab === 'services' || doctorView === 'list' ? (
+              <button
+                onClick={openCreateForm}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-primary text-white hover:bg-primary-hover transition shadow-sm cursor-pointer"
+              >
+                <Plus className="w-4 h-4" /> Add New
+              </button>
+            ) : null}
           </header>
 
-          {/* Filter Panel */}
-          <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
-            <div className="flex flex-1 flex-col sm:flex-row items-center gap-3 w-full">
-              <div className="relative w-full sm:w-64">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder={activeTab === 'services' ? 'Search services...' : 'Search doctors...'}
-                  className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs"
-                />
+          {/* Doctor sub-tabs */}
+          {activeTab === 'doctors' && (
+            <div className="flex gap-2 mb-6">
+              <button
+                onClick={() => setDoctorView('list')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  doctorView === 'list'
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                All Doctors
+              </button>
+              <button
+                onClick={() => setDoctorView('spotlight')}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer ${
+                  doctorView === 'spotlight'
+                    ? 'bg-primary text-white shadow-sm'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                Founder Spotlight
+              </button>
+            </div>
+          )}
+
+          {/* Filter Panel — hidden when spotlight sub-tab is active */}
+          {!(activeTab === 'doctors' && doctorView === 'spotlight') && (
+            <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="flex flex-1 flex-col sm:flex-row items-center gap-3 w-full">
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={activeTab === 'services' ? 'Search services...' : 'Search doctors...'}
+                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs"
+                  />
+                </div>
               </div>
             </div>
-          </div>
+          )}
 
-          {loading ? (
+          {activeTab === 'doctors' && doctorView === 'spotlight' ? (
+            <FounderSpotlightForm />
+          ) : loading ? (
             <div className="flex items-center justify-center h-64 text-sm text-slate-500">
               Loading administration records...
             </div>
@@ -271,8 +317,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
                 </>
               )}
 
-              {/* DOCTORS TABLE (CSS Grid) */}
-              {activeTab === 'doctors' && (
+              {activeTab === 'doctors' && doctorView === 'list' && (
                 <>
                   <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
                     <div className="col-span-3">Doctor Name</div>

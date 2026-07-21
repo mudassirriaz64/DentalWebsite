@@ -188,3 +188,12 @@ model ClinicSettings {
   openingHours     OpeningHoursEntry[]
   updatedAt        DateTime            @updatedAt
 }
+
+model FounderSpotlight {
+  id         String   @id @default(cuid())
+  name       String
+  title      String
+  imagePath  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
