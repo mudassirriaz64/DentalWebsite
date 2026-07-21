@@ -12,6 +12,7 @@ function AdminSidebarNav() {
   const tab = searchParams.get('tab');
 
   const menuItems = [
+    { label: 'Appointments', href: '/admin/appointments', path: '/admin/appointments', icon: Calendar },
     { label: 'Submissions', href: '/admin/submissions', path: '/admin/submissions', icon: FileText },
     { label: 'Reviews', href: '/admin/reviews', path: '/admin/reviews', icon: MessageSquare },
     { label: 'Gallery', href: '/admin/gallery', path: '/admin/gallery', icon: ImageIcon },

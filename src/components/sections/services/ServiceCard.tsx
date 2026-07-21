@@ -89,7 +89,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, variants }) =
           </Link>
 
           <Link
-            href={`/contact?service=${encodeURIComponent(title)}`}
+            href={`/book-appointment?service=${encodeURIComponent(slug)}`}
             className="inline-flex items-center justify-center font-bold text-[11px] px-3.5 py-2 rounded-full bg-accent text-white hover:bg-accent-hover transition-colors shadow-sm cursor-pointer shrink-0"
           >
             Book Consultation

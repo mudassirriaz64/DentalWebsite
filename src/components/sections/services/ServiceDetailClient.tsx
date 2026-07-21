@@ -26,7 +26,7 @@ export const ServiceDetailClient: React.FC<ServiceDetailClientProps> = ({ servic
     (b): b is string => typeof b === 'string' && b.trim().length > 0
   );
 
-  const contactUrl = `/contact?service=${encodeURIComponent(service.title)}`;
+  const bookingUrl = `/book-appointment?service=${encodeURIComponent(service.slug || service.id)}`;
 
   return (
     <div className="bg-bg py-12 md:py-16">
@@ -114,7 +114,7 @@ export const ServiceDetailClient: React.FC<ServiceDetailClientProps> = ({ servic
             {/* Dual CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-200/60 w-full">
               <Link
-                href={contactUrl}
+                href={bookingUrl}
                 className="inline-flex items-center justify-center font-bold transition-all duration-300 rounded-full text-sm px-8 py-3.5 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer"
               >
                 <Calendar className="w-4 h-4 mr-2" />
@@ -181,7 +181,7 @@ export const ServiceDetailClient: React.FC<ServiceDetailClientProps> = ({ servic
               </div>
 
               <Link
-                href={contactUrl}
+                href={bookingUrl}
                 className="w-full text-center font-bold transition-all duration-300 rounded-full text-xs px-6 py-3.5 bg-primary text-white hover:bg-primary-hover shadow-md cursor-pointer mt-2"
               >
                 Schedule Appointment for {service.title}

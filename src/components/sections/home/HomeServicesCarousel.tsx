@@ -169,7 +169,7 @@ export const HomeServicesCarousel: React.FC<HomeServicesCarouselProps> = ({
                 {/* Corner Action Buttons (Learn More + Book Consultation) */}
                 <div className="flex items-center gap-3 shrink-0 self-end md:self-auto">
                   <Link
-                    href={`/contact?service=${encodeURIComponent(currentService.title)}`}
+                    href={`/book-appointment?service=${encodeURIComponent(currentService.slug)}`}
                     className="inline-flex items-center justify-center font-bold text-xs px-5 py-3 rounded-full bg-accent text-white hover:bg-accent-hover transition-all shadow-md cursor-pointer"
                   >
                     Book Consultation

@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { services } from '@/data/services';
+import { getServices } from '@/data/services';
+import { Service } from '@/types';
 import { ClinicSettings } from '@/types/settings';
 import { MapPin, Phone, Mail, Clock, CheckCircle, ArrowRight, ExternalLink, Loader } from 'lucide-react';
 import { siteConfig } from '@/data/siteConfig';
@@ -15,6 +16,12 @@ interface ContactGridProps {
 export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
   const searchParams = useSearchParams();
   const paramService = searchParams?.get('service');
+
+  const [availableServices, setAvailableServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    getServices().then(setAvailableServices);
+  }, []);
 
   // Form state
   const [fullName, setFullName] = useState('');
@@ -152,7 +159,7 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
                       className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs font-semibold text-slate-700"
                     >
                       <option value="">Select Service</option>
-                      {services.map((s) => (
+                      {availableServices.map((s) => (
                         <option key={s.id} value={s.title}>
                           {s.title}
                         </option>
