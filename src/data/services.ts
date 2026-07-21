@@ -100,3 +100,8 @@ export async function getServices(): Promise<Service[]> {
   return services;
 }
 
+export async function getServiceBySlug(slug: string): Promise<Service | null> {
+  const allServices = await getServices();
+  return allServices.find((s) => s.slug === slug || s.id === slug) || null;
+}
+

@@ -78,14 +78,21 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, variants }) =
           )}
         </div>
 
-        {/* 5. BOTTOM: Consistent Learn More Link */}
-        <div className="pt-4 border-t border-slate-100 mt-auto">
+        {/* 5. BOTTOM: Actions (Learn More + Book Consultation) */}
+        <div className="pt-4 border-t border-slate-100 mt-auto flex items-center justify-between gap-3">
           <Link
             href={`/services/${slug}`}
-            className="text-primary hover:text-accent font-sans font-bold text-sm inline-flex items-center gap-1.5 transition-colors group/link"
+            className="text-primary hover:text-accent font-sans font-bold text-xs inline-flex items-center gap-1 transition-colors group/link"
           >
             <span>Learn More</span>
-            <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform duration-300" />
+          </Link>
+
+          <Link
+            href={`/contact?service=${encodeURIComponent(title)}`}
+            className="inline-flex items-center justify-center font-bold text-[11px] px-3.5 py-2 rounded-full bg-accent text-white hover:bg-accent-hover transition-colors shadow-sm cursor-pointer shrink-0"
+          >
+            Book Consultation
           </Link>
         </div>
       </div>

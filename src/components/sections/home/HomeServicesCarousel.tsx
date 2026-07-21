@@ -166,14 +166,23 @@ export const HomeServicesCarousel: React.FC<HomeServicesCarouselProps> = ({
                   )}
                 </div>
 
-                {/* Corner Link Button */}
-                <Link
-                  href={`/services#${currentService.slug}`}
-                  aria-label={`Learn more about ${currentService.title}`}
-                  className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-primary shadow-lg hover:scale-110 transition-transform duration-300 shrink-0 cursor-pointer self-end md:self-auto"
-                >
-                  <ArrowUpRight className="w-6 h-6" />
-                </Link>
+                {/* Corner Action Buttons (Learn More + Book Consultation) */}
+                <div className="flex items-center gap-3 shrink-0 self-end md:self-auto">
+                  <Link
+                    href={`/contact?service=${encodeURIComponent(currentService.title)}`}
+                    className="inline-flex items-center justify-center font-bold text-xs px-5 py-3 rounded-full bg-accent text-white hover:bg-accent-hover transition-all shadow-md cursor-pointer"
+                  >
+                    Book Consultation
+                  </Link>
+
+                  <Link
+                    href={`/services/${currentService.slug}`}
+                    aria-label={`Learn more about ${currentService.title}`}
+                    className="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-lg hover:scale-105 transition-transform duration-300 shrink-0 cursor-pointer"
+                  >
+                    <ArrowUpRight className="w-5 h-5" />
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>

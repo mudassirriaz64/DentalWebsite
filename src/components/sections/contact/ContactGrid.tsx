@@ -1,6 +1,5 @@
-'use client';
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { services } from '@/data/services';
 import { ClinicSettings } from '@/types/settings';
@@ -12,9 +11,18 @@ interface ContactGridProps {
 }
 
 export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
+  const searchParams = useSearchParams();
+  const paramService = searchParams?.get('service');
+
   // Form state
   const [fullName, setFullName] = useState('');
   const [serviceInterest, setServiceInterest] = useState('');
+
+  useEffect(() => {
+    if (paramService) {
+      setServiceInterest(paramService);
+    }
+  }, [paramService]);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
