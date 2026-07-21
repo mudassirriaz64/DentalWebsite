@@ -40,7 +40,7 @@ export async function getClinicSettings() {
       };
     }
   } catch (error) {
-    console.error('getClinicSettings error:', error);
+    console.warn('getClinicSettings fetch failed, using fallback settings:', (error as any)?.message || error);
   }
 
   // Seeding fallback to maintain layout rendering
