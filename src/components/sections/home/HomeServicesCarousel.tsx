@@ -184,29 +184,21 @@ export const HomeServicesCarousel: React.FC<HomeServicesCarouselProps> = ({
           </AnimatePresence>
         </div>
 
-        {/* Minimal Counter & Dot Indicators */}
-        <div className="flex items-center justify-between mt-6 px-2">
-          {/* Dot Indicators */}
-          <div className="flex items-center gap-2">
-            {displayServices.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  setDirection(idx > currentIndex ? 1 : -1);
-                  setCurrentIndex(idx);
-                }}
-                aria-label={`Go to slide ${idx + 1}`}
-                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  idx === currentIndex ? 'w-8 bg-accent' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
-                }`}
-              />
-            ))}
-          </div>
-
-          {/* Slide Counter (e.g., "01 / 03") */}
-          <div className="text-xs font-bold font-sans tracking-widest text-slate-500 uppercase">
-            {String(currentIndex + 1).padStart(2, '0')} / {String(displayServices.length).padStart(2, '0')}
-          </div>
+        {/* Dot Indicators */}
+        <div className="flex items-center gap-2 mt-6 px-2">
+          {displayServices.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                setDirection(idx > currentIndex ? 1 : -1);
+                setCurrentIndex(idx);
+              }}
+              aria-label={`Go to slide ${idx + 1}`}
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                idx === currentIndex ? 'w-8 bg-accent' : 'w-2.5 bg-slate-300 hover:bg-slate-400'
+              }`}
+            />
+          ))}
         </div>
       </Container>
     </section>
