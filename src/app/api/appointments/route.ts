@@ -6,6 +6,7 @@ const appointmentSchema = z.object({
   patientName: z.string().min(1, 'Patient Name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(7, 'Valid phone number is required (min 7 digits)'),
+  whatsapp: z.string().optional().nullable(),
   serviceId: z.string().min(1, 'Service selection is required'),
   doctorId: z.string().optional().nullable(),
   preferredDate: z.string().optional().nullable(),

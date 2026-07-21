@@ -5,6 +5,7 @@ export interface AppointmentInput {
   patientName: string;
   email: string;
   phone: string;
+  whatsapp?: string | null;
   serviceId: string;
   doctorId?: string | null;
   preferredDate?: string | Date | null;
@@ -20,6 +21,7 @@ export async function submitAppointment(data: AppointmentInput) {
       patientName: data.patientName,
       email: data.email,
       phone: data.phone,
+      whatsapp: data.whatsapp || data.phone,
       serviceId: data.serviceId,
       doctorId: data.doctorId && data.doctorId.trim().length > 0 ? data.doctorId : null,
       preferredDate: preferredDate && !isNaN(preferredDate.getTime()) ? preferredDate : null,

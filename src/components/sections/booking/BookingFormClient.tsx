@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Clock, CheckCircle2, User, Mail, Phone, FileText, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, CheckCircle2, User, Mail, Phone, FileText, ArrowRight, ShieldCheck, MessageSquare } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { Service, Doctor } from '@/types';
@@ -23,6 +23,8 @@ export const BookingFormClient: React.FC<BookingFormClientProps> = ({ services, 
   const [patientName, setPatientName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [whatsappSameAsPhone, setWhatsappSameAsPhone] = useState(true);
+  const [whatsapp, setWhatsapp] = useState('');
   const [serviceId, setServiceId] = useState('');
   const [doctorId, setDoctorId] = useState('');
   const [preferredDate, setPreferredDate] = useState('');
@@ -67,6 +69,11 @@ export const BookingFormClient: React.FC<BookingFormClientProps> = ({ services, 
     if (!phone.trim() || phone.replace(/\D/g, '').length < 7) {
       return setErrorMsg('Valid phone number (min 7 digits) is required.');
     }
+    if (!whatsappSameAsPhone) {
+      if (!whatsapp.trim() || whatsapp.replace(/\D/g, '').length < 7) {
+        return setErrorMsg('Valid WhatsApp number (min 7 digits) is required, or check "Same as phone".');
+      }
+    }
     if (!serviceId) return setErrorMsg('Please select a service for your appointment.');
 
     setLoading(true);
@@ -79,6 +86,7 @@ export const BookingFormClient: React.FC<BookingFormClientProps> = ({ services, 
           patientName,
           email,
           phone,
+          whatsapp: whatsappSameAsPhone ? phone : whatsapp,
           serviceId,
           doctorId: doctorId || null,
           preferredDate: preferredDate || null,
@@ -182,6 +190,8 @@ export const BookingFormClient: React.FC<BookingFormClientProps> = ({ services, 
                   setPatientName('');
                   setEmail('');
                   setPhone('');
+                  setWhatsappSameAsPhone(true);
+                  setWhatsapp('');
                   setNotes('');
                 }}
                 className="font-bold text-xs px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-hover transition-colors shadow-sm cursor-pointer"
@@ -257,6 +267,38 @@ export const BookingFormClient: React.FC<BookingFormClientProps> = ({ services, 
                     placeholder="(555) 000-0000"
                     className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
                   />
+                </div>
+
+                <div className="flex flex-col gap-1.5 sm:col-span-2">
+                  <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide flex items-center gap-1.5">
+                    <MessageSquare className="w-3.5 h-3.5 text-primary" />
+                    WhatsApp Number *
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="tel"
+                      required
+                      value={whatsappSameAsPhone ? phone : whatsapp}
+                      onChange={(e) => setWhatsapp(e.target.value)}
+                      disabled={whatsappSameAsPhone}
+                      placeholder="WhatsApp (with country code)"
+                      className={`flex-1 px-4 py-3 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs ${
+                        whatsappSameAsPhone ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-[#F4F5FB]'
+                      }`}
+                    />
+                    <label className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-600 whitespace-nowrap cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={whatsappSameAsPhone}
+                        onChange={(e) => {
+                          setWhatsappSameAsPhone(e.target.checked);
+                          if (e.target.checked) setWhatsapp('');
+                        }}
+                        className="w-3.5 h-3.5 rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+                      />
+                      Same as phone
+                    </label>
+                  </div>
                 </div>
               </div>
 

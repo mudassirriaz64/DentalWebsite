@@ -385,6 +385,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
                     name={a.patientName}
                     email={a.email}
                     phone={a.phone}
+                    whatsapp={a.whatsapp || a.phone}
                   />
                 </div>
 
