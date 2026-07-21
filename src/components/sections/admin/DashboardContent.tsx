@@ -254,7 +254,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                     <thead>
                       <tr className="bg-bg-alt text-body-text font-bold text-xs uppercase border-b border-slate-100">
                         <th className="p-4 pl-6">Doctor Name</th>
-                        <th className="p-4">App Role</th>
+                        <th className="p-4">Display Order</th>
                         <th className="p-4">Title / Specialties</th>
                         <th className="p-4">Photo Path</th>
                         <th className="p-4 pr-6 text-right">Actions</th>
@@ -272,7 +272,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                               <div className="font-bold text-dark-text">{d.name}</div>
                               <div className="text-xs text-body-text mt-0.5 max-w-xs truncate">{d.bio}</div>
                             </td>
-                            <td className="p-4 text-xs font-semibold text-primary capitalize">{d.role.replace('-', ' ')}</td>
+                            <td className="p-4 text-xs font-semibold text-primary font-mono">#{d.displayOrder || 0}</td>
                             <td className="p-4 text-xs">
                               <div className="font-semibold text-dark-text">{d.title}</div>
                               <div className="flex flex-wrap gap-1 mt-1 max-w-xs">
@@ -356,16 +356,14 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
-                      <label className="font-bold text-dark-text">Roster Role Category</label>
-                      <select
-                        value={formFields.role}
-                        onChange={(e) => setFormFields({ ...formFields, role: e.target.value })}
+                      <label className="font-bold text-dark-text">Display Order Number</label>
+                      <input
+                        type="number"
+                        value={formFields.displayOrder ?? 0}
+                        onChange={(e) => setFormFields({ ...formFields, displayOrder: parseInt(e.target.value, 10) || 0 })}
                         className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                      >
-                        <option value="visionary">Visionary (About Page)</option>
-                        <option value="department-head">Department Head</option>
-                        <option value="core-team">Core Team</option>
-                      </select>
+                        placeholder="1"
+                      />
                     </div>
                     <div className="flex flex-col gap-1.5">
                       <label className="font-bold text-dark-text">Professional Title</label>
@@ -375,7 +373,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                         value={formFields.title}
                         onChange={(e) => setFormFields({ ...formFields, title: e.target.value })}
                         className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-                        placeholder="Head of Implantology"
+                        placeholder="Implantology Specialist"
                       />
                     </div>
                   </div>

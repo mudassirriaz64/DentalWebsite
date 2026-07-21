@@ -120,8 +120,7 @@ async function main() {
   const doctorsData = [
     {
       name: 'Dr. Elena Sterling',
-      role: 'visionary',
-      title: 'Founder & Lead Cosmetic Surgeon',
+      title: 'Lead Cosmetic Surgeon',
       bio: 'Specializing in full-mouth rehabilitation and smile design with over 25 years of experience.',
       imagePath: '/images/home/doctor-elena.png',
       specialtiesJson: JSON.stringify([
@@ -130,78 +129,79 @@ async function main() {
         'Sedation Dentistry',
       ]),
       educationJson: JSON.stringify(['DDS - Columbia University', 'Fellowship - AACD']),
+      displayOrder: 1,
     },
     {
       name: 'Dr. Marcus Vance',
-      role: 'visionary',
       title: 'Chief Implantologist',
       bio: 'A pioneer in robotic-assisted dental implants and bone grafting procedures.',
       imagePath: '/images/home/doctor-marcus.png',
       specialtiesJson: JSON.stringify(['Robotic Implants', 'Bone Grafting', 'Sinus Lifts']),
       educationJson: JSON.stringify(['DDS - NYU Dentistry', 'Mastership - ICOI']),
+      displayOrder: 2,
     },
     {
       name: 'Dr. Sarah Chen',
-      role: 'visionary',
       title: 'Orthodontic Specialist',
       bio: 'Expert in invisible alignment systems and adult aesthetic orthodontics.',
       imagePath: '/images/home/doctor-sarah.png',
       specialtiesJson: JSON.stringify(['Invisalign Aligner Tech', 'Adult Aesthetic Ortho', 'Bite Corrections']),
       educationJson: JSON.stringify(['DDS - Harvard Dental', 'Residency - UCSF Ortho']),
+      displayOrder: 3,
     },
     {
       name: 'Dr. Mark Wright',
-      role: 'department-head',
-      title: 'Head of Implantology',
+      title: 'Implantology Specialist',
       bio: 'Expert in reconstructive surgery and complex implant positioning utilizing advanced 3D diagnostic guides.',
       imagePath: '/images/home/doctor-marcus.png',
       specialtiesJson: JSON.stringify(['Computer Guided Implants', '3D Bone Scanning']),
+      displayOrder: 4,
     },
     {
       name: 'Dr. Jane Cooper',
-      role: 'department-head',
-      title: 'Head of Cosmetic Dentistry',
+      title: 'Lead Cosmetic Surgeon',
       bio: 'Renowned cosmetic surgeon specializing in porcelain veneers, bonding, and full-smile designs.',
       imagePath: '/images/home/doctor-elena.png',
       specialtiesJson: JSON.stringify(['Smile Designs', 'Laser Gum Contouring']),
+      displayOrder: 5,
     },
     {
       name: 'Dr. Emily Wilson',
-      role: 'department-head',
-      title: 'Head of Orthodontics',
+      title: 'Orthodontic Specialist',
       bio: 'Leader in digital orthodontic alignments, Invisalign protocols, and biomechanical optimization.',
       imagePath: '/images/home/doctor-sarah.png',
       specialtiesJson: JSON.stringify(['Clear Aligner Therapy', 'Childhood Retention']),
+      displayOrder: 6,
     },
     {
       name: 'Dr. Theresa Webb',
-      role: 'core-team',
       title: 'Periodontist',
       bio: 'Specializing in soft tissue grafts, bone regeneration, and the treatment of periodontal diseases.',
       imagePath: '/images/home/doctor-marcus.png',
       specialtiesJson: JSON.stringify(['Periodontal Regeneration', 'Gum Grafting']),
+      displayOrder: 7,
     },
     {
       name: 'Dr. Brooklyn Simmons',
-      role: 'core-team',
       title: 'Oral Surgeon',
       bio: 'Performing wisdom teeth extractions, maxillofacial procedures, and emergency trauma operations.',
       imagePath: '/images/home/doctor-elena.png',
       specialtiesJson: JSON.stringify(['Maxillofacial Surgery', 'Wisdom Teeth Extraction']),
+      displayOrder: 8,
     },
     {
       name: 'Dr. Adelaida Smith',
-      role: 'core-team',
       title: 'Endodontist',
       bio: 'Specialist in microscopic root canal therapies, pulpal diagnostics, and biological tooth preservation.',
       imagePath: '/images/home/doctor-sarah.png',
       specialtiesJson: JSON.stringify(['Microscopic Endodontics', 'Apicoectomy']),
+      displayOrder: 9,
     },
   ];
 
   for (const d of doctorsData) {
     const existing = await prisma.doctor.findFirst({
-      where: { name: d.name, role: d.role },
+      where: { name: d.name },
     });
     if (existing) {
       await prisma.doctor.update({

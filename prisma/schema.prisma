@@ -56,12 +56,12 @@ model Service {
 model Doctor {
   id              String   @id @default(uuid())
   name            String
-  role            String
   title           String
   specialtiesJson String   @default("[]") // Serialized JSON array of strings
   bio             String
   imagePath       String
   educationJson   String   @default("[]") // Serialized JSON array of strings
+  displayOrder    Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }

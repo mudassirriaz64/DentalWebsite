@@ -1,18 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, Variants } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { getDoctorsByRole } from '@/data/doctors';
+import { getDoctors } from '@/data/doctors';
 import { Doctor } from '@/types';
 
 export const Visionaries: React.FC = () => {
-  const [visionaries, setVisionaries] = React.useState<Doctor[]>([]);
+  const [featuredDoctors, setFeaturedDoctors] = useState<Doctor[]>([]);
 
-  React.useEffect(() => {
-    getDoctorsByRole('visionary').then(setVisionaries);
+  useEffect(() => {
+    getDoctors().then((docs) => setFeaturedDoctors(docs.slice(0, 3)));
   }, []);
 
   const containerVariants: Variants = {
@@ -28,7 +30,7 @@ export const Visionaries: React.FC = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' as const },
+      transition: { duration: 0.5, ease: 'easeOut' },
     },
   };
 
@@ -38,8 +40,8 @@ export const Visionaries: React.FC = () => {
         {/* Header Block */}
         <div className="text-center flex flex-col items-center mb-16">
           <SectionHeading
-            eyebrow="Our Team"
-            title="Meet the Visionaries"
+            eyebrow="Clinical Leadership"
+            title="Meet Our Specialists"
             showDots={true}
             subtitle="Our multidisciplinary specialists bring decades of combined research and clinical excellence to cosmetic & implant medicine."
           />
@@ -51,30 +53,23 @@ export const Visionaries: React.FC = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12"
         >
-          {visionaries.map((doc, idx) => (
+          {featuredDoctors.map((doc, idx) => (
             <motion.div
-              key={idx}
+              key={doc.id || idx}
               variants={cardVariants}
               className="flex flex-col items-start text-left group"
             >
-              {/* Doctor Photo Container (480px tall, 24px radius, shadow) */}
-              <div className="relative w-full h-[480px] rounded-[24px] overflow-hidden shadow-card border border-slate-100 bg-slate-100 flex-shrink-0 focus-within:ring-2 focus-within:ring-primary">
+              {/* Doctor Photo Container */}
+              <div className="relative w-full h-[400px] sm:h-[420px] rounded-[24px] overflow-hidden shadow-card border border-slate-100 bg-slate-100 flex-shrink-0">
                 <Image
-                  src={doc.imagePath}
+                  src={doc.imagePath || '/images/home/doctor-elena.png'}
                   alt={doc.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 400px"
                   className="object-cover group-hover:scale-102 transition-transform duration-500"
                 />
-
-                {/* Hover Teal Overlay (opacity 0 -> 1) with View Profile White Pill Button */}
-                <div className="absolute inset-0 bg-primary/20 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
-                  <button className="px-6 py-2.5 bg-white text-primary font-sans font-bold text-xs uppercase tracking-wider rounded-full shadow-lg hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer">
-                    View Profile
-                  </button>
-                </div>
               </div>
 
               {/* Below Photo Contents */}
@@ -90,6 +85,15 @@ export const Visionaries: React.FC = () => {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* View Full Team CTA */}
+        <Link
+          href="/team"
+          className="inline-flex items-center gap-2 font-bold transition-all duration-300 rounded-full text-xs px-8 py-3.5 bg-primary text-white hover:bg-primary-hover shadow-md cursor-pointer"
+        >
+          <span>View Full Team</span>
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </Container>
     </section>
   );

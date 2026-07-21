@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import React from 'react';
 import TeamHero from '@/components/sections/team/TeamHero';
-import TeamHeads from '@/components/sections/team/TeamHeads';
-import CoreTeam from '@/components/sections/team/CoreTeam';
+import DoctorsGrid from '@/components/sections/team/DoctorsGrid';
 import Workflow from '@/components/sections/team/Workflow';
 import TeamFAQ from '@/components/sections/team/TeamFAQ';
 import ConsultationCTA from '@/components/sections/team/ConsultationCTA';
@@ -17,8 +16,7 @@ export default function TeamPage() {
   return (
     <>
       <TeamHero />
-      <TeamHeads />
-      <CoreTeam />
+      <DoctorsGrid />
       <Workflow />
       <TeamFAQ />
       <ConsultationCTA />

@@ -5,12 +5,12 @@ import { getSession } from '@/lib/auth';
 
 const doctorSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  role: z.string().min(1, 'Role is required'),
   title: z.string().min(1, 'Title is required'),
   bio: z.string().min(1, 'Bio is required'),
   imagePath: z.string().min(1, 'Image path is required'),
   specialties: z.array(z.string()).optional(),
   education: z.array(z.string()).optional(),
+  displayOrder: z.number().optional(),
 });
 
 type Params = Promise<{ id: string }>;
@@ -39,12 +39,12 @@ export async function PATCH(request: Request, segmentData: { params: Params }) {
       where: { id },
       data: {
         name: data.name,
-        role: data.role,
         title: data.title,
         bio: data.bio,
         imagePath: data.imagePath,
         specialtiesJson,
         educationJson,
+        displayOrder: data.displayOrder ?? 0,
       },
     });
 

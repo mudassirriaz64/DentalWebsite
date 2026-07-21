@@ -69,12 +69,12 @@ export interface TeamMember {
 export interface Doctor {
   id: string;
   name: string;
-  role: 'department-head' | 'core-team' | 'visionary';
   title: string;
   bio: string;
   imagePath: string;
   specialties?: string[];
   education?: string[];
+  displayOrder?: number;
 }
 
 export interface Testimonial {

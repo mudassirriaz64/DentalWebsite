@@ -5,12 +5,12 @@ import { getSession } from '@/lib/auth';
 
 const doctorSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  role: z.string().min(1, 'Role is required'),
   title: z.string().min(1, 'Title is required'),
   bio: z.string().min(1, 'Bio is required'),
   imagePath: z.string().min(1, 'Image path is required'),
   specialties: z.array(z.string()).optional(),
   education: z.array(z.string()).optional(),
+  displayOrder: z.number().optional(),
 });
 
 export async function GET() {
@@ -21,7 +21,7 @@ export async function GET() {
 
   try {
     const doctors = await prisma.doctor.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { displayOrder: 'asc' },
     });
     const parsedDoctors = doctors.map((d) => ({
       ...d,
@@ -56,12 +56,12 @@ export async function POST(request: Request) {
     const newDoctor = await prisma.doctor.create({
       data: {
         name: data.name,
-        role: data.role,
         title: data.title,
         bio: data.bio,
         imagePath: data.imagePath,
         specialtiesJson,
         educationJson,
+        displayOrder: data.displayOrder ?? 0,
       },
     });
 
