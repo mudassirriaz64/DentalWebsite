@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import React from 'react';
 import ServicesHero from '@/components/sections/services/ServicesHero';
 import ServicesGrid from '@/components/sections/services/ServicesGrid';
-import ServicesCTA from '@/components/sections/services/ServicesCTA';
 import { getServices } from '@/data/services';
 
 export const metadata: Metadata = {
@@ -18,7 +17,6 @@ export default async function ServicesPage() {
     <>
       <ServicesHero />
       <ServicesGrid initialServices={initialServices} />
-      <ServicesCTA />
     </>
   );
 }
