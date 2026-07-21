@@ -12,6 +12,8 @@ export const services: Service[] = [
     iconName: 'Sparkles',
     variant: 'large-image-card',
     imagePath: '/images/home/cosmetic-smile.png',
+    featured: true,
+    bullets: ['Custom Porcelain Veneers', 'Laser Teeth Whitening', 'Gum Contouring', 'Composite Bonding'],
   },
   {
     id: 'dental-implants',
@@ -24,6 +26,9 @@ export const services: Service[] = [
     iconName: 'Shield',
     variant: 'dark-teal-card',
     ctaLabel: 'Learn More',
+    imagePath: '/images/home/dental-implants.png',
+    featured: true,
+    bullets: ['Single & Full Arch Implants', '3D Computer Guided Surgery', 'Bone Grafting & Augmentation'],
   },
   {
     id: 'preventive-care',
@@ -35,6 +40,8 @@ export const services: Service[] = [
     slug: 'preventive-care',
     iconName: 'CheckSquare',
     variant: 'white-card',
+    featured: false,
+    bullets: ['Comprehensive Examination', 'Ultrasonic Hygiene Cleaning', 'Oral Cancer Screening'],
   },
   {
     id: 'orthodontics',
@@ -47,6 +54,8 @@ export const services: Service[] = [
     iconName: 'Activity',
     variant: 'white-card',
     imagePath: '/images/home/orthodontics.png',
+    featured: true,
+    bullets: ['Custom Clear Aligners', '3D Digital Simulation', 'Adult & Teen Orthodontics'],
   },
   {
     id: 'emergency-care',
@@ -59,6 +68,7 @@ export const services: Service[] = [
     iconName: 'PhoneCall',
     variant: 'accent-pink-card',
     ctaLabel: 'Learn More',
+    featured: false,
   },
 ];
 
@@ -81,6 +91,7 @@ export async function getServices(): Promise<Service[]> {
         variant: s.variant as any || undefined,
         ctaLabel: s.ctaLabel || undefined,
         bullets: JSON.parse(s.bulletsJson || '[]'),
+        featured: (s as any).featured ?? false,
       }));
     }
   } catch (error) {

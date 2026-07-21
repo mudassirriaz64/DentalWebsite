@@ -53,6 +53,7 @@ export interface Service {
   variant?: 'large-image-card' | 'dark-teal-card' | 'white-card' | 'accent-pink-card';
   ctaLabel?: string;
   bullets?: string[];
+  featured?: boolean;
 }
 
 export interface TeamMember {

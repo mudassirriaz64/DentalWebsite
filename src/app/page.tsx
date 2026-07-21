@@ -1,15 +1,18 @@
 import React from 'react';
 import Hero from '@/components/sections/home/Hero';
 import Philosophy from '@/components/sections/home/Philosophy';
-import ServicesBento from '@/components/sections/home/ServicesBento';
+import HomeServicesCarousel from '@/components/sections/home/HomeServicesCarousel';
 import StatsBar from '@/components/sections/home/StatsBar';
 import TestimonialCarousel from '@/components/sections/home/TestimonialCarousel';
 import FinalCTA from '@/components/sections/home/FinalCTA';
 import { getApprovedReviews } from '@/lib/reviews';
-import { Testimonial } from '@/types';
+import { getServices } from '@/data/services';
+import { Testimonial, Service } from '@/types';
 
 export default async function Home() {
   let mappedTestimonials: Testimonial[] = [];
+  let initialServices: Service[] = [];
+
   try {
     const dbReviews = await getApprovedReviews({ page: 1, pageSize: 6 });
     mappedTestimonials = dbReviews.map((r) => ({
@@ -24,11 +27,17 @@ export default async function Home() {
     console.warn('Database query failed for reviews on homepage:', error);
   }
 
+  try {
+    initialServices = await getServices();
+  } catch (error) {
+    console.warn('Database query failed for services on homepage:', error);
+  }
+
   return (
     <>
       <Hero />
       <Philosophy />
-      <ServicesBento />
+      <HomeServicesCarousel initialServices={initialServices.length > 0 ? initialServices : undefined} />
       <StatsBar />
       <TestimonialCarousel initialTestimonials={mappedTestimonials.length > 0 ? mappedTestimonials : undefined} />
       <FinalCTA />
