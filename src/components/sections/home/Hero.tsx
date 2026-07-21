@@ -10,7 +10,7 @@ import Container from '@/components/ui/Container';
 
 export const Hero: React.FC = () => {
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-bg">
+    <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden bg-bg">
       {/* Decorative Blur Blobs */}
       <div className="absolute top-1/4 right-10 w-72 h-72 rounded-full bg-accent/5 blur-3xl pointer-events-none -z-10 animate-pulse" />
       <div className="absolute bottom-10 left-10 w-96 h-96 rounded-full bg-primary/5 blur-3xl pointer-events-none -z-10" />

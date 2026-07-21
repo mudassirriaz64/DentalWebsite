@@ -34,10 +34,10 @@ export const Header: React.FC = () => {
     <>
       <header
         className={cn(
-          'fixed top-0 left-0 right-0 z-40 transition-all duration-300 w-full border-b border-transparent',
+          'sticky top-0 left-0 right-0 z-40 transition-all duration-300 w-full border-b',
           isScrolled
-            ? 'bg-[rgba(249,249,255,0.9)] backdrop-blur-md shadow-sm py-3 border-border/30'
-            : 'bg-transparent py-5'
+            ? 'bg-bg/95 backdrop-blur-md shadow-sm py-3 border-slate-200/60'
+            : 'bg-bg/90 backdrop-blur-md py-4 border-slate-100/60'
         )}
       >
         <Container className="flex items-center justify-between">

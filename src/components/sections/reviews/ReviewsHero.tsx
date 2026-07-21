@@ -12,7 +12,7 @@ interface ReviewsHeroProps {
 
 export const ReviewsHero: React.FC<ReviewsHeroProps> = ({ onOpenModal }) => {
   return (
-    <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 bg-bg overflow-hidden flex flex-col items-center">
+    <section className="relative pt-12 pb-16 md:pt-16 md:pb-24 bg-bg overflow-hidden flex flex-col items-center">
       {/* Glow blobs */}
       <div className="absolute top-[10%] left-[5%] w-24 h-24 rounded-full bg-primary/5 blur-2xl pointer-events-none" />
       <div className="absolute bottom-[10%] right-[5%] w-32 h-32 rounded-full bg-accent/5 blur-3xl pointer-events-none" />

@@ -8,7 +8,7 @@ import Button from '@/components/ui/Button';
 
 export const ServicesHero: React.FC = () => {
   return (
-    <section className="relative pt-36 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-bg flex flex-col justify-center items-center text-center">
+    <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden bg-bg flex flex-col justify-center items-center text-center">
       {/* Faint Overlapping Decorative Outline Squares (Teal & Crimson, 10% Opacity) */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] pointer-events-none -z-10 translate-x-12 -translate-y-12 select-none opacity-10">
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">

@@ -8,7 +8,7 @@ import Container from '@/components/ui/Container';
 
 export const AboutHero: React.FC = () => {
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden bg-bg">
+    <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden bg-bg">
       <Container className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         {/* Left Column - Text Block */}
         <motion.div
