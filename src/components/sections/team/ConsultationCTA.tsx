@@ -287,13 +287,13 @@ export const ConsultationCTA: React.FC = () => {
                     </svg>
                   </div>
                   <h3 className="font-serif font-bold text-2xl text-hero-heading-dark mb-3">
-                    Consultation Requested
+                    Consultation Request Received!
                   </h3>
                   <p className="text-sm text-body-text leading-relaxed font-sans font-normal mb-6">
-                    Thank you, <span className="font-bold text-primary">{formData.name}</span>. Our
-                    clinic coordinator will contact you at{' '}
+                    Thank you, <span className="font-bold text-primary">{formData.name}</span>. Our team
+                    will reach out to you at{' '}
                     <span className="font-semibold text-primary">{formData.phone}</span> within 24
-                    business hours to confirm your private appointment.
+                    business hours.
                   </p>
                   <button
                     onClick={() => {
