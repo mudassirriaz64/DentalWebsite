@@ -48,7 +48,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, variants }) =
       </div>
 
       {/* CARD BODY: Content Order (Title -> Description -> Bullets -> Link) */}
-      <div className="p-7 sm:p-8 flex flex-col flex-grow justify-between">
+      <div className="p-7 sm:p-8 flex flex-col flex-grow">
         <div className="flex flex-col flex-grow">
           {/* 2. Title */}
           <h3 className="font-serif font-bold text-2xl text-primary mb-3 tracking-tight">
@@ -57,7 +57,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, variants }) =
 
           {/* 3. Short Description */}
           {shortDescription && (
-            <p className="text-sm text-body-text leading-relaxed font-sans font-normal mb-5 flex-grow">
+            <p className="text-sm text-body-text leading-relaxed font-sans font-normal mb-5">
               {shortDescription}
             </p>
           )}
