@@ -50,7 +50,7 @@ export const BottomCTA: React.FC = () => {
 
             <div className="flex flex-wrap items-center gap-4">
               <Link
-                href="/contact"
+                href="/book-appointment"
                 className="inline-flex items-center justify-center font-bold transition-all duration-300 rounded-full text-xs px-8 py-3.5 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer"
               >
                 Book Now

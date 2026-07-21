@@ -4,21 +4,17 @@ import React, { useState, useEffect } from 'react';
 import {
   Calendar,
   Search,
-  Filter,
   CheckSquare,
-  Trash2,
-  Eye,
   X,
   Mail,
   Phone,
-  Clock,
-  User,
   CheckCircle,
   AlertCircle,
   XCircle,
   RefreshCw,
 } from 'lucide-react';
 import { Service, Doctor } from '@/types';
+import PatientContactInfo from '@/components/shared/PatientContactInfo';
 
 interface AppointmentsAdminContentProps {
   services: Service[];
@@ -40,7 +36,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [bulkStatus, setBulkStatus] = useState('confirmed');
 
-  // Detail Modal
+  // Detail Drawer
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
   const [detailStatus, setDetailStatus] = useState('pending');
   const [internalNote, setInternalNote] = useState('');
@@ -81,7 +77,6 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
     setDetailStatus(item.status);
     setInternalNote(item.internalNote || '');
 
-    // Auto mark as read if unread
     if (!item.isRead) {
       try {
         await fetch(`/api/admin/appointments/${item.id}`, {
@@ -175,31 +170,31 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
     switch (status) {
       case 'confirmed':
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full text-[10px]">
+          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <CheckCircle className="w-3 h-3" /> Confirmed
           </span>
         );
       case 'rescheduled':
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full text-[10px]">
+          <span className="inline-flex items-center gap-1 font-bold text-amber-700 bg-amber-50 border border-amber-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <RefreshCw className="w-3 h-3" /> Rescheduled
           </span>
         );
       case 'cancelled':
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-1 rounded-full text-[10px]">
+          <span className="inline-flex items-center gap-1 font-bold text-rose-700 bg-rose-50 border border-rose-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <XCircle className="w-3 h-3" /> Cancelled
           </span>
         );
       case 'completed':
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-blue-700 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-full text-[10px]">
+          <span className="inline-flex items-center gap-1 font-bold text-blue-700 bg-blue-50 border border-blue-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <CheckSquare className="w-3 h-3" /> Completed
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-full text-[10px]">
+          <span className="inline-flex items-center gap-1 font-bold text-slate-700 bg-slate-100 border border-slate-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <AlertCircle className="w-3 h-3 text-amber-500" /> Pending
           </span>
         );
@@ -207,11 +202,11 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
   };
 
   return (
-    <div className="p-6 md:p-8 flex flex-col gap-6 text-left font-sans max-w-7xl mx-auto w-full">
+    <div className="flex-1 flex flex-col font-sans p-6 text-sm text-slate-800">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <header className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="font-serif font-bold text-2xl md:text-3xl text-slate-900">
+          <h1 className="text-2xl font-bold font-sans tracking-tight text-slate-900">
             Appointment Bookings
           </h1>
           <p className="text-xs text-slate-500 mt-1">
@@ -221,71 +216,66 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
 
         <button
           onClick={fetchAppointments}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-sm cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           Refresh Requests
         </button>
-      </div>
+      </header>
 
-      {/* Filter Tabs & Search Bar */}
-      <div className="bg-white rounded-3xl p-5 shadow-card border border-slate-100 flex flex-col gap-4">
-        {/* Status Filter Tabs */}
-        <div className="flex flex-wrap gap-2 border-b border-slate-100 pb-4">
-          {['all', 'pending', 'confirmed', 'rescheduled', 'completed', 'cancelled'].map((st) => (
-            <button
-              key={st}
-              onClick={() => setActiveStatus(st)}
-              className={`px-4 py-2 rounded-full text-xs font-bold capitalize transition-all cursor-pointer ${
-                activeStatus === st
-                  ? 'bg-primary text-white shadow-sm'
-                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-              }`}
+      {/* Filter Panel */}
+      <div className="bg-white rounded-2xl border border-slate-100 p-4 mb-6 shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+          <form onSubmit={handleSearchSubmit} className="flex flex-1 flex-col sm:flex-row items-center gap-3 w-full">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search by name, email, phone..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <select
+              value={activeStatus}
+              onChange={(e) => setActiveStatus(e.target.value)}
+              className="w-full sm:w-36 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary font-semibold text-xs text-slate-600 cursor-pointer"
             >
-              {st}
-            </button>
-          ))}
-        </div>
+              <option value="all">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="rescheduled">Rescheduled</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
 
-        {/* Dropdowns & Search Input */}
-        <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="relative">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-            <input
-              type="text"
-              placeholder="Search by name, email, phone..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
+            <select
+              value={selectedService}
+              onChange={(e) => setSelectedService(e.target.value)}
+              className="w-full sm:w-44 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary font-semibold text-xs text-slate-600 cursor-pointer"
+            >
+              <option value="all">All Services</option>
+              {services.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.title}
+                </option>
+              ))}
+            </select>
 
-          <select
-            value={selectedService}
-            onChange={(e) => setSelectedService(e.target.value)}
-            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 cursor-pointer"
-          >
-            <option value="all">All Services</option>
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.title}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={selectedDoctor}
-            onChange={(e) => setSelectedDoctor(e.target.value)}
-            className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 cursor-pointer"
-          >
-            <option value="all">All Specialists</option>
-            {doctors.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-          </select>
-        </form>
+            <select
+              value={selectedDoctor}
+              onChange={(e) => setSelectedDoctor(e.target.value)}
+              className="w-full sm:w-44 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary font-semibold text-xs text-slate-600 cursor-pointer"
+            >
+              <option value="all">All Specialists</option>
+              {doctors.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
+          </form>
       </div>
 
       {/* Bulk Bar */}
@@ -332,155 +322,145 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
         </div>
       )}
 
-      {/* Data Table */}
-      <div className="bg-white rounded-3xl shadow-card border border-slate-100 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="bg-slate-50 border-b border-slate-100 text-slate-500 font-bold uppercase tracking-wider">
-                <th className="p-4 pl-6 w-10">
+      {/* Data Table (CSS Grid) */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col flex-1">
+        {/* Table Headings */}
+        <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
+          <div className="col-span-1 flex items-center justify-center">
+            <input
+              type="checkbox"
+              checked={
+                appointments.length > 0 && selectedIds.length === appointments.length
+              }
+              onChange={handleSelectAll}
+              className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+            />
+          </div>
+          <div className="col-span-1 text-center">Read</div>
+          <div className="col-span-3">Patient Info</div>
+          <div className="col-span-2">Requested Service</div>
+          <div className="col-span-2">Assigned Doctor</div>
+          <div className="col-span-2">Date & Time</div>
+          <div className="col-span-1 text-center">Status</div>
+        </div>
+
+        {/* Table Body */}
+        <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left font-sans">
+          {loading ? (
+            <div className="p-8 text-center text-slate-400 text-xs">
+              Loading appointments...
+            </div>
+          ) : appointments.length === 0 ? (
+            <div className="p-8 text-center text-slate-400 text-xs">
+              No appointment requests found matching filters.
+            </div>
+          ) : (
+            appointments.map((a) => (
+              <div
+                key={a.id}
+                className={`grid grid-cols-12 gap-4 px-6 py-4 items-center transition-all ${
+                  !a.isRead ? 'bg-primary-light/10 hover:bg-primary-light/20' : 'bg-white'
+                }`}
+              >
+                {/* Checkbox */}
+                <div className="col-span-1 flex items-center justify-center">
                   <input
                     type="checkbox"
-                    checked={
-                      appointments.length > 0 && selectedIds.length === appointments.length
-                    }
-                    onChange={handleSelectAll}
+                    checked={selectedIds.includes(a.id)}
+                    onChange={() => handleSelectRow(a.id)}
                     className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
                   />
-                </th>
-                <th className="p-4">Patient Info</th>
-                <th className="p-4">Requested Service</th>
-                <th className="p-4">Assigned Doctor</th>
-                <th className="p-4">Date & Time Preference</th>
-                <th className="p-4">Status</th>
-                <th className="p-4 pr-6 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {loading ? (
-                <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-400">
-                    Loading appointments...
-                  </td>
-                </tr>
-              ) : appointments.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-400">
-                    No appointment requests found matching filters.
-                  </td>
-                </tr>
-              ) : (
-                appointments.map((a) => (
-                  <tr
-                    key={a.id}
-                    className={`hover:bg-slate-50/60 transition-colors ${
-                      !a.isRead ? 'bg-amber-50/30 font-semibold' : ''
-                    }`}
-                  >
-                    <td className="p-4 pl-6">
-                      <input
-                        type="checkbox"
-                        checked={selectedIds.includes(a.id)}
-                        onChange={() => handleSelectRow(a.id)}
-                        className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
-                      />
-                    </td>
+                </div>
 
-                    <td className="p-4">
-                      <div className="font-bold text-slate-900 flex items-center gap-1.5">
-                        {!a.isRead && (
-                          <span className="w-2 h-2 rounded-full bg-accent shrink-0" title="Unread" />
-                        )}
-                        {a.patientName}
-                      </div>
-                      <div className="text-[11px] text-slate-500 mt-0.5">{a.email}</div>
-                      <div className="text-[11px] text-slate-500">{a.phone}</div>
-                    </td>
+                {/* Read dot */}
+                <div className="col-span-1 flex justify-center">
+                  {!a.isRead && (
+                    <span className="w-2.5 h-2.5 rounded-full bg-primary" title="Unread" />
+                  )}
+                </div>
 
-                    <td className="p-4 font-bold text-primary">
-                      {a.service?.title || 'Unknown Service'}
-                    </td>
+                {/* Patient Info */}
+                <div className="col-span-3 flex flex-col">
+                  <PatientContactInfo
+                    name={a.patientName}
+                    email={a.email}
+                    phone={a.phone}
+                  />
+                </div>
 
-                    <td className="p-4 text-slate-700">
-                      {a.doctor ? (
-                        <span className="font-semibold text-slate-900">{a.doctor.name}</span>
-                      ) : (
-                        <span className="text-slate-400 italic">No preference</span>
-                      )}
-                    </td>
+                {/* Service */}
+                <div className="col-span-2 font-bold text-primary text-xs">
+                  {a.service?.title || 'Unknown Service'}
+                </div>
 
-                    <td className="p-4">
-                      {a.preferredDate ? (
-                        <div className="font-semibold text-slate-800">
-                          {new Date(a.preferredDate).toLocaleDateString()}
-                        </div>
-                      ) : (
-                        <div className="text-slate-400 italic">No date specified</div>
-                      )}
-                      <div className="text-[10px] text-slate-500 mt-0.5 font-medium">
-                        {a.preferredTime || 'Any Time'}
-                      </div>
-                    </td>
+                {/* Doctor */}
+                <div className="col-span-2 text-xs">
+                  {a.doctor ? (
+                    <span className="font-semibold text-slate-900">{a.doctor.name}</span>
+                  ) : (
+                    <span className="text-slate-400 italic">No preference</span>
+                  )}
+                </div>
 
-                    <td className="p-4">{getStatusBadge(a.status)}</td>
+                {/* Date & Time */}
+                <div className="col-span-2 text-xs">
+                  {a.preferredDate ? (
+                    <div className="font-semibold text-slate-800">
+                      {new Date(a.preferredDate).toLocaleDateString()}
+                    </div>
+                  ) : (
+                    <div className="text-slate-400 italic">No date specified</div>
+                  )}
+                  <div className="text-[10px] text-slate-500 mt-0.5 font-medium">
+                    {a.preferredTime || 'Any Time'}
+                  </div>
+                </div>
 
-                    <td className="p-4 pr-6 text-right">
-                      <div className="flex justify-end gap-1">
-                        <button
-                          onClick={() => handleOpenDetail(a)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-primary cursor-pointer"
-                          title="View Details"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDeleteOne(a.id)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 cursor-pointer"
-                          title="Delete"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                {/* Status */}
+                <div className="col-span-1 text-center">
+                  {getStatusBadge(a.status)}
+                </div>
+
+                {/* Actions are available via click on the row to open detail */}
+              </div>
+            ))
+          )}
         </div>
       </div>
 
-      {/* DETAIL MODAL DRAWER */}
+      {/* DETAIL SLIDE-OVER DRAWER */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl w-full max-w-lg shadow-xl border border-slate-100 overflow-hidden flex flex-col max-h-[85vh]">
-            <header className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex justify-end text-slate-800">
+          <div className="absolute inset-0" onClick={() => setSelectedItem(null)} />
+
+          <div className="relative w-full max-w-lg bg-white h-screen flex flex-col shadow-2xl overflow-hidden animate-slide-in-right z-10 text-left">
+            <header className="p-6 border-b border-slate-100 flex justify-between items-center">
               <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                <span className="text-[9px] uppercase tracking-wider text-slate-400 font-bold block mb-1">
                   Appointment Details
                 </span>
-                <h3 className="font-bold text-lg font-sans text-slate-900">
+                <h3 className="font-bold text-lg font-sans text-slate-900 leading-tight">
                   {selectedItem.patientName}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedItem(null)}
-                className="text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="p-1.5 rounded-full text-slate-400 hover:bg-slate-50 hover:text-slate-800 cursor-pointer transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </header>
 
-            <div className="p-6 overflow-y-auto flex flex-col gap-5 text-xs">
+            <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-5 text-sm">
               <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Service</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Service</span>
                   <span className="font-bold text-primary text-sm mt-0.5 block">
                     {selectedItem.service?.title}
                   </span>
                 </div>
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Doctor</span>
+                  <span className="text-[9px] uppercase font-bold text-slate-400 block">Doctor</span>
                   <span className="font-bold text-slate-800 text-sm mt-0.5 block">
                     {selectedItem.doctor ? selectedItem.doctor.name : 'No Preference'}
                   </span>
@@ -508,21 +488,21 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
               </div>
 
               {selectedItem.notes && (
-                <div>
-                  <span className="font-bold text-slate-800 block mb-1">Patient Notes:</span>
-                  <div className="p-3 bg-slate-50 border rounded-xl text-slate-700 leading-relaxed">
+                <div className="flex flex-col gap-2">
+                  <span className="font-bold text-slate-500 text-[10px] uppercase tracking-wide">Patient Notes</span>
+                  <div className="p-4 bg-slate-50 border rounded-2xl text-xs leading-relaxed text-slate-700">
                     {selectedItem.notes}
                   </div>
                 </div>
               )}
 
               {/* Status Selector */}
-              <div className="flex flex-col gap-1.5 pt-2 border-t border-slate-100">
-                <label className="font-bold text-slate-800">Update Status</label>
+              <div className="flex flex-col gap-2 border-t border-slate-100 pt-4">
+                <label className="font-bold text-slate-500 text-[10px] uppercase tracking-wide">Update Status</label>
                 <select
                   value={detailStatus}
                   onChange={(e) => setDetailStatus(e.target.value)}
-                  className="px-4 py-2.5 bg-slate-50 border rounded-xl font-semibold text-slate-800 cursor-pointer"
+                  className="px-4 py-2.5 bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary font-semibold text-slate-800 cursor-pointer text-xs"
                 >
                   <option value="pending">Pending</option>
                   <option value="confirmed">Confirmed</option>
@@ -533,29 +513,29 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
               </div>
 
               {/* Internal Notes */}
-              <div className="flex flex-col gap-1.5">
-                <label className="font-bold text-slate-800">Internal Clinic Notes (Private)</label>
+              <div className="flex flex-col gap-2">
+                <label className="font-bold text-slate-500 text-[10px] uppercase tracking-wide">Internal Clinic Notes (Private)</label>
                 <textarea
                   rows={3}
                   value={internalNote}
                   onChange={(e) => setInternalNote(e.target.value)}
                   placeholder="Add private staff notes, appointment confirmation details..."
-                  className="px-4 py-2.5 bg-slate-50 border rounded-xl text-slate-800 resize-none"
+                  className="px-4 py-3 bg-[#F4F5FB] border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
                 />
               </div>
             </div>
 
-            <footer className="p-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+            <footer className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
               <button
                 onClick={() => setSelectedItem(null)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-200 cursor-pointer"
+                className="px-5 py-2 border rounded-full bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveDetail}
                 disabled={updating}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-primary text-white hover:bg-primary-hover cursor-pointer disabled:opacity-50"
+                className="px-6 py-2 bg-primary hover:bg-teal-950 text-white rounded-full text-xs font-bold transition shadow cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
               >
                 {updating ? 'Saving...' : 'Save Changes'}
               </button>

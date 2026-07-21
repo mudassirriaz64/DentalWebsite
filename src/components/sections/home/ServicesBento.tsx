@@ -177,7 +177,7 @@ export const ServicesBento: React.FC = () => {
                 href="/contact"
                 className="inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-sm px-6 py-3 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer text-center"
               >
-                Book Emergency Visit
+                Contact Us Now
               </Link>
             </div>
 

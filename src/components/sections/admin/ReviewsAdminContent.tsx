@@ -432,14 +432,14 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                   {rev.status === 'approved' ? (
                     <button
                       onClick={() => handleToggleFeatured(rev.id, rev.featured)}
-                      className={`p-1 rounded-full cursor-pointer transition-colors ${
+                      className={`p-1.5 rounded-full cursor-pointer transition-colors ${
                         rev.featured
                           ? 'text-[#FFB020] hover:text-amber-500'
                           : 'text-slate-200 hover:text-slate-400'
                       }`}
                       title={rev.featured ? 'Featured case' : 'Mark featured'}
                     >
-                      <Star className={`w-4.5 h-4.5 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
+                      <Star className={`w-4 h-4 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
                     </button>
                   ) : (
                     <span className="text-[10px] text-slate-300 select-none">-</span>
@@ -452,23 +452,23 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                     <>
                       <button
                         onClick={() => handleApprove(rev.id)}
-                        className="p-1 text-emerald-600 hover:bg-emerald-50 rounded cursor-pointer"
+                        className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer"
                         title="Approve Review"
                       >
-                        <Check className="w-4.5 h-4.5" />
+                        <Check className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleReject(rev.id)}
-                        className="p-1 text-rose-600 hover:bg-rose-50 rounded cursor-pointer"
+                        className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
                         title="Reject Review"
                       >
-                        <X className="w-4.5 h-4.5" />
+                        <X className="w-4 h-4" />
                       </button>
                     </>
                   )}
                   <button
                     onClick={() => handleDelete(rev.id)}
-                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded cursor-pointer"
+                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded-lg cursor-pointer"
                     title="Delete permanently"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -528,14 +528,14 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                   {rev.status === 'approved' ? (
                     <button
                       onClick={() => handleToggleFeatured(rev.id, rev.featured)}
-                      className={`p-1 rounded-full cursor-pointer transition-colors ${
+                      className={`p-1.5 rounded-full cursor-pointer transition-colors ${
                         rev.featured
                           ? 'text-[#FFB020] hover:text-amber-500'
                           : 'text-slate-200 hover:text-slate-400'
                       }`}
                       title={rev.featured ? 'Featured case' : 'Mark featured'}
                     >
-                      <Star className={`w-4.5 h-4.5 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
+                      <Star className={`w-4 h-4 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
                     </button>
                   ) : (
                     <span className="text-[10px] text-slate-300 select-none">-</span>
@@ -547,23 +547,23 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                     <>
                       <button
                         onClick={() => handleApprove(rev.id)}
-                        className="p-1 text-emerald-600 hover:bg-emerald-50 rounded cursor-pointer"
+                        className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer"
                         title="Approve Review"
                       >
-                        <Check className="w-4.5 h-4.5" />
+                        <Check className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleReject(rev.id)}
-                        className="p-1 text-rose-600 hover:bg-rose-50 rounded cursor-pointer"
+                        className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
                         title="Reject Review"
                       >
-                        <X className="w-4.5 h-4.5" />
+                        <X className="w-4 h-4" />
                       </button>
                     </>
                   )}
                   <button
                     onClick={() => handleDelete(rev.id)}
-                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded cursor-pointer"
+                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded-lg cursor-pointer"
                     title="Delete permanently"
                   >
                     <Trash2 className="w-4 h-4" />

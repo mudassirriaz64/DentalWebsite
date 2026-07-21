@@ -473,9 +473,9 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
                     {updatingId === item.id ? (
                       <Loader className="w-4 h-4 animate-spin text-slate-400" />
                     ) : item.status === 'published' ? (
-                      <CheckCircle className="w-5 h-5 text-emerald-500 fill-emerald-50" />
+                      <CheckCircle className="w-4 h-4 text-emerald-500 fill-emerald-50" />
                     ) : (
-                      <XCircle className="w-5 h-5 text-slate-300 fill-slate-50" />
+                      <XCircle className="w-4 h-4 text-slate-300 fill-slate-50" />
                     )}
                   </button>
                 </div>
@@ -487,21 +487,21 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
                       setEditingItem(item);
                       setIsDrawerOpen(true);
                     }}
-                    className="p-1 text-slate-400 hover:text-primary hover:bg-slate-100 rounded cursor-pointer"
+                    className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg cursor-pointer"
                     title="Edit Case"
                   >
                     <Edit className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDuplicate(item)}
-                    className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded cursor-pointer"
+                    className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
                     title="Duplicate Case"
                   >
                     <Copy className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleDeleteOne(item.id)}
-                    className="p-1 text-slate-400 hover:text-accent hover:bg-slate-100 rounded cursor-pointer"
+                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-100 rounded-lg cursor-pointer"
                     title="Delete Case"
                   >
                     <Trash className="w-4 h-4" />
