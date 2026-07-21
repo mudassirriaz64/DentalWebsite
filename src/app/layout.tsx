@@ -45,8 +45,8 @@ export default async function RootLayout({
   const settings = await getClinicSettings();
 
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}>
-      <body className="min-h-full flex flex-col antialiased text-foreground bg-bg font-sans">
+    <html lang="en" suppressHydrationWarning className={`${sans.variable} ${serif.variable} h-full scroll-smooth`}>
+      <body suppressHydrationWarning className="min-h-full flex flex-col antialiased text-foreground bg-bg font-sans">
         <HeaderFooterWrapper settings={settings}>{children}</HeaderFooterWrapper>
       </body>
     </html>
