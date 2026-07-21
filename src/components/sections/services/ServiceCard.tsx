@@ -1,6 +1,4 @@
-'use client';
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, Variants } from 'framer-motion';
@@ -13,11 +11,16 @@ interface ServiceCardProps {
 }
 
 export const ServiceCard: React.FC<ServiceCardProps> = ({ service, variants }) => {
-  // Defensive prop handling to ensure zero silent layout breaks
+  const defaultFallback = '/images/home/dental-tech.png';
   const title = service?.title || 'Dental Service';
   const shortDescription = service?.shortDescription || service?.description || '';
   const slug = service?.slug || service?.id || 'service';
-  const displayImage = service?.imagePath || '/images/home/dental-tech.png';
+  
+  const [imgSrc, setImgSrc] = useState(service?.imagePath || defaultFallback);
+
+  useEffect(() => {
+    setImgSrc(service?.imagePath || defaultFallback);
+  }, [service?.imagePath]);
 
   // Safely parse and filter bullets array
   const rawBullets = Array.isArray(service?.bullets) ? service.bullets : [];
@@ -33,11 +36,13 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, variants }) =
       {/* 1. TOP: Full-Width Prominent Photo Header */}
       <div className="relative w-full h-[210px] sm:h-[230px] overflow-hidden bg-slate-100 shrink-0">
         <Image
-          src={displayImage}
+          src={imgSrc}
           alt={title}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
+          onError={() => setImgSrc(defaultFallback)}
+          unoptimized={typeof imgSrc === 'string' && imgSrc.startsWith('data:')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
       </div>

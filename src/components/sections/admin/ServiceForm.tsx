@@ -66,12 +66,17 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
     handleFieldChange('bullets', updated);
   };
 
-  // Mock local image file selection
+  // Convert local image file to Data URL for instant persistent display
   const handleImageUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const simulatedUrl = `/images/home/${file.name}`;
-      handleFieldChange('imagePath', simulatedUrl);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === 'string') {
+          handleFieldChange('imagePath', reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
     }
   };
 
