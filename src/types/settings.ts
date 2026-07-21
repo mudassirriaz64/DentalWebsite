@@ -1,5 +1,5 @@
 export interface OpeningHoursEntry {
-  id: string;
+  id?: string;
   label: string;
   hours: string;
   isEmergencyNote: boolean;

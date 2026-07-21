@@ -89,8 +89,8 @@ export async function getDoctors(): Promise<Doctor[]> {
         title: doc.title,
         bio: doc.bio,
         imagePath: doc.imagePath,
-        specialties: JSON.parse(doc.specialtiesJson || '[]'),
-        education: JSON.parse(doc.educationJson || '[]'),
+        specialties: Array.isArray(doc.specialties) ? doc.specialties : [],
+        education: Array.isArray(doc.education) ? doc.education : [],
         displayOrder: doc.displayOrder,
       }));
     }

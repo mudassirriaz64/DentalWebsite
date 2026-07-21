@@ -35,7 +35,7 @@ export async function PATCH(request: Request, segmentData: { params: Params }) {
     }
 
     const data = result.data;
-    const bulletsJson = JSON.stringify(data.bullets || []);
+    const bullets = data.bullets || [];
 
     // Resolve slug collisions automatically (excluding current item)
     let baseSlug = data.slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
@@ -73,15 +73,12 @@ export async function PATCH(request: Request, segmentData: { params: Params }) {
         imagePath: data.imagePath || null,
         variant: data.variant || null,
         ctaLabel: data.ctaLabel || null,
-        bulletsJson,
+        bullets,
         featured: data.featured ?? false,
       },
     });
 
-    return NextResponse.json({
-      ...updatedService,
-      bullets: data.bullets || [],
-    });
+    return NextResponse.json(updatedService);
   } catch (error: any) {
     console.error('Update service error:', error);
     if (error.code === 'P2002') {

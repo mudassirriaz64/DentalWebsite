@@ -208,7 +208,7 @@ export async function getServices(): Promise<Service[]> {
         imagePath: service.imagePath || undefined,
         variant: service.variant as Service['variant'],
         ctaLabel: service.ctaLabel || undefined,
-        bullets: JSON.parse(service.bulletsJson || '[]'),
+        bullets: Array.isArray(service.bullets) ? service.bullets : [],
         featured: service.featured,
       }));
     }
@@ -236,7 +236,7 @@ export async function getServiceBySlug(slug: string): Promise<Service | null> {
         imagePath: dbService.imagePath || undefined,
         variant: dbService.variant as Service['variant'],
         ctaLabel: dbService.ctaLabel || undefined,
-        bullets: JSON.parse(dbService.bulletsJson || '[]'),
+        bullets: Array.isArray(dbService.bullets) ? dbService.bullets : [],
         featured: dbService.featured,
       };
     }

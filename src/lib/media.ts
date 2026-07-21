@@ -1,21 +1,48 @@
-import { GalleryImage } from '@/types/gallery';
-
 /**
- * Resolves a gallery image structure to a displayable URL string.
- * This is the single source of truth for media delivery.
- * When Cloudinary is connected later, updating this function will instantly
- * redirect all public and admin elements to the cloud delivery optimization pipeline.
+ * Universal media delivery seam.
+ * Resolves local paths, Cloudinary URLs, or Cloudinary public IDs to displayable image URLs.
  */
-export function resolveImageUrl(image: GalleryImage): string {
-  if (!image) return '';
 
-  // TODO: once Cloudinary credentials are set up:
-  // 1. Install '@cloudinary/url-gen' or use the standard delivery path:
-  //    return `https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/q_auto,f_auto,w_800/${image.publicId}`;
-  // 2. Or use a helper SDK client:
-  //    return cloudinaryClient.image(image.publicId).quality('auto').format('auto').toURL();
+export interface MediaResolvable {
+  url?: string | null;
+  publicId?: string | null;
+  [key: string]: any;
+}
 
-  return image.url; // default local folder asset resolution
+export function resolveImageUrl(
+  media?: string | MediaResolvable | null,
+  fallback: string = ''
+): string {
+  if (!media) return fallback;
+
+  let url = '';
+  let publicId = '';
+
+  if (typeof media === 'string') {
+    url = media.trim();
+  } else if (typeof media === 'object') {
+    url = (media.url || media.beforeImageUrl || media.afterImageUrl || media.mainImageUrl || '').trim();
+    publicId = (media.publicId || media.beforeImageId || media.afterImageId || media.mainImageId || '').trim();
+  }
+
+  const cloudName =
+    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ||
+    process.env.CLOUDINARY_CLOUD_NAME ||
+    'uhlykkmf';
+
+  if (publicId && cloudName) {
+    return `https://res.cloudinary.com/${cloudName}/image/upload/q_auto,f_auto/${publicId}`;
+  }
+
+  if (url && (url.startsWith('http://') || url.startsWith('https://'))) {
+    return url;
+  }
+
+  if (url) {
+    return url;
+  }
+
+  return fallback;
 }
 
 export default resolveImageUrl;

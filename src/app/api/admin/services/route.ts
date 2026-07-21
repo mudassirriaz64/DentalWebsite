@@ -26,12 +26,7 @@ export async function GET() {
     const services = await prisma.service.findMany({
       orderBy: { createdAt: 'desc' },
     });
-    // Parse bulletsJson back to array
-    const parsedServices = services.map((s) => ({
-      ...s,
-      bullets: JSON.parse(s.bulletsJson || '[]'),
-    }));
-    return NextResponse.json(parsedServices);
+    return NextResponse.json(services);
   } catch (error) {
     console.error('Fetch services error:', error);
     return NextResponse.json({ error: 'Failed to fetch services' }, { status: 500 });
@@ -53,7 +48,7 @@ export async function POST(request: Request) {
     }
 
     const data = result.data;
-    const bulletsJson = JSON.stringify(data.bullets || []);
+    const bullets = data.bullets || [];
 
     // Resolve slug collisions automatically
     let baseSlug = data.slug.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-');
@@ -87,15 +82,12 @@ export async function POST(request: Request) {
         imagePath: data.imagePath || null,
         variant: data.variant || null,
         ctaLabel: data.ctaLabel || null,
-        bulletsJson,
+        bullets,
         featured: data.featured ?? false,
       },
     });
 
-    return NextResponse.json({
-      ...newService,
-      bullets: data.bullets || [],
-    });
+    return NextResponse.json(newService);
   } catch (error: any) {
     console.error('Create service error:', error);
     if (error.code === 'P2002') {

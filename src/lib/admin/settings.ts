@@ -1,19 +1,11 @@
 import { prisma } from '../db';
 
-const SETTINGS_ID = 'clinic-settings-singleton';
-
 /**
- * Fetches the clinic settings singleton, including related opening hours list.
+ * Fetches the clinic settings singleton, including embedded opening hours list.
  */
 export async function getClinicSettingsForAdmin() {
-  return prisma.clinicSettings.findUnique({
-    where: { id: SETTINGS_ID },
-    include: {
-      openingHours: {
-        orderBy: { displayOrder: 'asc' },
-      },
-    },
-  });
+  const settings = await prisma.clinicSettings.findFirst();
+  return settings;
 }
 
 interface UpdateSettingsPayload {
@@ -32,19 +24,22 @@ interface UpdateSettingsPayload {
 }
 
 /**
- * Updates the clinic settings singleton and performs a batch replace of hours entries.
+ * Updates the clinic settings singleton and updates embedded hours entries.
  */
 export async function updateClinicSettings(payload: UpdateSettingsPayload) {
-  // Use a transaction to ensure database consistency
-  return prisma.$transaction(async (tx) => {
-    // 1. Delete all existing opening hours entries for the settings singleton
-    await tx.openingHoursEntry.deleteMany({
-      where: { clinicSettingsId: SETTINGS_ID },
-    });
+  const existing = await prisma.clinicSettings.findFirst();
 
-    // 2. Update settings details and recreate hours lists
-    return tx.clinicSettings.update({
-      where: { id: SETTINGS_ID },
+  const formattedHours = payload.openingHours.map((oh, idx) => ({
+    label: oh.label,
+    hours: oh.hours,
+    isEmergencyNote: Boolean(oh.isEmergencyNote),
+    isDimmed: Boolean(oh.isDimmed),
+    displayOrder: idx + 1,
+  }));
+
+  if (existing) {
+    return prisma.clinicSettings.update({
+      where: { id: existing.id },
       data: {
         address: payload.address,
         phone: payload.phone,
@@ -52,21 +47,20 @@ export async function updateClinicSettings(payload: UpdateSettingsPayload) {
         email: payload.email,
         emergencyPhone: payload.emergencyPhone || null,
         mapDirectionsUrl: payload.mapDirectionsUrl || null,
-        openingHours: {
-          create: payload.openingHours.map((oh, idx) => ({
-            label: oh.label,
-            hours: oh.hours,
-            isEmergencyNote: oh.isEmergencyNote,
-            isDimmed: oh.isDimmed,
-            displayOrder: idx + 1,
-          })),
-        },
-      },
-      include: {
-        openingHours: {
-          orderBy: { displayOrder: 'asc' },
-        },
+        openingHours: formattedHours,
       },
     });
+  }
+
+  return prisma.clinicSettings.create({
+    data: {
+      address: payload.address,
+      phone: payload.phone,
+      phoneNote: payload.phoneNote || null,
+      email: payload.email,
+      emergencyPhone: payload.emergencyPhone || null,
+      mapDirectionsUrl: payload.mapDirectionsUrl || null,
+      openingHours: formattedHours,
+    },
   });
 }

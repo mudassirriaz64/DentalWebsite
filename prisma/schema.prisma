@@ -1,6 +1,6 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "mongodb"
+  url      = env("MONGODB_URI")
 }
 
 generator client {
@@ -8,7 +8,7 @@ generator client {
 }
 
 model AdminUser {
-  id           String   @id @default(uuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   username     String   @unique
   passwordHash String
   createdAt    DateTime @default(now())
@@ -23,7 +23,7 @@ enum SubmissionStatus {
 }
 
 model ContactSubmission {
-  id              String           @id @default(cuid())
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
   fullName        String
   serviceInterest String
   email           String
@@ -38,7 +38,7 @@ model ContactSubmission {
 }
 
 model Service {
-  id               String        @id @default(uuid())
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
   title            String
   shortDescription String
   description      String
@@ -47,7 +47,7 @@ model Service {
   imagePath        String?
   variant          String?       // "large-image-card" | "dark-teal-card" | "white-card" | "accent-pink-card"
   ctaLabel         String?
-  bulletsJson      String        @default("[]") // Serialized JSON array of strings
+  bullets          String[]      // Native Mongo String array
   featured         Boolean       @default(false)
   appointments     Appointment[]
   createdAt        DateTime      @default(now())
@@ -55,17 +55,17 @@ model Service {
 }
 
 model Doctor {
-  id              String        @id @default(uuid())
-  name            String
-  title           String
-  specialtiesJson String        @default("[]") // Serialized JSON array of strings
-  bio             String
-  imagePath       String
-  educationJson   String        @default("[]") // Serialized JSON array of strings
-  displayOrder    Int           @default(0)
-  appointments    Appointment[]
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  title        String
+  specialties  String[]      // Native Mongo String array
+  bio          String
+  imagePath    String
+  education    String[]      // Native Mongo String array
+  displayOrder Int           @default(0)
+  appointments Appointment[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 enum AppointmentStatus {
@@ -77,14 +77,16 @@ enum AppointmentStatus {
 }
 
 model Appointment {
-  id            String            @id @default(uuid())
+  id            String            @id @default(auto()) @map("_id") @db.ObjectId
   patientName   String
   email         String
   phone         String
   whatsapp      String?
-  serviceId     String
+  serviceId     String            @db.ObjectId
+  serviceTitle  String            // Write-time snapshot field
   service       Service           @relation(fields: [serviceId], references: [id])
-  doctorId      String?
+  doctorId      String?           @db.ObjectId
+  doctorName    String?           // Write-time snapshot field
   doctor        Doctor?           @relation(fields: [doctorId], references: [id])
   preferredDate DateTime?
   preferredTime String?
@@ -103,7 +105,7 @@ enum ReviewStatus {
 }
 
 model Review {
-  id                String       @id @default(cuid())
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
   patientName       String
   patientAvatarUrl  String?
   rating            Int          // 1-5
@@ -120,7 +122,7 @@ model Review {
 }
 
 model SiteStat {
-  id           String   @id @default(cuid())
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   page         String   // e.g. "reviews"
   label        String   // "Five Star Reviews"
   value        String   // "2,500+"
@@ -142,7 +144,7 @@ enum ContentStatus {
 }
 
 model GalleryItem {
-  id                String         @id @default(cuid())
+  id                String         @id @default(auto()) @map("_id") @db.ObjectId
   variant           GalleryVariant
   title             String
   description       String
@@ -165,19 +167,16 @@ model GalleryItem {
   updatedAt         DateTime       @updatedAt
 }
 
-model OpeningHoursEntry {
-  id                String         @id @default(cuid())
-  label             String
-  hours             String
-  isEmergencyNote   Boolean        @default(false)
-  isDimmed          Boolean        @default(false)
-  displayOrder      Int            @default(0)
-  clinicSettingsId  String
-  clinicSettings    ClinicSettings @relation(fields: [clinicSettingsId], references: [id], onDelete: Cascade)
+type OpeningHoursEntry {
+  label           String
+  hours           String
+  isEmergencyNote Boolean @default(false)
+  isDimmed        Boolean @default(false)
+  displayOrder    Int     @default(0)
 }
 
 model ClinicSettings {
-  id               String              @id @default(cuid())
+  id               String              @id @default(auto()) @map("_id") @db.ObjectId
   address          String
   phone            String
   phoneNote        String?
@@ -190,10 +189,10 @@ model ClinicSettings {
 }
 
 model FounderSpotlight {
-  id         String   @id @default(cuid())
-  name       String
-  title      String
-  imagePath  String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  title     String
+  imagePath String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

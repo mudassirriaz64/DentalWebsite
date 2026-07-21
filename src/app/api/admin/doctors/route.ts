@@ -23,12 +23,7 @@ export async function GET() {
     const doctors = await prisma.doctor.findMany({
       orderBy: { displayOrder: 'asc' },
     });
-    const parsedDoctors = doctors.map((d) => ({
-      ...d,
-      specialties: JSON.parse(d.specialtiesJson || '[]'),
-      education: JSON.parse(d.educationJson || '[]'),
-    }));
-    return NextResponse.json(parsedDoctors);
+    return NextResponse.json(doctors);
   } catch (error) {
     console.error('Fetch doctors error:', error);
     return NextResponse.json({ error: 'Failed to fetch doctors' }, { status: 500 });
@@ -50,8 +45,8 @@ export async function POST(request: Request) {
     }
 
     const data = result.data;
-    const specialtiesJson = JSON.stringify(data.specialties || []);
-    const educationJson = JSON.stringify(data.education || []);
+    const specialties = data.specialties || [];
+    const education = data.education || [];
 
     const newDoctor = await prisma.doctor.create({
       data: {
@@ -59,17 +54,13 @@ export async function POST(request: Request) {
         title: data.title,
         bio: data.bio,
         imagePath: data.imagePath,
-        specialtiesJson,
-        educationJson,
+        specialties,
+        education,
         displayOrder: data.displayOrder ?? 0,
       },
     });
 
-    return NextResponse.json({
-      ...newDoctor,
-      specialties: data.specialties || [],
-      education: data.education || [],
-    });
+    return NextResponse.json(newDoctor);
   } catch (error) {
     console.error('Create doctor error:', error);
     return NextResponse.json({ error: 'Failed to create doctor' }, { status: 500 });

@@ -25,13 +25,7 @@ export async function submitContactForm(data: ContactFormInput) {
  */
 export async function getClinicSettings() {
   try {
-    const settings = await prisma.clinicSettings.findFirst({
-      include: {
-        openingHours: {
-          orderBy: { displayOrder: 'asc' },
-        },
-      },
-    });
+    const settings = await prisma.clinicSettings.findFirst();
 
     if (settings) {
       return {

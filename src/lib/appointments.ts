@@ -16,6 +16,21 @@ export interface AppointmentInput {
 export async function submitAppointment(data: AppointmentInput) {
   const preferredDate = data.preferredDate ? new Date(data.preferredDate) : null;
 
+  // Look up Service for write-time snapshot
+  const service = await prisma.service.findUnique({
+    where: { id: data.serviceId },
+  });
+
+  const doctorIdClean = data.doctorId && data.doctorId.trim().length > 0 ? data.doctorId : null;
+  let doctorNameSnapshot: string | null = null;
+
+  if (doctorIdClean) {
+    const doctor = await prisma.doctor.findUnique({
+      where: { id: doctorIdClean },
+    });
+    doctorNameSnapshot = doctor ? doctor.name : null;
+  }
+
   return prisma.appointment.create({
     data: {
       patientName: data.patientName,
@@ -23,7 +38,9 @@ export async function submitAppointment(data: AppointmentInput) {
       phone: data.phone,
       whatsapp: data.whatsapp || data.phone,
       serviceId: data.serviceId,
-      doctorId: data.doctorId && data.doctorId.trim().length > 0 ? data.doctorId : null,
+      serviceTitle: service ? service.title : 'General Consultation',
+      doctorId: doctorIdClean,
+      doctorName: doctorNameSnapshot,
       preferredDate: preferredDate && !isNaN(preferredDate.getTime()) ? preferredDate : null,
       preferredTime: data.preferredTime || null,
       notes: data.notes || null,

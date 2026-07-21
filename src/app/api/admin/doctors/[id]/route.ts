@@ -32,8 +32,8 @@ export async function PATCH(request: Request, segmentData: { params: Params }) {
     }
 
     const data = result.data;
-    const specialtiesJson = JSON.stringify(data.specialties || []);
-    const educationJson = JSON.stringify(data.education || []);
+    const specialties = data.specialties || [];
+    const education = data.education || [];
 
     const updatedDoctor = await prisma.doctor.update({
       where: { id },
@@ -42,17 +42,13 @@ export async function PATCH(request: Request, segmentData: { params: Params }) {
         title: data.title,
         bio: data.bio,
         imagePath: data.imagePath,
-        specialtiesJson,
-        educationJson,
+        specialties,
+        education,
         displayOrder: data.displayOrder ?? 0,
       },
     });
 
-    return NextResponse.json({
-      ...updatedDoctor,
-      specialties: data.specialties || [],
-      education: data.education || [],
-    });
+    return NextResponse.json(updatedDoctor);
   } catch (error) {
     console.error('Update doctor error:', error);
     return NextResponse.json({ error: 'Failed to update doctor' }, { status: 500 });
