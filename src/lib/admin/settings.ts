@@ -14,6 +14,7 @@ interface UpdateSettingsPayload {
   phoneNote?: string;
   email: string;
   emergencyPhone?: string;
+  mapImageUrl?: string | null;
   mapDirectionsUrl?: string;
   openingHours: {
     label: string;
@@ -46,6 +47,7 @@ export async function updateClinicSettings(payload: UpdateSettingsPayload) {
         phoneNote: payload.phoneNote || null,
         email: payload.email,
         emergencyPhone: payload.emergencyPhone || null,
+        mapImageUrl: payload.mapImageUrl || null,
         mapDirectionsUrl: payload.mapDirectionsUrl || null,
         openingHours: formattedHours,
       },
@@ -59,6 +61,7 @@ export async function updateClinicSettings(payload: UpdateSettingsPayload) {
       phoneNote: payload.phoneNote || null,
       email: payload.email,
       emergencyPhone: payload.emergencyPhone || null,
+      mapImageUrl: payload.mapImageUrl || null,
       mapDirectionsUrl: payload.mapDirectionsUrl || null,
       openingHours: formattedHours,
     },

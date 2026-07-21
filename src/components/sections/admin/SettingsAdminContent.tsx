@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Save, Plus, Trash2, HelpCircle, Loader, CheckCircle, AlertCircle } from 'lucide-react';
 import { ClinicSettings, OpeningHoursEntry } from '@/types/settings';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 
 interface SettingsAdminContentProps {
   initialSettings: ClinicSettings;
@@ -23,6 +24,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
   const [phoneNote, setPhoneNote] = useState(initialSettings.phoneNote || '');
   const [email, setEmail] = useState(initialSettings.email);
   const [emergencyPhone, setEmergencyPhone] = useState(initialSettings.emergencyPhone || '');
+  const [mapImageUrl, setMapImageUrl] = useState(initialSettings.mapImageUrl || '');
   const [mapDirectionsUrl, setMapDirectionsUrl] = useState(initialSettings.mapDirectionsUrl || '');
 
   // Repeatable rows for hours
@@ -99,6 +101,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
           phoneNote: phoneNote.trim() || undefined,
           email,
           emergencyPhone: emergencyPhone.trim() || undefined,
+          mapImageUrl: mapImageUrl.trim() || undefined,
           mapDirectionsUrl: mapDirectionsUrl.trim() || undefined,
           openingHours: hoursRows.map((row) => ({
             label: row.label,
@@ -122,6 +125,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
       setPhoneNote(data.phoneNote || '');
       setEmail(data.email);
       setEmergencyPhone(data.emergencyPhone || '');
+      setMapImageUrl(data.mapImageUrl || '');
       setMapDirectionsUrl(data.mapDirectionsUrl || '');
       setHoursRows(
         (data.openingHours || []).map((oh: OpeningHoursEntry) => ({
@@ -246,6 +250,14 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
               className="px-4 py-2.5 bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs"
             />
           </div>
+
+          {/* Map Image Upload */}
+          <ImageUploadField
+            label="Clinic Map Image / Building Location Photo"
+            folder="clinic-settings"
+            value={mapImageUrl}
+            onChange={(val) => setMapImageUrl(val?.url || '')}
+          />
 
           {/* Map Directions URL */}
           <div className="flex flex-col gap-1.5">

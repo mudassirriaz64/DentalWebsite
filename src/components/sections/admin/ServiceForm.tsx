@@ -2,6 +2,7 @@
 
 import React, { useRef } from 'react';
 import { Plus, Trash2, Upload, Star } from 'lucide-react';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 
 interface ServiceFormProps {
   fields: {
@@ -132,50 +133,12 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
       </div>
 
       {/* 4. Image (Optional Upload / Path) */}
-      <div className="flex flex-col gap-2">
-        <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
-          Service Photo / Preview Image (Optional)
-        </label>
-        <div className="flex items-center gap-4">
-          <div className="relative w-24 h-16 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
-            {fields.imagePath ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={fields.imagePath}
-                alt="Service preview"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <Upload className="w-5 h-5 text-slate-300" />
-            )}
-          </div>
-          <div className="flex flex-col gap-2 flex-grow">
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-dark-text font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
-              >
-                <Upload className="w-3.5 h-3.5" /> Upload Image File
-              </button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*"
-                onChange={handleImageUploadChange}
-                className="hidden"
-              />
-            </div>
-            <input
-              type="text"
-              value={fields.imagePath || ''}
-              onChange={(e) => handleFieldChange('imagePath', e.target.value)}
-              placeholder="/images/home/service-photo.png (Optional manual path)"
-              className="px-3 py-2 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-[10px] font-mono"
-            />
-          </div>
-        </div>
-      </div>
+      <ImageUploadField
+        label="Service Photo / Preview Image (Optional)"
+        folder="services"
+        value={fields.imagePath || ''}
+        onChange={(val) => handleFieldChange('imagePath', val?.url || null)}
+      />
 
       {/* 5. Bullets (Repeatable List UI) */}
       <div className="flex flex-col gap-2">

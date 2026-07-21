@@ -9,6 +9,7 @@ const updateSettingsSchema = z.object({
   phoneNote: z.string().max(50).optional(),
   email: z.string().email('Please enter a valid email address').max(100),
   emergencyPhone: z.string().max(30).optional(),
+  mapImageUrl: z.string().optional().or(z.literal('')).nullable(),
   mapDirectionsUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
   openingHours: z.array(
     z.object({

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Save, Loader } from 'lucide-react';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 
 export default function FounderSpotlightForm() {
   const [name, setName] = useState('');
@@ -106,22 +107,12 @@ export default function FounderSpotlightForm() {
             />
           </div>
 
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
-              Image Path *
-            </label>
-            <input
-              type="text"
-              required
-              value={imagePath}
-              onChange={(e) => setImagePath(e.target.value)}
-              placeholder="/images/team/doctor-name.png"
-              className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
-            />
-            <p className="text-[10px] text-slate-400 mt-0.5">
-              Paste the image path (e.g. /images/team/doctor-name.png). Cloudinary migration coming later.
-            </p>
-          </div>
+          <ImageUploadField
+            label="Founder Spotlight Photo"
+            folder="founder"
+            value={imagePath}
+            onChange={(val) => setImagePath(val?.url || '')}
+          />
         </div>
 
         <button

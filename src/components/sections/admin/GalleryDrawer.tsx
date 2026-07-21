@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Upload, Plus, AlertCircle, ShieldAlert } from 'lucide-react';
 import { GalleryItem, GalleryCategory, GALLERY_CATEGORIES } from '@/types/gallery';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 
 interface GalleryDrawerProps {
   isOpen: boolean;
@@ -246,40 +247,18 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
             {variant === 'comparison' ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Before Image Slot */}
-                <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-dashed border-slate-200 rounded-2xl relative">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase">
-                    Before Smile Profile
-                  </span>
-                  {beforeImage.url ? (
-                    <div className="relative w-full h-32 rounded-xl overflow-hidden border">
-                      <img src={beforeImage.url} className="object-cover w-full h-full" alt="" />
-                      <button
-                        type="button"
-                        onClick={() => setBeforeImage({ publicId: '', url: '', altText: '' })}
-                        className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 text-xs cursor-pointer hover:bg-black"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center h-32 bg-white rounded-xl border cursor-pointer hover:bg-slate-50 text-slate-400">
-                      <Upload className="w-5 h-5 mb-1.5" />
-                      <span className="text-xs">Browse/Drop</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => handleLocalImageSelect('before', e)}
-                      />
-                    </label>
-                  )}
-                  {/* Manual path entry */}
-                  <input
-                    type="text"
-                    value={beforeImage.url}
-                    onChange={(e) => handleManualPathInput('before', e.target.value)}
-                    placeholder="Or enter path e.g. /images/home/about-hero.png"
-                    className="w-full text-[10px] px-3 py-1.5 rounded border bg-white focus:outline-none"
+                <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-slate-200 rounded-2xl relative">
+                  <ImageUploadField
+                    label="Before Smile Profile"
+                    folder="gallery"
+                    value={beforeImage}
+                    onChange={(val) =>
+                      setBeforeImage({
+                        publicId: val?.publicId || '',
+                        url: val?.url || '',
+                        altText: beforeImage.altText,
+                      })
+                    }
                   />
                   {/* Required alt text */}
                   <input
@@ -298,40 +277,18 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
                 </div>
 
                 {/* After Image Slot */}
-                <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-dashed border-slate-200 rounded-2xl relative">
-                  <span className="text-[10px] font-bold text-slate-500 uppercase">
-                    After Smile Profile
-                  </span>
-                  {afterImage.url ? (
-                    <div className="relative w-full h-32 rounded-xl overflow-hidden border">
-                      <img src={afterImage.url} className="object-cover w-full h-full" alt="" />
-                      <button
-                        type="button"
-                        onClick={() => setAfterImage({ publicId: '', url: '', altText: '' })}
-                        className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 text-xs cursor-pointer hover:bg-black"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="flex flex-col items-center justify-center h-32 bg-white rounded-xl border cursor-pointer hover:bg-slate-50 text-slate-400">
-                      <Upload className="w-5 h-5 mb-1.5" />
-                      <span className="text-xs">Browse/Drop</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={(e) => handleLocalImageSelect('after', e)}
-                      />
-                    </label>
-                  )}
-                  {/* Manual path entry */}
-                  <input
-                    type="text"
-                    value={afterImage.url}
-                    onChange={(e) => handleManualPathInput('after', e.target.value)}
-                    placeholder="Or enter path e.g. /images/home/cosmetic-smile.png"
-                    className="w-full text-[10px] px-3 py-1.5 rounded border bg-white focus:outline-none"
+                <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-slate-200 rounded-2xl relative">
+                  <ImageUploadField
+                    label="After Smile Profile"
+                    folder="gallery"
+                    value={afterImage}
+                    onChange={(val) =>
+                      setAfterImage({
+                        publicId: val?.publicId || '',
+                        url: val?.url || '',
+                        altText: afterImage.altText,
+                      })
+                    }
                   />
                   {/* Required alt text */}
                   <input
@@ -351,38 +308,18 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
               </div>
             ) : (
               /* B. SINGLE IMAGE SLOT FOR OTHERS */
-              <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-dashed border-slate-200 rounded-2xl relative">
-                <span className="text-[10px] font-bold text-slate-500 uppercase">Main Case photo</span>
-                {mainImage.url ? (
-                  <div className="relative w-2/3 h-36 rounded-xl overflow-hidden border mx-auto">
-                    <img src={mainImage.url} className="object-cover w-full h-full" alt="" />
-                    <button
-                      type="button"
-                      onClick={() => setMainImage({ publicId: '', url: '', altText: '' })}
-                      className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 text-xs cursor-pointer hover:bg-black"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ) : (
-                  <label className="flex flex-col items-center justify-center h-36 bg-white rounded-xl border cursor-pointer hover:bg-slate-50 text-slate-400 max-w-sm mx-auto w-full">
-                    <Upload className="w-5 h-5 mb-1.5" />
-                    <span className="text-xs">Browse / Drag file here</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleLocalImageSelect('main', e)}
-                    />
-                  </label>
-                )}
-                {/* Manual path entry */}
-                <input
-                  type="text"
-                  value={mainImage.url}
-                  onChange={(e) => handleManualPathInput('main', e.target.value)}
-                  placeholder="Or enter path e.g. /images/home/orthodontics.png"
-                  className="w-full text-[10px] px-3 py-1.5 rounded border bg-white focus:outline-none max-w-md mx-auto"
+              <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-slate-200 rounded-2xl relative">
+                <ImageUploadField
+                  label="Main Case Photo"
+                  folder="gallery"
+                  value={mainImage}
+                  onChange={(val) =>
+                    setMainImage({
+                      publicId: val?.publicId || '',
+                      url: val?.url || '',
+                      altText: mainImage.altText,
+                    })
+                  }
                 />
                 {/* Required alt text */}
                 <input
@@ -390,11 +327,11 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
                   required
                   value={mainImage.altText}
                   onChange={(e) => setMainImage({ ...mainImage, altText: e.target.value })}
-                  placeholder="Required Alt text for accessibility (min 10 chars)"
-                  className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none max-w-md mx-auto"
+                  placeholder="Required Alt text (min 10 chars)"
+                  className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none"
                 />
                 {mainImage.altText.trim().length < 10 && mainImage.altText.trim().length > 0 && (
-                  <span className="text-[9px] text-accent font-semibold text-center">
+                  <span className="text-[9px] text-accent font-semibold">
                     Need {10 - mainImage.altText.trim().length} more characters.
                   </span>
                 )}

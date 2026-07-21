@@ -12,6 +12,7 @@ import {
 
 import ServiceForm from './ServiceForm';
 import FounderSpotlightForm from './FounderSpotlightForm';
+import ImageUploadField from '@/components/admin/ImageUploadField';
 
 interface DashboardContentProps {
   username: string;
@@ -462,16 +463,12 @@ export default function DashboardContent({ username: _username }: DashboardConte
                       className="px-4 py-2.5 bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs resize-none"
                     />
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Photo Asset Path</label>
-                    <input
-                      type="text"
-                      required
-                      value={formFields.imagePath}
-                      onChange={(e) => setFormFields({ ...formFields, imagePath: e.target.value })}
-                      className="px-4 py-2.5 bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs"
-                    />
-                  </div>
+                  <ImageUploadField
+                    label="Doctor Headshot / Photo Asset"
+                    folder="doctors"
+                    value={formFields.imagePath || ''}
+                    onChange={(val) => setFormFields({ ...formFields, imagePath: val?.url || '' })}
+                  />
                   <div className="flex flex-col gap-1.5">
                     <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Specialties list (comma separated)</label>
                     <input
