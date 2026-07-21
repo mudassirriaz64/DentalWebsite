@@ -184,16 +184,15 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                     <thead>
                       <tr className="bg-bg-alt text-body-text font-bold text-xs uppercase border-b border-slate-100">
                         <th className="p-4 pl-6">Service Title</th>
-                        <th className="p-4">Slug</th>
-                        <th className="p-4">Icon & Variant</th>
-                        <th className="p-4">Bullets</th>
+                        <th className="p-4">Homepage Featured</th>
+                        <th className="p-4">Procedure Highlights</th>
                         <th className="p-4 pr-6 text-right">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-50">
                       {services.length === 0 ? (
                         <tr>
-                          <td colSpan={5} className="p-6 text-center text-body-text">No services found.</td>
+                          <td colSpan={4} className="p-6 text-center text-body-text">No services found.</td>
                         </tr>
                       ) : (
                         services.map((s) => (
@@ -204,10 +203,14 @@ export default function DashboardContent({ username }: DashboardContentProps) {
                                 {s.shortDescription}
                               </div>
                             </td>
-                            <td className="p-4 text-xs font-mono text-slate-600">{s.slug}</td>
-                            <td className="p-4 text-xs text-body-text">
-                              <div>Icon: <span className="font-semibold text-primary">{s.iconName}</span></div>
-                              <div className="mt-0.5">Card: <span className="font-semibold">{s.variant || 'Default'}</span></div>
+                            <td className="p-4 text-xs">
+                              {s.featured ? (
+                                <span className="inline-flex items-center gap-1 font-semibold text-accent bg-accent-soft px-2.5 py-1 rounded-full text-[11px]">
+                                  ★ Featured
+                                </span>
+                              ) : (
+                                <span className="text-slate-400 font-normal">Standard</span>
+                              )}
                             </td>
                             <td className="p-4 text-xs">
                               <div className="flex flex-wrap gap-1 max-w-xs">
