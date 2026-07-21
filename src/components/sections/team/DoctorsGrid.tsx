@@ -94,10 +94,10 @@ export const DoctorsGrid: React.FC = () => {
               {/* Action Link to Consultation */}
               <div className="pt-4 border-t border-slate-100 mt-auto">
                 <Link
-                  href={`/contact?doctor=${encodeURIComponent(doc.name)}`}
+                  href={`/book-appointment?doctor=${encodeURIComponent(doc.id)}`}
                   className="text-primary hover:text-accent font-sans font-bold text-xs inline-flex items-center gap-1.5 transition-colors group/link"
                 >
-                  <span>Book Consultation with {doc.name.split(' ')[1] || doc.name}</span>
+                  <span>Book Appointment with {doc.name.split(' ')[1] || doc.name}</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform duration-300" />
                 </Link>
               </div>

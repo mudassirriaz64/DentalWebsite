@@ -118,7 +118,7 @@ export const ServiceDetailClient: React.FC<ServiceDetailClientProps> = ({ servic
                 className="inline-flex items-center justify-center font-bold transition-all duration-300 rounded-full text-sm px-8 py-3.5 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer"
               >
                 <Calendar className="w-4 h-4 mr-2" />
-                Book Consultation
+                Book Appointment
               </Link>
               <Link
                 href="/services"

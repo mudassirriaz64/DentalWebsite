@@ -58,10 +58,10 @@ export const ServicesHero: React.FC = () => {
           className="flex flex-wrap items-center justify-center gap-4 w-full sm:w-auto font-sans"
         >
           <Link
-            href="/contact"
+            href="/book-appointment"
             className="inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-sm px-8 py-3.5 bg-primary text-white hover:bg-primary-hover btn-diagonal-stripe shadow-lg cursor-pointer"
           >
-            Book Consultation
+            Book Appointment
           </Link>
           <a
             href="#services-list"

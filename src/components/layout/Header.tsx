@@ -87,10 +87,10 @@ export const Header: React.FC = () => {
             </a>
 
             <Link
-              href="/contact"
+              href="/book-appointment"
               className="hidden md:inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-xs px-5 py-2.5 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer"
             >
-              Book Consultation
+              Book Appointment
             </Link>
 
             {/* Mobile Menu Toggle */}

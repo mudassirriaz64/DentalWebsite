@@ -130,11 +130,11 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, links }
             {/* CTA Button Footer */}
             <div className="p-6 border-t border-slate-100 bg-slate-50 flex flex-col">
               <Link
-                href="/contact"
+                href="/book-appointment"
                 onClick={onClose}
                 className="w-full inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-sm px-6 py-3 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer text-center"
               >
-                Book Consultation
+                Book Appointment
               </Link>
             </div>
           </motion.div>
