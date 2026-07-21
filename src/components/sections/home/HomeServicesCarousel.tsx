@@ -138,12 +138,7 @@ export const HomeServicesCarousel: React.FC<HomeServicesCarouselProps> = ({
               {/* Dark Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-primary/95 via-primary/50 to-transparent z-10 pointer-events-none" />
 
-              {/* Top-left Featured Badge */}
-              <div className="absolute top-6 left-6 z-20">
-                <span className="bg-accent text-white font-sans font-bold text-[10px] tracking-wider uppercase px-3.5 py-1.5 rounded-full shadow-sm">
-                  Featured Service
-                </span>
-              </div>
+
 
               {/* Bottom Card Content */}
               <div className="relative z-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 w-full">
