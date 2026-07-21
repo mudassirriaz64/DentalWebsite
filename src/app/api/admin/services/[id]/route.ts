@@ -13,6 +13,7 @@ const serviceSchema = z.object({
   variant: z.string().nullable().optional(),
   ctaLabel: z.string().nullable().optional(),
   bullets: z.array(z.string()).optional(),
+  featured: z.boolean().optional(),
 });
 
 type Params = Promise<{ id: string }>;
@@ -73,6 +74,7 @@ export async function PATCH(request: Request, segmentData: { params: Params }) {
         variant: data.variant || null,
         ctaLabel: data.ctaLabel || null,
         bulletsJson,
+        featured: data.featured ?? false,
       },
     });
 

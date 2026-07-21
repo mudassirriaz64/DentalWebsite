@@ -94,7 +94,7 @@ export default function DashboardContent({ username }: DashboardContentProps) {
     setEditingItem(null);
     setErrorMessage('');
     if (activeTab === 'services') {
-      setFormFields({ title: '', shortDescription: '', description: '', slug: '', iconName: 'Sparkles', variant: 'white-card', bullets: [''] });
+      setFormFields({ title: '', shortDescription: '', description: '', slug: '', iconName: 'Sparkles', imagePath: '', bullets: [''], featured: false });
     } else if (activeTab === 'doctors') {
       setFormFields({ name: '', role: 'core-team', title: '', bio: '', imagePath: '/images/home/doctor-elena.png', specialties: [''], education: [''] });
     }

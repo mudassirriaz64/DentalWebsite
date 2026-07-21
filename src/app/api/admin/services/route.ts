@@ -13,6 +13,7 @@ const serviceSchema = z.object({
   variant: z.string().nullable().optional(),
   ctaLabel: z.string().nullable().optional(),
   bullets: z.array(z.string()).optional(),
+  featured: z.boolean().optional(),
 });
 
 export async function GET() {
@@ -87,6 +88,7 @@ export async function POST(request: Request) {
         variant: data.variant || null,
         ctaLabel: data.ctaLabel || null,
         bulletsJson,
+        featured: data.featured ?? false,
       },
     });
 
