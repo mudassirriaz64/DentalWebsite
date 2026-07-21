@@ -11,6 +11,7 @@ export interface FooterLink {
 export interface FooterSection {
   title: string;
   links: FooterLink[];
+  viewAll?: { label: string; href: string };
 }
 
 export interface SocialLinks {

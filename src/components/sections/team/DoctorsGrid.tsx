@@ -7,14 +7,16 @@ import { motion, Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { getDoctors } from '@/data/doctors';
 import { Doctor } from '@/types';
 
 export const DoctorsGrid: React.FC = () => {
   const [allDoctors, setAllDoctors] = useState<Doctor[]>([]);
 
   useEffect(() => {
-    getDoctors().then(setAllDoctors);
+    fetch('/api/doctors')
+      .then((res) => res.json())
+      .then(setAllDoctors)
+      .catch(() => {});
   }, []);
 
   const containerVariants: Variants = {

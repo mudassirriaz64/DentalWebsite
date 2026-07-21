@@ -14,9 +14,12 @@ export const footerLinks: FooterSection[] = [
   },
   {
     title: 'Services',
-    links: services.map((s) => ({
-      label: s.title,
-      href: `/services#${s.id}`,
-    })),
+    links: services
+      .filter((s) => s.featured)
+      .map((s) => ({
+        label: s.title,
+        href: `/services#${s.id}`,
+      })),
+    viewAll: { label: 'View Services →', href: '/services' },
   },
 ];

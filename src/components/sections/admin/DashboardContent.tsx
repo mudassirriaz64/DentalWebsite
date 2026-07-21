@@ -83,7 +83,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
     if (activeTab === 'services') {
       setFormFields({ title: '', shortDescription: '', description: '', slug: '', iconName: 'Sparkles', imagePath: '', bullets: [''], featured: false });
     } else if (activeTab === 'doctors') {
-      setFormFields({ name: '', role: 'core-team', title: '', bio: '', imagePath: '/images/home/doctor-elena.png', specialties: [''], education: [''] });
+      setFormFields({ name: 'Dr. ', role: 'core-team', title: '', bio: '', imagePath: '/images/home/doctor-elena.png', specialties: [''], education: [''] });
     }
     setIsFormOpen(true);
   };

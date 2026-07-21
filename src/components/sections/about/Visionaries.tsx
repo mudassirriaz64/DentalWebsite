@@ -7,14 +7,16 @@ import { motion, Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
-import { getDoctors } from '@/data/doctors';
 import { Doctor } from '@/types';
 
 export const Visionaries: React.FC = () => {
   const [featuredDoctors, setFeaturedDoctors] = useState<Doctor[]>([]);
 
   useEffect(() => {
-    getDoctors().then((docs) => setFeaturedDoctors(docs.slice(0, 3)));
+    fetch('/api/doctors')
+      .then((res) => res.json())
+      .then((docs) => setFeaturedDoctors(docs.slice(0, 3)))
+      .catch(() => {});
   }, []);
 
   const containerVariants: Variants = {

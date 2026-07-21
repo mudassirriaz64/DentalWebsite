@@ -140,9 +140,16 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                     </Link>
                   </li>
                 ))}
-              </ul>
-            </div>
-          ))}
+              {section.viewAll && (
+                <li className="mt-1">
+                  <Link href={section.viewAll.href} className="text-primary-light hover:underline text-[10px] font-bold tracking-wide w-fit">
+                    {section.viewAll.label}
+                  </Link>
+                </li>
+              )}
+            </ul>
+          </div>
+        ))}
 
           {/* Clinic Column */}
           <div className="flex flex-col gap-3">
