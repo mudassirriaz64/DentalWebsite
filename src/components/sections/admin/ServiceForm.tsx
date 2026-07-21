@@ -1,20 +1,7 @@
 'use client';
 
 import React, { useRef } from 'react';
-import {
-  Sparkles,
-  Shield,
-  CheckSquare,
-  PhoneCall,
-  Activity,
-  Smile,
-  HeartPulse,
-  Stethoscope,
-  Plus,
-  Trash2,
-  Upload,
-  Star,
-} from 'lucide-react';
+import { Plus, Trash2, Upload, Star } from 'lucide-react';
 
 interface ServiceFormProps {
   fields: {
@@ -22,24 +9,13 @@ interface ServiceFormProps {
     shortDescription: string;
     description: string;
     slug?: string;
-    iconName: string;
+    iconName?: string;
     imagePath?: string | null;
     bullets: string[];
     featured?: boolean;
   };
   onChange: (updatedFields: any) => void;
 }
-
-const AVAILABLE_ICONS = [
-  { name: 'Sparkles', icon: Sparkles, label: 'Bespoke / Aesthetic' },
-  { name: 'Shield', icon: Shield, label: 'Protection / Hygiene' },
-  { name: 'CheckSquare', icon: CheckSquare, label: 'Preventive / Checkup' },
-  { name: 'PhoneCall', icon: PhoneCall, label: 'Emergency / Direct' },
-  { name: 'Activity', icon: Activity, label: 'Orthodontics / Alignment' },
-  { name: 'Smile', icon: Smile, label: 'Cosmetic / General' },
-  { name: 'HeartPulse', icon: HeartPulse, label: 'Anxiety-Free / Calm' },
-  { name: 'Stethoscope', icon: Stethoscope, label: 'Clinical / Medical' },
-];
 
 export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -61,12 +37,14 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
       ...fields,
       title: titleVal,
       slug: slugify(titleVal),
+      iconName: fields.iconName || 'Sparkles',
     });
   };
 
   const handleFieldChange = (key: string, value: any) => {
     onChange({
       ...fields,
+      iconName: fields.iconName || 'Sparkles',
       [key]: value,
     });
   };
@@ -148,35 +126,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
         />
       </div>
 
-      {/* 4. Icon Visual Picker */}
-      <div className="flex flex-col gap-2.5">
-        <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
-          Select Clinical Icon
-        </label>
-        <div className="grid grid-cols-4 gap-2">
-          {AVAILABLE_ICONS.map(({ name, icon: Icon, label }) => {
-            const isSelected = fields.iconName === name;
-            return (
-              <button
-                key={name}
-                type="button"
-                onClick={() => handleFieldChange('iconName', name)}
-                className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer ${
-                  isSelected
-                    ? 'bg-primary-soft border-primary text-primary shadow-sm font-semibold'
-                    : 'bg-white border-slate-100 hover:bg-slate-50 text-slate-500 hover:border-slate-200'
-                }`}
-                title={label}
-              >
-                <Icon className={`w-5 h-5 ${isSelected ? 'text-primary' : 'text-slate-500'}`} />
-                <span className="text-[9px] truncate max-w-full tracking-tight">{name}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 5. Image (Optional Upload / Path) */}
+      {/* 4. Image (Optional Upload / Path) */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
           Service Photo / Preview Image (Optional)
@@ -222,7 +172,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
         </div>
       </div>
 
-      {/* 6. Bullets (Repeatable List UI) */}
+      {/* 5. Bullets (Repeatable List UI) */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide flex justify-between items-center">
           <span>Procedure Highlights & Key Benefits (Optional)</span>
@@ -268,7 +218,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
         </button>
       </div>
 
-      {/* 7. Featured for Homepage Carousel */}
+      {/* 6. Featured for Homepage Carousel */}
       <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-accent/10 text-accent flex items-center justify-center shrink-0">
