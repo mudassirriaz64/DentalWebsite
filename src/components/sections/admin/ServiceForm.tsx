@@ -85,7 +85,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
     <div className="flex flex-col gap-6 text-left font-sans">
       {/* 1. Title */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
+        <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">
           Service Title *
         </label>
         <input
@@ -94,7 +94,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
           value={fields.title}
           onChange={handleTitleChange}
           placeholder="e.g. Teeth Whitening (Bleaching Light)"
-          className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
+          className="px-4 py-3 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
         />
         {fields.slug && (
           <span className="text-[10px] text-slate-400 font-mono pl-1 mt-0.5">
@@ -105,7 +105,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
 
       {/* 2. Short Description */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
+        <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">
           Short Description *
         </label>
         <textarea
@@ -114,13 +114,13 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
           value={fields.shortDescription}
           onChange={(e) => handleFieldChange('shortDescription', e.target.value)}
           placeholder="A quick 1-2 sentence overview shown directly on the grid card..."
-          className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
+          className="px-4 py-3 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
         />
       </div>
 
       {/* 3. Full Description (Optional) */}
       <div className="flex flex-col gap-1.5">
-        <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
+        <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">
           Full Detail Description (Optional)
         </label>
         <textarea
@@ -128,7 +128,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
           value={fields.description}
           onChange={(e) => handleFieldChange('description', e.target.value)}
           placeholder="Deep detailed summary for potential procedures, detail views, and clinical guides..."
-          className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
+          className="px-4 py-3 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
         />
       </div>
 
@@ -142,7 +142,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
 
       {/* 5. Bullets (Repeatable List UI) */}
       <div className="flex flex-col gap-2">
-        <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide flex justify-between items-center">
+        <label className="text-xs font-bold text-[#333333] uppercase tracking-wide flex justify-between items-center">
           <span>Procedure Highlights & Key Benefits (Optional)</span>
           <span className="text-[10px] font-semibold text-slate-400 normal-case">
             {(fields.bullets || []).length} items added
@@ -157,7 +157,7 @@ export const ServiceForm: React.FC<ServiceFormProps> = ({ fields, onChange }) =>
                 value={bullet}
                 onChange={(e) => handleBulletChange(idx, e.target.value)}
                 placeholder="e.g. Laser Teeth Whitening"
-                className="flex-grow px-4 py-2 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
+                className="flex-grow px-4 py-2 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
               />
               <button
                 type="button"

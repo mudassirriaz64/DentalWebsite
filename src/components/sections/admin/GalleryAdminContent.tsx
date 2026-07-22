@@ -289,7 +289,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
             setEditingItem(null);
             setIsDrawerOpen(true);
           }}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary hover:bg-teal-950 text-white font-bold transition shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold transition shadow-sm cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add New Case
         </button>
@@ -441,7 +441,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
                   <div className="font-bold text-slate-900 leading-tight flex items-center gap-1.5">
                     {item.title}
                     {item.featured && (
-                      <span className="text-[9px] uppercase bg-amber-50 text-amber-600 border border-amber-200/50 px-1.5 py-0.2 rounded font-bold">
+                      <span className="text-[9px] uppercase bg-yellow-50 text-yellow-600 border border-yellow-200/50 px-1.5 py-0.2 rounded font-bold">
                         PIN
                       </span>
                     )}
@@ -473,7 +473,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
                     {updatingId === item.id ? (
                       <Loader className="w-4 h-4 animate-spin text-slate-400" />
                     ) : item.status === 'published' ? (
-                      <CheckCircle className="w-4 h-4 text-emerald-500 fill-emerald-50" />
+                      <CheckCircle className="w-4 h-4 text-green-500 fill-green-50" />
                     ) : (
                       <XCircle className="w-4 h-4 text-slate-300 fill-slate-50" />
                     )}

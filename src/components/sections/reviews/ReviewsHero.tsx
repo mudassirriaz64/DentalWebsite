@@ -45,7 +45,7 @@ export const ReviewsHero: React.FC<ReviewsHeroProps> = ({ onOpenModal }) => {
               <Star className="w-4 h-4 text-[#FFB020] fill-[#FFB020]" />
               <Star className="w-4 h-4 text-[#FFB020] fill-[#FFB020]" />
               <Star className="w-4 h-4 text-[#FFB020] fill-[#FFB020]" />
-              <span className="text-xs font-bold text-[#1A2526] ml-1">4.9/5 Rating</span>
+              <span className="text-xs font-bold text-[#000000] ml-1">4.9/5 Rating</span>
             </div>
           </div>
         </div>

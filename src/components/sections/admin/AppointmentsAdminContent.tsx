@@ -170,19 +170,19 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
     switch (status) {
       case 'confirmed':
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1 font-bold text-green-700 bg-green-50 border border-green-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <CheckCircle className="w-3 h-3" /> Confirmed
           </span>
         );
       case 'rescheduled':
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-amber-700 bg-amber-50 border border-amber-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1 font-bold text-yellow-700 bg-yellow-50 border border-yellow-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <RefreshCw className="w-3 h-3" /> Rescheduled
           </span>
         );
       case 'cancelled':
         return (
-          <span className="inline-flex items-center gap-1 font-bold text-rose-700 bg-rose-50 border border-rose-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
+          <span className="inline-flex items-center gap-1 font-bold text-red-700 bg-red-50 border border-red-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
             <XCircle className="w-3 h-3" /> Cancelled
           </span>
         );
@@ -195,7 +195,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
       default:
         return (
           <span className="inline-flex items-center gap-1 font-bold text-slate-700 bg-slate-100 border border-slate-200/50 px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
-            <AlertCircle className="w-3 h-3 text-amber-500" /> Pending
+            <AlertCircle className="w-3 h-3 text-yellow-500" /> Pending
           </span>
         );
     }
@@ -314,7 +314,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
 
             <button
               onClick={() => handleBulkAction('delete')}
-              className="px-3.5 py-1.5 rounded-lg bg-rose-600 text-white text-xs font-bold hover:bg-rose-700 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-lg bg-red-600 text-white text-xs font-bold hover:bg-red-700 cursor-pointer"
             >
               Delete Selected
             </button>
@@ -521,7 +521,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
                   value={internalNote}
                   onChange={(e) => setInternalNote(e.target.value)}
                   placeholder="Add private staff notes, appointment confirmation details..."
-                  className="px-4 py-3 bg-[#F4F5FB] border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
+                  className="px-4 py-3 bg-[#F0F0F0] border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
                 />
               </div>
             </div>
@@ -536,7 +536,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
               <button
                 onClick={handleSaveDetail}
                 disabled={updating}
-                className="px-6 py-2 bg-primary hover:bg-teal-950 text-white rounded-full text-xs font-bold transition shadow cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-primary hover:bg-primary-hover text-white rounded-full text-xs font-bold transition shadow cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
               >
                 {updating ? 'Saving...' : 'Save Changes'}
               </button>

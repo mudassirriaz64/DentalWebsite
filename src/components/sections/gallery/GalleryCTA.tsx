@@ -7,7 +7,7 @@ export const GalleryCTA: React.FC = () => {
     <section className="py-20 md:py-24 bg-bg overflow-hidden text-center">
       <Container>
         {/* Light Lavender Card with 40px radius */}
-        <div className="bg-[#F0F3FF] rounded-[40px] p-10 md:p-16 max-w-5xl mx-auto flex flex-col items-center relative overflow-hidden shadow-sm border border-slate-100/50">
+        <div className="bg-[#F0F0F0] rounded-[40px] p-10 md:p-16 max-w-5xl mx-auto flex flex-col items-center relative overflow-hidden shadow-sm border border-slate-100/50">
           {/* Decorative circular rings in bottom-right */}
           <div className="absolute bottom-[-50px] right-[-50px] w-64 h-64 rounded-full border-[16px] border-primary/5 pointer-events-none" />
           <div className="absolute bottom-[-100px] right-[-100px] w-80 h-80 rounded-full border-[32px] border-primary/5 pointer-events-none" />

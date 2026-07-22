@@ -128,9 +128,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, links, 
                         href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors"
+                        className="flex items-center gap-1.5 text-xs font-bold text-green-600 hover:text-green-700 transition-colors"
                       >
-                        <WhatsAppIcon className="w-4 h-4 fill-emerald-500" /> WhatsApp
+                        <WhatsAppIcon className="w-4 h-4 fill-green-500" /> WhatsApp
                       </a>
                     </div>
                   )}

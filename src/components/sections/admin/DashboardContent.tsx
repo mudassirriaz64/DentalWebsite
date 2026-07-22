@@ -421,7 +421,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
               {activeTab === 'doctors' && (
                 <>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Doctor Name</label>
+                    <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">Doctor Name</label>
                     <input
                       type="text"
                       required
@@ -432,7 +432,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Display Order Number</label>
+                      <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">Display Order Number</label>
                       <input
                         type="number"
                         value={formFields.displayOrder ?? 0}
@@ -442,7 +442,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Professional Title</label>
+                      <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">Professional Title</label>
                       <input
                         type="text"
                         required
@@ -454,7 +454,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Profile Bio Statement</label>
+                    <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">Profile Bio Statement</label>
                     <textarea
                       required
                       rows={3}
@@ -470,7 +470,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
                     onChange={(val) => setFormFields({ ...formFields, imagePath: val?.url || '' })}
                   />
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Specialties list (comma separated)</label>
+                    <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">Specialties list (comma separated)</label>
                     <input
                       type="text"
                       value={Array.isArray(formFields.specialties) ? formFields.specialties.join(', ') : ''}
@@ -479,7 +479,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">Education list (comma separated, Optional)</label>
+                    <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">Education list (comma separated, Optional)</label>
                     <input
                       type="text"
                       value={Array.isArray(formFields.education) ? formFields.education.join(', ') : ''}
@@ -495,7 +495,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
                       onChange={(e) => setFormFields({ ...formFields, featured: e.target.checked })}
                       className="w-4 h-4 text-primary bg-slate-50 border-slate-300 rounded focus:ring-primary"
                     />
-                    <label htmlFor="doctor-featured" className="text-sm font-bold text-[#2A3738]">
+                    <label htmlFor="doctor-featured" className="text-sm font-bold text-[#333333]">
                       Featured on About Page preview
                     </label>
                   </div>
@@ -513,7 +513,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
               </button>
               <button
                 type="submit"
-                className="px-6 py-2 bg-primary hover:bg-teal-950 text-white rounded-full text-xs font-bold transition shadow cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                className="px-6 py-2 bg-primary hover:bg-primary-hover text-white rounded-full text-xs font-bold transition shadow cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
               >
                 Save Record
               </button>

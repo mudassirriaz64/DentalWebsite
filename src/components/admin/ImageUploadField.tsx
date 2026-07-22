@@ -121,11 +121,11 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   return (
     <div className={`flex flex-col gap-2 font-sans text-left ${className}`}>
       {label && (
-        <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide flex items-center justify-between">
+        <label className="text-xs font-bold text-[#333333] uppercase tracking-wide flex items-center justify-between">
           <span>{label} {required && <span className="text-accent">*</span>}</span>
           {displayPreviewUrl && (
-            <span className="text-[10px] text-emerald-600 font-semibold uppercase tracking-wider flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Active Image Set
+            <span className="text-[10px] text-green-600 font-semibold uppercase tracking-wider flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Active Image Set
             </span>
           )}
         </label>
@@ -187,7 +187,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
                 <button
                   type="button"
                   onClick={handleRemove}
-                  className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md cursor-pointer transition flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold shadow-md cursor-pointer transition flex items-center gap-1"
                 >
                   <X className="w-3.5 h-3.5" /> Remove
                 </button>
@@ -248,13 +248,13 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
               value={currentUrl}
               onChange={handleUrlInputChange}
               placeholder={placeholder}
-              className="flex-1 px-4 py-2.5 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs font-mono"
+              className="flex-1 px-4 py-2.5 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs font-mono"
             />
             {currentUrl && (
               <button
                 type="button"
                 onClick={handleRemove}
-                className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition cursor-pointer"
+                className="p-2.5 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-600 transition cursor-pointer"
                 title="Clear URL"
               >
                 <X className="w-4 h-4" />

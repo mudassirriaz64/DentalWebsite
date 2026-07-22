@@ -126,7 +126,7 @@ export const ConsultationCTA: React.FC = () => {
                           type="text"
                           value={formData.name}
                           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F3FF] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary ${
+                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F0F0] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary ${
                             errors.name
                               ? 'border-accent/40 focus:ring-accent'
                               : 'border-transparent'
@@ -150,7 +150,7 @@ export const ConsultationCTA: React.FC = () => {
                           id="cta-interest"
                           value={formData.service}
                           onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl bg-[#F0F3FF] border border-transparent text-sm text-dark font-sans focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                          className="w-full px-4 py-3 rounded-xl bg-[#F0F0F0] border border-transparent text-sm text-dark font-sans focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
                         >
                           {services.map((srv) => (
                             <option key={srv.id} value={srv.title}>
@@ -176,7 +176,7 @@ export const ConsultationCTA: React.FC = () => {
                           type="email"
                           value={formData.email}
                           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F3FF] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary ${
+                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F0F0] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary ${
                             errors.email
                               ? 'border-accent/40 focus:ring-accent'
                               : 'border-transparent'
@@ -201,7 +201,7 @@ export const ConsultationCTA: React.FC = () => {
                           type="tel"
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F3FF] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary ${
+                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F0F0] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary ${
                             errors.phone
                               ? 'border-accent/40 focus:ring-accent'
                               : 'border-transparent'
@@ -246,7 +246,7 @@ export const ConsultationCTA: React.FC = () => {
                           disabled={formData.whatsappSameAsPhone}
                           value={formData.whatsappSameAsPhone ? formData.phone : formData.whatsapp}
                           onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F3FF] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60 ${
+                          className={`w-full px-4 py-3 rounded-xl bg-[#F0F0F0] border text-sm text-dark font-sans placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-60 ${
                             errors.whatsapp && !formData.whatsappSameAsPhone
                               ? 'border-accent/40 focus:ring-accent'
                               : 'border-transparent'

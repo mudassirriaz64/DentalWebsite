@@ -219,7 +219,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onOpenLightbox }
           </div>
         </div>
 
-        <div className="bg-[#1A6B6B] p-8 md:p-10 flex flex-col justify-between text-white relative">
+        <div className="bg-[#006030] p-8 md:p-10 flex flex-col justify-between text-white relative">
           {/* Subtle glowing spot */}
           <div className="absolute bottom-0 right-0 w-32 h-32 rounded-full bg-white/5 blur-2xl pointer-events-none" />
 
@@ -259,7 +259,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onOpenLightbox }
   return (
     <div
       onClick={() => onOpenLightbox(item, 'main')}
-      className="lg:col-span-1 rounded-[24px] bg-[#DBE4E4] overflow-hidden shadow-card border border-slate-200/30 flex flex-col h-[450px] group cursor-pointer text-left hover:-translate-y-1.5 transition-transform duration-300 relative"
+      className="lg:col-span-1 rounded-[24px] bg-[#C0C0C0] overflow-hidden shadow-card border border-slate-200/30 flex flex-col h-[450px] group cursor-pointer text-left hover:-translate-y-1.5 transition-transform duration-300 relative"
     >
       <div className="relative w-full h-[220px] overflow-hidden bg-slate-50">
         {mainImg && (
@@ -275,13 +275,13 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onOpenLightbox }
 
       <div className="p-6 flex-grow flex flex-col justify-between">
         <div>
-          <span className="inline-flex text-[9px] font-sans font-bold text-[#404849] uppercase tracking-wider mb-2">
+          <span className="inline-flex text-[9px] font-sans font-bold text-[#5A5A5A] uppercase tracking-wider mb-2">
             {item.category}
           </span>
           <h3 className="font-serif font-bold text-lg text-primary leading-tight mb-2">
             {item.title}
           </h3>
-          <p className="text-xs text-[#404849]/90 font-sans leading-relaxed line-clamp-3">
+          <p className="text-xs text-[#5A5A5A]/90 font-sans leading-relaxed line-clamp-3">
             {item.description}
           </p>
         </div>
@@ -289,7 +289,7 @@ export const GalleryCard: React.FC<GalleryCardProps> = ({ item, onOpenLightbox }
           {(item.tags || []).slice(0, 3).map((t, idx) => (
             <span
               key={idx}
-              className="px-2 py-0.5 rounded bg-white/20 border border-white/10 text-[9px] text-[#404849]"
+              className="px-2 py-0.5 rounded bg-white/20 border border-white/10 text-[9px] text-[#5A5A5A]"
             >
               #{t}
             </span>

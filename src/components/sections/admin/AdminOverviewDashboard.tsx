@@ -41,11 +41,11 @@ export const AdminOverviewDashboard: React.FC<AdminOverviewDashboardProps> = ({
         <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm flex flex-col justify-between transition hover:shadow-md">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-teal-50 rounded-xl text-primary">
+              <div className="p-3 bg-green-50 rounded-xl text-primary">
                 <Calendar className="w-5 h-5" />
               </div>
               {unreadAppointments > 0 ? (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-100 text-teal-800 animate-pulse">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-800 animate-pulse">
                   {unreadAppointments} New
                 </span>
               ) : (
@@ -63,7 +63,7 @@ export const AdminOverviewDashboard: React.FC<AdminOverviewDashboardProps> = ({
           </div>
           <Link
             href="/admin/appointments"
-            className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-teal-950 transition-colors w-fit group"
+            className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary transition-colors w-fit group"
           >
             Manage Appointments <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
@@ -95,7 +95,7 @@ export const AdminOverviewDashboard: React.FC<AdminOverviewDashboardProps> = ({
           </div>
           <Link
             href="/admin/submissions"
-            className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-teal-950 transition-colors w-fit group"
+            className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary transition-colors w-fit group"
           >
             Review Submissions <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
@@ -105,11 +105,11 @@ export const AdminOverviewDashboard: React.FC<AdminOverviewDashboardProps> = ({
         <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm flex flex-col justify-between transition hover:shadow-md">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-amber-50 rounded-xl text-amber-600">
+              <div className="p-3 bg-yellow-50 rounded-xl text-yellow-600">
                 <MessageSquare className="w-5 h-5" />
               </div>
               {pendingReviews > 0 ? (
-                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 animate-pulse">
+                <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 animate-pulse">
                   {pendingReviews} Pending
                 </span>
               ) : (
@@ -127,7 +127,7 @@ export const AdminOverviewDashboard: React.FC<AdminOverviewDashboardProps> = ({
           </div>
           <Link
             href="/admin/reviews"
-            className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-teal-950 transition-colors w-fit group"
+            className="mt-6 inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary transition-colors w-fit group"
           >
             Moderate Reviews <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
@@ -164,7 +164,7 @@ export const AdminOverviewDashboard: React.FC<AdminOverviewDashboardProps> = ({
           href="/admin?tab=doctors"
           className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex items-center gap-4 transition hover:shadow-md hover:border-slate-200 cursor-pointer"
         >
-          <div className="p-3 bg-rose-50 rounded-xl text-rose-600 shrink-0">
+          <div className="p-3 bg-red-50 rounded-xl text-red-600 shrink-0">
             <Users className="w-5 h-5" />
           </div>
           <div>
@@ -182,7 +182,7 @@ export const AdminOverviewDashboard: React.FC<AdminOverviewDashboardProps> = ({
           href="/admin/gallery"
           className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm flex items-center gap-4 transition hover:shadow-md hover:border-slate-200 cursor-pointer"
         >
-          <div className="p-3 bg-emerald-50 rounded-xl text-emerald-600 shrink-0">
+          <div className="p-3 bg-green-50 rounded-xl text-green-600 shrink-0">
             <ImageIcon className="w-5 h-5" />
           </div>
           <div>

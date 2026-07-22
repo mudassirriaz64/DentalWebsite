@@ -69,8 +69,8 @@ export default function FounderSpotlightForm() {
         <div
           className={`p-4 rounded-xl font-semibold text-xs border ${
             isError
-              ? 'bg-rose-50 text-rose-700 border-rose-200/50'
-              : 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+              ? 'bg-red-50 text-red-700 border-red-200/50'
+              : 'bg-green-50 text-green-700 border-green-200/50'
           }`}
         >
           {message}
@@ -80,7 +80,7 @@ export default function FounderSpotlightForm() {
       <form onSubmit={handleSave} className="max-w-xl">
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
+            <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">
               Doctor Name *
             </label>
             <input
@@ -89,12 +89,12 @@ export default function FounderSpotlightForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Dr. Sarah Jane"
-              className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
+              className="px-4 py-3 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#2A3738] uppercase tracking-wide">
+            <label className="text-xs font-bold text-[#333333] uppercase tracking-wide">
               Title / Role *
             </label>
             <input
@@ -103,7 +103,7 @@ export default function FounderSpotlightForm() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Chief Cosmetic Specialist"
-              className="px-4 py-3 bg-[#F4F5FB] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
+              className="px-4 py-3 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs"
             />
           </div>
 

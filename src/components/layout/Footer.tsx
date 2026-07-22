@@ -87,16 +87,8 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-6 border-b border-white/10 text-left">
           {/* Brand Info Column */}
           <div className="flex flex-col gap-3">
-            <Link href="/" className="flex items-center gap-2 group w-fit">
-              <Logo variant="dark" />
-              <div className="flex flex-col">
-                <span className="font-serif font-bold text-primary-light text-base sm:text-lg leading-tight">
-                  Dental Cosmetic
-                </span>
-                <span className="text-[9px] uppercase font-bold tracking-[1.6px] text-accent leading-none mt-1">
-                  & Implant Centre
-                </span>
-              </div>
+            <Link href="/" className="flex items-center group w-fit">
+              <Logo variant="dark" className="group-hover:scale-105 transition-transform duration-300" />
             </Link>
             <p className="text-xs text-body-text-dark/80 leading-relaxed font-sans font-normal">
               Setting the gold standard in cosmetic dentistry and implants. Precision medicine meets aesthetic excellence.
@@ -178,10 +170,10 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
               </li>
               {settings?.whatsapp && (
                 <li className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <Phone className="w-4 h-4 text-green-400 flex-shrink-0" />
                   <a
                     href={`tel:${settings.whatsapp.replace(/\D/g, '')}`}
-                    className="text-emerald-400 hover:underline font-semibold transition-all duration-300"
+                    className="text-green-400 hover:underline font-semibold transition-all duration-300"
                   >
                     {settings.whatsapp}
                   </a>
@@ -189,9 +181,9 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                     href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 hover:text-emerald-300 transition-colors bg-emerald-500/10 px-2 py-1 rounded-md ml-1"
+                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-green-400 hover:text-green-300 transition-colors bg-green-500/10 px-2 py-1 rounded-md ml-1"
                   >
-                    <WhatsAppIcon className="w-3 h-3 fill-emerald-400" /> WA
+                    <WhatsAppIcon className="w-3 h-3 fill-green-400" /> WA
                   </a>
                 </li>
               )}

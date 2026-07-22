@@ -86,7 +86,7 @@ export const TechBento: React.FC = () => {
           {/* Card 2: Laser Dentistry (Right top, spans 2 columns width) */}
           <motion.div
             variants={cardVariants}
-            className="lg:col-span-2 lg:row-span-1 rounded-[24px] bg-[#E7EEFF] p-8 shadow-card border border-slate-100/10 flex flex-col justify-center text-left h-[238px]"
+            className="lg:col-span-2 lg:row-span-1 rounded-[24px] bg-[#E0E0E0] p-8 shadow-card border border-slate-100/10 flex flex-col justify-center text-left h-[238px]"
           >
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
@@ -105,7 +105,7 @@ export const TechBento: React.FC = () => {
           {/* Card 3: AI-Driven Diagnosis (Right bottom left, 1 column width) */}
           <motion.div
             variants={cardVariants}
-            className="lg:col-span-1 lg:row-span-1 rounded-[24px] bg-[#FFD9DC] p-6 shadow-card border border-slate-100/10 flex flex-col justify-between text-left h-[238px] group cursor-pointer"
+            className="lg:col-span-1 lg:row-span-1 rounded-[24px] bg-[#E0E0E0] p-6 shadow-card border border-slate-100/10 flex flex-col justify-between text-left h-[238px] group cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-white shadow-sm mb-4">
               <Brain className="w-5 h-5" />
@@ -123,7 +123,7 @@ export const TechBento: React.FC = () => {
           {/* Card 4: Robotic Surgery (Right bottom right, 1 column width) */}
           <motion.div
             variants={cardVariants}
-            className="lg:col-span-1 lg:row-span-1 rounded-[24px] bg-[#DBE4E4] p-6 shadow-card border border-slate-100/10 flex flex-col justify-between text-left h-[238px] group cursor-pointer"
+            className="lg:col-span-1 lg:row-span-1 rounded-[24px] bg-[#C0C0C0] p-6 shadow-card border border-slate-100/10 flex flex-col justify-between text-left h-[238px] group cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary shadow-sm mb-4">
               <Cpu className="w-5 h-5" />

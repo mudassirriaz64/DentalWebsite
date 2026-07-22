@@ -227,7 +227,7 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
                   onClick={() => setVariant(v.value)}
                   className={`p-3 rounded-xl border flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
                     variant === v.value
-                      ? 'border-[#005252] bg-[#005252]/5 text-[#005252] font-bold shadow-sm'
+                      ? 'border-[#0B5E2F] bg-[#0B5E2F]/5 text-[#0B5E2F] font-bold shadow-sm'
                       : 'border-slate-200 hover:border-slate-300 bg-white text-slate-500'
                   }`}
                 >
@@ -488,14 +488,14 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
                 />
                 Save as Draft
               </label>
-              <label className="flex items-center gap-2 cursor-pointer font-semibold text-xs text-[#005252]">
+              <label className="flex items-center gap-2 cursor-pointer font-semibold text-xs text-[#0B5E2F]">
                 <input
                   type="radio"
                   name="status"
                   value="published"
                   checked={status === 'published'}
                   onChange={() => setStatus('published')}
-                  className="w-4 h-4 text-[#005252] focus:ring-primary cursor-pointer"
+                  className="w-4 h-4 text-[#0B5E2F] focus:ring-primary cursor-pointer"
                 />
                 Publish Instantly
               </label>
@@ -528,7 +528,7 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
                 type="button"
                 onClick={(e) => handleSubmit(e, 'published')}
                 disabled={loading || !isFormValid()}
-                className="px-6 py-2.5 rounded-full bg-primary text-white hover:bg-teal-950 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition cursor-pointer font-bold shadow-sm"
+                className="px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary-hover disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition cursor-pointer font-bold shadow-sm"
               >
                 {loading ? 'Publishing...' : 'Save & Publish'}
               </button>

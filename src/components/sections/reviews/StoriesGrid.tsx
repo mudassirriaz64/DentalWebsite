@@ -144,7 +144,7 @@ export const StoriesGrid: React.FC<StoriesGridProps> = ({ initialReviews, onOpen
                 className={`px-5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   activeCategory === cat
                     ? 'bg-primary text-white shadow-sm'
-                    : 'bg-[#F4F5FB] text-slate-600 hover:bg-slate-200'
+                    : 'bg-[#F0F0F0] text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 {cat}
@@ -170,7 +170,7 @@ export const StoriesGrid: React.FC<StoriesGridProps> = ({ initialReviews, onOpen
                 <motion.div
                   key={rev.id}
                   variants={cardVariants}
-                  className="lg:col-span-2 bg-[#FFF0F2] border border-[#FFE0E4] rounded-3xl p-8 shadow-sm flex flex-col justify-between text-left hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group overflow-hidden"
+                  className="lg:col-span-2 bg-[#F8F8F8] border border-[#D8D8D8] rounded-3xl p-8 shadow-sm flex flex-col justify-between text-left hover:-translate-y-1 hover:shadow-md transition-all duration-300 relative group overflow-hidden"
                 >
                   {/* Testimonial glowing blur */}
                   <div className="absolute top-[-50px] right-[-50px] w-36 h-36 rounded-full bg-accent/5 blur-2xl pointer-events-none" />
@@ -198,7 +198,7 @@ export const StoriesGrid: React.FC<StoriesGridProps> = ({ initialReviews, onOpen
                   </div>
 
                   {/* Patient Info row */}
-                  <div className="flex items-center justify-between mt-8 border-t border-[#FFD0D8] pt-4">
+                  <div className="flex items-center justify-between mt-8 border-t border-[#C0C0C0] pt-4">
                     <div className="flex items-center gap-3">
                       {rev.patientAvatarUrl ? (
                         <img
@@ -224,7 +224,7 @@ export const StoriesGrid: React.FC<StoriesGridProps> = ({ initialReviews, onOpen
                     </div>
 
                     {rev.isVerifiedPatient && (
-                      <span className="flex items-center gap-1 text-[9px] font-bold text-accent uppercase tracking-wider bg-white/70 border border-[#FFE0E4] px-2.5 py-1 rounded-full shadow-sm">
+                      <span className="flex items-center gap-1 text-[9px] font-bold text-accent uppercase tracking-wider bg-white/70 border border-[#D8D8D8] px-2.5 py-1 rounded-full shadow-sm">
                         <ShieldCheck className="w-3.5 h-3.5 text-accent" /> Verified Patient
                       </span>
                     )}
@@ -240,7 +240,7 @@ export const StoriesGrid: React.FC<StoriesGridProps> = ({ initialReviews, onOpen
                 {index === 2 && (
                   <motion.div
                     variants={cardVariants}
-                    className="bg-[#005252] text-white rounded-3xl p-8 shadow-sm flex flex-col justify-between text-left hover:-translate-y-1 hover:shadow-card transition-all duration-300 relative overflow-hidden border border-[#004040]"
+                    className="bg-[#0B5E2F] text-white rounded-3xl p-8 shadow-sm flex flex-col justify-between text-left hover:-translate-y-1 hover:shadow-card transition-all duration-300 relative overflow-hidden border border-[#004020]"
                   >
                     <div className="absolute top-[-50px] right-[-50px] w-36 h-36 rounded-full bg-white/5 blur-2xl pointer-events-none" />
 
@@ -248,7 +248,7 @@ export const StoriesGrid: React.FC<StoriesGridProps> = ({ initialReviews, onOpen
                       <div className="bg-white/10 p-3 rounded-2xl w-fit mb-2 flex items-center justify-center">
                         <MessageSquarePlus className="w-5 h-5 text-primary-light" />
                       </div>
-                      <h3 className="font-serif font-bold text-xl text-[#A0E9E8]">
+                      <h3 className="font-serif font-bold text-xl text-[#7AC943]">
                         Ready to share your story?
                       </h3>
                       <p className="text-xs text-slate-200 leading-relaxed font-normal">

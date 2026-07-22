@@ -109,7 +109,7 @@ export const Lightbox: React.FC<LightboxProps> = ({ item, initialType = 'main', 
                   onClick={() => setActiveType('after')}
                   className={`px-5 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     activeType === 'after'
-                      ? 'bg-primary-light text-[#002020] shadow'
+                      ? 'bg-primary-light text-[#000000] shadow'
                       : 'text-slate-300 hover:text-white'
                   }`}
                 >
@@ -128,7 +128,7 @@ export const Lightbox: React.FC<LightboxProps> = ({ item, initialType = 'main', 
                   {item.category}
                 </span>
                 {item.isVerifiedPatient && (
-                  <span className="flex items-center gap-1 text-[9px] uppercase tracking-wider text-[#A0E9E8] font-bold">
+                  <span className="flex items-center gap-1 text-[9px] uppercase tracking-wider text-[#7AC943] font-bold">
                     <ShieldCheck className="w-3.5 h-3.5 text-primary-light" /> Patient Verified
                   </span>
                 )}

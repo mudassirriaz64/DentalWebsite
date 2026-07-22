@@ -40,7 +40,7 @@ export const Hero: React.FC<HeroProps> = ({ settings, patientStat, liveReviewsCo
 
           {/* H1 Headline */}
           <h1 className="font-serif font-bold text-4xl sm:text-5xl lg:text-[48px] lg:leading-[58px] text-primary tracking-[-0.96px] mb-6 text-left">
-            Transforming <span className="text-accent italic font-normal">Smiles</span> with Clinical Precision
+            Transforming <span className="text-primary italic font-normal">Smiles</span> with Clinical Precision
           </h1>
 
           {/* Subtext */}

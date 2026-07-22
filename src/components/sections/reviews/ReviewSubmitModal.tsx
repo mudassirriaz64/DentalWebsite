@@ -92,7 +92,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
 
         {success ? (
           <div className="py-10 flex flex-col items-center justify-center text-center animate-fade-in">
-            <CheckCircle className="w-14 h-14 text-emerald-500 mb-4 animate-bounce" />
+            <CheckCircle className="w-14 h-14 text-green-500 mb-4 animate-bounce" />
             <h3 className="font-serif font-bold text-xl text-primary mb-2">
               Review Submitted!
             </h3>
@@ -104,7 +104,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
                 setSuccess(false);
                 onClose();
               }}
-              className="px-6 py-2.5 rounded-full bg-primary hover:bg-teal-950 text-white font-sans text-xs font-bold transition shadow cursor-pointer"
+              className="px-6 py-2.5 rounded-full bg-primary hover:bg-primary-hover text-white font-sans text-xs font-bold transition shadow cursor-pointer"
             >
               Close Window
             </button>
@@ -129,7 +129,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Patient Name */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-[#2A3738] uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-[#333333] uppercase tracking-wide">
                   Your Name *
                 </label>
                 <input
@@ -144,7 +144,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
 
               {/* Treatment Category */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-[#2A3738] uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-[#333333] uppercase tracking-wide">
                   Treatment Category *
                 </label>
                 <select
@@ -163,7 +163,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Treatment Type Description */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-[#2A3738] uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-[#333333] uppercase tracking-wide">
                   Treatment Received (Optional)
                 </label>
                 <input
@@ -177,7 +177,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
 
               {/* Rating picker */}
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-bold text-[#2A3738] uppercase tracking-wide">
+                <label className="text-[9px] font-bold text-[#333333] uppercase tracking-wide">
                   Star Rating *
                 </label>
                 <div className="flex gap-1.5 items-center py-2 pl-1 select-none">
@@ -201,7 +201,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
 
             {/* Title */}
             <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold text-[#2A3738] uppercase tracking-wide">
+              <label className="text-[9px] font-bold text-[#333333] uppercase tracking-wide">
                 Review Headline *
               </label>
               <input
@@ -216,7 +216,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
 
             {/* Body */}
             <div className="flex flex-col gap-1">
-              <label className="text-[9px] font-bold text-[#2A3738] uppercase tracking-wide">
+              <label className="text-[9px] font-bold text-[#333333] uppercase tracking-wide">
                 Review Description *
               </label>
               <textarea
@@ -244,7 +244,7 @@ export const ReviewSubmitModal: React.FC<ReviewSubmitModalProps> = ({ isOpen, on
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-1 font-semibold transition-all duration-300 rounded-full text-xs px-8 py-3.5 bg-primary text-white hover:bg-teal-950 btn-diagonal-stripe shadow-md cursor-pointer mt-3 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center gap-1 font-semibold transition-all duration-300 rounded-full text-xs px-8 py-3.5 bg-primary text-white hover:bg-primary-hover btn-diagonal-stripe shadow-md cursor-pointer mt-3 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

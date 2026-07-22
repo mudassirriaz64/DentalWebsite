@@ -262,7 +262,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
 
   const getStatusBadgeClass = (status: SubmissionStatus) => {
     const styles = {
-      new: 'bg-emerald-50 text-emerald-700 border-emerald-200/50',
+      new: 'bg-green-50 text-green-700 border-green-200/50',
       contacted: 'bg-blue-50 text-blue-700 border-blue-200/50',
       scheduled: 'bg-purple-50 text-purple-700 border-purple-200/50',
       closed: 'bg-slate-100 text-slate-600 border-slate-200/30',
@@ -569,7 +569,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
                 </div>
 
                 <div className="flex items-center gap-2.5 mt-2">
-                  <MessageSquare className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <MessageSquare className="w-4 h-4 text-green-500 shrink-0" />
                   <div className="flex flex-col">
                     <span className="text-[9px] font-bold uppercase text-slate-400">WhatsApp Contact</span>
                     {selectedSub.whatsapp ? (
@@ -577,7 +577,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
                         href={`https://wa.me/${selectedSub.whatsapp.replace(/\D/g, '')}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs font-semibold text-emerald-600 hover:underline flex items-center gap-1"
+                        className="text-xs font-semibold text-green-600 hover:underline flex items-center gap-1"
                       >
                         {selectedSub.whatsapp} <ExternalLink className="w-3.5 h-3.5" />
                       </a>
@@ -648,7 +648,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
                   value={internalNote}
                   onChange={(e) => setInternalNote(e.target.value)}
                   placeholder="Record call logs, scheduling dates, or doctor details..."
-                  className="px-4 py-3 bg-[#F4F5FB] border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
+                  className="px-4 py-3 bg-[#F0F0F0] border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs resize-none"
                 />
                 <button
                   type="button"

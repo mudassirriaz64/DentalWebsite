@@ -175,7 +175,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
       {/* Form */}
       <form onSubmit={handleSubmit} className="max-w-3xl flex flex-col gap-6 text-left">
         {success && (
-          <div className="p-4 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/50 text-xs font-semibold flex items-center gap-2">
+          <div className="p-4 rounded-xl bg-green-50 text-green-700 border border-green-200/50 text-xs font-semibold flex items-center gap-2">
             <CheckCircle className="w-5 h-5 shrink-0" />
             Statistics updated successfully! Changes reflect on public pages immediately.
           </div>

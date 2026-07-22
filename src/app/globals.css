@@ -2,54 +2,54 @@
 
 :root {
   /* Design Tokens - Colors */
-  --color-primary: #005252;
-  --color-primary-light: #A6EFEF;
-  --color-primary-soft: #8BD3D2;
-  --color-accent: #B51E47;
-  --color-accent-soft: #FFD9DC;
-  --color-accent-dark: #5F001E;
-  --color-bg: #F9F9FF;
-  --color-bg-alt: #F0F3FF;
-  --color-bg-blue-soft: #E7EEFF;
-  --color-dark: #273141;
-  --color-dark-text: #121C2C;
-  --color-body-text: #3F4948;
-  --color-body-text-dark: #D9E3F9;
-  --color-border: #BEC9C8;
+  --color-primary: #0B5E2F;
+  --color-primary-light: #7AC943;
+  --color-primary-soft: #9CD84B;
+  --color-accent: #333333;
+  --color-accent-soft: #E0E0E0;
+  --color-accent-dark: #000000;
+  --color-bg: #F8F8F8;
+  --color-bg-alt: #F0F0F0;
+  --color-bg-blue-soft: #E0E0E0;
+  --color-dark: #333333;
+  --color-dark-text: #000000;
+  --color-body-text: #5A5A5A;
+  --color-body-text-dark: #E0E0E0;
+  --color-border: #C0C0C0;
 
   /* About Page Specific Design Tokens */
-  --color-hero-badge-bg: #FFD9DC;
-  --color-hero-badge-text: #5F001E;
-  --color-stat-card-bg: #FE5778;
-  --color-milestone-border-top: #005252;
-  --color-milestone-year-text: #B51E47;
-  --color-tech-card-bg-blue: #E7EEFF;
-  --color-tech-card-bg-pink: #FFD9DC;
-  --color-tech-card-bg-gray: #DBE4E4;
-  --color-tech-card-bg-dark: #1A6B6B;
-  --color-doctor-overlay-hover: rgba(0, 82, 82, 0.2);
+  --color-hero-badge-bg: #E0E0E0;
+  --color-hero-badge-text: #0B5E2F;
+  --color-stat-card-bg: #7AC943;
+  --color-milestone-border-top: #0B5E2F;
+  --color-milestone-year-text: #333333;
+  --color-tech-card-bg-blue: #E0E0E0;
+  --color-tech-card-bg-pink: #F0F0F0;
+  --color-tech-card-bg-gray: #C0C0C0;
+  --color-tech-card-bg-dark: #006030;
+  --color-doctor-overlay-hover: rgba(11, 94, 47, 0.2);
 
   /* Team Page Specific Design Tokens */
-  --color-hero-badge-bg-mint: #A6EFEF;
-  --color-hero-badge-text-dark: #002020;
-  --color-heading-highlight: rgba(181, 30, 71, 0.2);
-  --color-hero-heading-dark: #121C2C;
-  --color-specialty-card-border: rgba(190, 201, 200, 0.2);
-  --color-video-section-bg: #005252;
-  --color-play-button-bg: #B51E47;
-  --color-faq-border: rgba(190, 201, 200, 0.3);
-  --color-cta-input-bg: #F0F3FF;
+  --color-hero-badge-bg-mint: #7AC943;
+  --color-hero-badge-text-dark: #000000;
+  --color-heading-highlight: rgba(11, 94, 47, 0.2);
+  --color-hero-heading-dark: #000000;
+  --color-specialty-card-border: rgba(192, 192, 192, 0.2);
+  --color-video-section-bg: #0B5E2F;
+  --color-play-button-bg: #7AC943;
+  --color-faq-border: rgba(192, 192, 192, 0.3);
+  --color-cta-input-bg: #F0F0F0;
 
   /* Theme mappings for styling consistency */
   --background: var(--color-bg);
   --foreground: var(--color-dark-text);
   
   --primary: var(--color-primary);
-  --primary-hover: #003d3d;
+  --primary-hover: #005030;
   --accent: var(--color-accent);
-  --accent-hover: #961639;
+  --accent-hover: #1A1A1A;
   --dark: var(--color-dark);
-  --dark-hover: #1f2733;
+  --dark-hover: #222222;
 
   --border: var(--color-border);
   --input: var(--color-border);
@@ -93,7 +93,7 @@
   --color-faq-border: var(--color-faq-border);
   --color-cta-input-bg: var(--color-cta-input-bg);
 
-  --shadow-card: 0px 10px 30px rgba(26, 107, 107, 0.08);
+  --shadow-card: 0px 10px 30px rgba(11, 94, 47, 0.08);
 
   --font-sans: var(--font-sans), system-ui, sans-serif;
   --font-serif: var(--font-serif), Georgia, serif;

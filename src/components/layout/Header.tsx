@@ -37,22 +37,14 @@ export const Header: React.FC<{ settings?: any }> = ({ settings }) => {
         className={cn(
           'sticky top-0 left-0 right-0 z-40 transition-all duration-300 w-full border-b',
           isScrolled
-            ? 'bg-bg/95 backdrop-blur-md shadow-sm py-3 border-slate-200/60'
+            ? 'bg-bg/95 backdrop-blur-md shadow-sm py-3 border-primary/20'
             : 'bg-bg/90 backdrop-blur-md py-4 border-slate-100/60'
         )}
       >
         <Container className="flex items-center justify-between">
-          {/* Logo - Teal vector icon + wordmark in Libre Caslon Text */}
+          {/* Logo - Client-provided image logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Logo className="w-14 h-14 group-hover:scale-105 transition-transform duration-300" />
-            <div className="flex flex-col">
-              <span className="font-serif font-bold text-primary tracking-tight text-xl sm:text-2xl leading-none">
-                Dental Cosmetic
-              </span>
-              <span className="text-[9px] uppercase font-bold tracking-[1.6px] text-accent leading-none mt-1">
-                & Implant Centre
-              </span>
-            </div>
+            <Logo className="group-hover:scale-105 transition-transform duration-300" />
           </Link>
 
           {/* Desktop Navigation - Manrope 14px bold, uppercase, tracking */}
@@ -70,7 +62,7 @@ export const Header: React.FC<{ settings?: any }> = ({ settings }) => {
                 >
                   {link.label}
                   {isActive && (
-                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-accent rounded-full animate-fade-in" />
+                    <span className="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-full animate-fade-in" />
                   )}
                 </Link>
               );
@@ -99,7 +91,7 @@ export const Header: React.FC<{ settings?: any }> = ({ settings }) => {
                 title={`WhatsApp us: ${settings.whatsapp}`}
                 aria-label={`Message us on WhatsApp at ${settings.whatsapp}`}
               >
-                <WhatsAppIcon className="w-4 h-4 fill-emerald-500 hover:fill-emerald-600 transition-colors" />
+                <WhatsAppIcon className="w-4 h-4 fill-green-500 hover:fill-green-600 transition-colors" />
               </a>
             )}
 

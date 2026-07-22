@@ -270,8 +270,8 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
   const getStatusBadge = (status: ReviewStatus) => {
     const badges = {
       pending: 'bg-yellow-50 text-yellow-700 border-yellow-200/50',
-      approved: 'bg-emerald-50 text-emerald-700 border-emerald-200/50',
-      rejected: 'bg-rose-50 text-rose-700 border-rose-200/50',
+      approved: 'bg-green-50 text-green-700 border-green-200/50',
+      rejected: 'bg-red-50 text-red-700 border-red-200/50',
     };
     return `px-2 py-0.5 rounded border text-[10px] font-bold uppercase tracking-wider ${badges[status]}`;
   };
@@ -302,7 +302,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
         </div>
         <button
           onClick={handleOpenCreate}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary hover:bg-teal-950 text-white font-bold transition shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary hover:bg-primary-hover text-white font-bold transition shadow-sm cursor-pointer"
         >
           <Plus className="w-4.5 h-4.5" /> Add Review
         </button>
@@ -434,7 +434,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                       onClick={() => handleToggleFeatured(rev.id, rev.featured)}
                       className={`p-1.5 rounded-full cursor-pointer transition-colors ${
                         rev.featured
-                          ? 'text-[#FFB020] hover:text-amber-500'
+                          ? 'text-[#FFB020] hover:text-yellow-500'
                           : 'text-slate-200 hover:text-slate-400'
                       }`}
                       title={rev.featured ? 'Featured case' : 'Mark featured'}
@@ -452,14 +452,14 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                     <>
                       <button
                         onClick={() => handleApprove(rev.id)}
-                        className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer"
+                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg cursor-pointer"
                         title="Approve Review"
                       >
                         <Check className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleReject(rev.id)}
-                        className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
                         title="Reject Review"
                       >
                         <X className="w-4 h-4" />
@@ -530,7 +530,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                       onClick={() => handleToggleFeatured(rev.id, rev.featured)}
                       className={`p-1.5 rounded-full cursor-pointer transition-colors ${
                         rev.featured
-                          ? 'text-[#FFB020] hover:text-amber-500'
+                          ? 'text-[#FFB020] hover:text-yellow-500'
                           : 'text-slate-200 hover:text-slate-400'
                       }`}
                       title={rev.featured ? 'Featured case' : 'Mark featured'}
@@ -547,14 +547,14 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
                     <>
                       <button
                         onClick={() => handleApprove(rev.id)}
-                        className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg cursor-pointer"
+                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg cursor-pointer"
                         title="Approve Review"
                       >
                         <Check className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleReject(rev.id)}
-                        className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg cursor-pointer"
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
                         title="Reject Review"
                       >
                         <X className="w-4 h-4" />
@@ -614,7 +614,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Patient Name */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-[#2A3738] uppercase">Patient Name *</label>
+                  <label className="text-xs font-bold text-[#333333] uppercase">Patient Name *</label>
                   <input
                     type="text"
                     required
@@ -627,7 +627,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
 
                 {/* Avatar Url */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-[#2A3738] uppercase">Avatar Image Path</label>
+                  <label className="text-xs font-bold text-[#333333] uppercase">Avatar Image Path</label>
                   <input
                     type="text"
                     value={patientAvatarUrl}
@@ -641,7 +641,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Category */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-[#2A3738] uppercase">Category *</label>
+                  <label className="text-xs font-bold text-[#333333] uppercase">Category *</label>
                   <select
                     required
                     value={category}
@@ -658,7 +658,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
 
                 {/* Treatment Type */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-[#2A3738] uppercase">Treatment Details</label>
+                  <label className="text-xs font-bold text-[#333333] uppercase">Treatment Details</label>
                   <input
                     type="text"
                     value={treatmentType}
@@ -672,7 +672,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
                 {/* Rating picker */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-[#2A3738] uppercase">Star Rating *</label>
+                  <label className="text-xs font-bold text-[#333333] uppercase">Star Rating *</label>
                   <div className="flex gap-1.5 items-center py-1 select-none">
                     {[1, 2, 3, 4, 5].map((val) => (
                       <button
@@ -693,7 +693,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
 
                 {/* Status select dropdown */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-[#2A3738] uppercase">Moderation Status</label>
+                  <label className="text-xs font-bold text-[#333333] uppercase">Moderation Status</label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as ReviewStatus)}
@@ -708,7 +708,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
 
               {/* Title */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-[#2A3738] uppercase">Review Headline *</label>
+                <label className="text-xs font-bold text-[#333333] uppercase">Review Headline *</label>
                 <input
                   type="text"
                   required
@@ -721,7 +721,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
 
               {/* Body */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-[#2A3738] uppercase">Review Text Content *</label>
+                <label className="text-xs font-bold text-[#333333] uppercase">Review Text Content *</label>
                 <textarea
                   rows={5}
                   required
@@ -770,7 +770,7 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
               <button
                 type="submit"
                 disabled={loading}
-                className="flex items-center gap-1.5 px-6 py-2 bg-primary hover:bg-teal-950 text-white rounded-full text-xs font-bold transition shadow cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+                className="flex items-center gap-1.5 px-6 py-2 bg-primary hover:bg-primary-hover text-white rounded-full text-xs font-bold transition shadow cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>

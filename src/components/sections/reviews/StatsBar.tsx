@@ -8,7 +8,7 @@ interface StatsBarProps {
 
 export const StatsBar: React.FC<StatsBarProps> = ({ stats }) => {
   return (
-    <section className="bg-[#005252] text-white py-10 overflow-hidden shadow-inner select-none font-sans">
+    <section className="bg-[#0B5E2F] text-white py-10 overflow-hidden shadow-inner select-none font-sans">
       <Container>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 text-center items-center divide-y md:divide-y-0 md:divide-x divide-white/10">
           {stats.map((stat, index) => (
@@ -18,7 +18,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({ stats }) => {
                 index >= 2 ? 'pt-6 md:pt-2' : ''
               }`}
             >
-              <span className="font-serif font-bold text-3xl md:text-4xl text-[#A0E9E8] tracking-tight">
+              <span className="font-serif font-bold text-3xl md:text-4xl text-[#7AC943] tracking-tight">
                 {stat.value}
               </span>
               <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-300">

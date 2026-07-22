@@ -30,7 +30,7 @@ export const BottomCTA: React.FC = () => {
     <section className="py-16 md:py-24 bg-bg overflow-hidden font-sans text-left">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         {/* Dark Teal Background card */}
-        <div className="bg-[#003838] text-white rounded-[40px] p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-[#002828] grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="bg-[#005030] text-white rounded-[40px] p-8 md:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-[#004020] grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Blurred decorative radial gradient */}
           <div className="absolute bottom-[-100px] left-[-100px] w-80 h-80 rounded-full bg-accent/10 blur-3xl pointer-events-none" />
@@ -75,7 +75,7 @@ export const BottomCTA: React.FC = () => {
                   {b.icon}
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-[#A0E9E8] mb-1">
+                  <h3 className="text-sm font-bold text-[#7AC943] mb-1">
                     {b.title}
                   </h3>
                   <p className="text-[10px] text-slate-300 leading-relaxed font-normal font-sans">

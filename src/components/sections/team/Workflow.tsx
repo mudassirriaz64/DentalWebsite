@@ -8,7 +8,7 @@ import Container from '@/components/ui/Container';
 
 export const Workflow: React.FC = () => {
   return (
-    <section className="py-20 md:py-24 bg-[#005252] text-white overflow-hidden">
+    <section className="py-20 md:py-24 bg-[#0B5E2F] text-white overflow-hidden">
       <Container className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         {/* Left Column: Video Thumbnail */}
         <motion.div

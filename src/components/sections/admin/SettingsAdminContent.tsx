@@ -164,7 +164,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
       {/* Settings Form */}
       <form onSubmit={handleSubmit} className="max-w-4xl flex flex-col gap-6 text-left">
         {success && (
-          <div className="p-4 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/50 text-xs font-semibold flex items-center gap-2">
+          <div className="p-4 rounded-xl bg-green-50 text-green-700 border border-green-200/50 text-xs font-semibold flex items-center gap-2">
             <CheckCircle className="w-5 h-5 shrink-0" />
             Clinic settings updated successfully! Changes reflect on public pages immediately.
           </div>
@@ -186,7 +186,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Phone */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2A3738] uppercase">Clinic Phone *</label>
+              <label className="text-xs font-bold text-[#333333] uppercase">Clinic Phone *</label>
               <input
                 type="text"
                 required
@@ -199,7 +199,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
 
             {/* Phone note */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2A3738] uppercase">Phone Note (Subtext)</label>
+              <label className="text-xs font-bold text-[#333333] uppercase">Phone Note (Subtext)</label>
               <input
                 type="text"
                 value={phoneNote}
@@ -213,7 +213,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2A3738] uppercase">Clinic Email *</label>
+              <label className="text-xs font-bold text-[#333333] uppercase">Clinic Email *</label>
               <input
                 type="email"
                 required
@@ -226,7 +226,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
 
             {/* Emergency Phone */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2A3738] uppercase">Emergency Hotline Phone</label>
+              <label className="text-xs font-bold text-[#333333] uppercase">Emergency Hotline Phone</label>
               <input
                 type="text"
                 value={emergencyPhone}
@@ -240,7 +240,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* WhatsApp */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2A3738] uppercase">WhatsApp / Mobile Number</label>
+              <label className="text-xs font-bold text-[#333333] uppercase">WhatsApp / Mobile Number</label>
               <input
                 type="text"
                 value={whatsapp}
@@ -252,7 +252,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
 
             {/* Booking Status Message */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-[#2A3738] uppercase">Booking status / availability message</label>
+              <label className="text-xs font-bold text-[#333333] uppercase">Booking status / availability message</label>
               <input
                 type="text"
                 value={bookingStatusMessage}
@@ -272,7 +272,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
 
           {/* Address */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#2A3738] uppercase">Clinic Physical Address *</label>
+            <label className="text-xs font-bold text-[#333333] uppercase">Clinic Physical Address *</label>
             <input
               type="text"
               required
@@ -293,7 +293,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
 
           {/* Map Directions URL */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-[#2A3738] uppercase">Google Map Directions Link</label>
+            <label className="text-xs font-bold text-[#333333] uppercase">Google Map Directions Link</label>
             <input
               type="url"
               value={mapDirectionsUrl}

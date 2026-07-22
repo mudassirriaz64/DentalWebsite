@@ -60,7 +60,7 @@ export const AboutHero: React.FC = () => {
           className="lg:col-span-6 relative flex justify-center lg:justify-end py-10"
         >
           {/* Hero Image Container Wrapper - border E7EEFF */}
-          <div className="relative w-full max-w-[480px] aspect-square rounded-[24px] border-[12px] border-[#E7EEFF] shadow-card bg-slate-100 shrink-0">
+          <div className="relative w-full max-w-[480px] aspect-square rounded-[24px] border-[12px] border-[#E0E0E0] shadow-card bg-slate-100 shrink-0">
             <Image
               src="/images/home/about-hero.png"
               alt="Dental Cosmetics Team"
