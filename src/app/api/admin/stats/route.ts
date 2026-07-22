@@ -12,14 +12,17 @@ const updateStatsSchema = z.object({
   ),
 });
 
-export async function GET() {
+export async function GET(request: Request) {
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const { searchParams } = new URL(request.url);
+  const page = searchParams.get('page') || 'reviews';
+
   try {
-    const stats = await getStatsForAdmin();
+    const stats = await getStatsForAdmin(page);
     return NextResponse.json(stats);
   } catch (error) {
     console.error('API GET stats error:', error);
@@ -33,6 +36,9 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const { searchParams } = new URL(request.url);
+  const page = searchParams.get('page') || 'reviews';
+
   try {
     const body = await request.json();
     const result = updateStatsSchema.safeParse(body);
@@ -41,7 +47,13 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: result.error.issues[0].message }, { status: 400 });
     }
 
-    await updateStats(result.data.stats);
+    const labels = result.data.stats.map(s => s.label.trim().toLowerCase());
+    const hasDuplicates = labels.some((label, idx) => labels.indexOf(label) !== idx);
+    if (hasDuplicates) {
+      return NextResponse.json({ error: 'Duplicate statistic labels are not allowed' }, { status: 400 });
+    }
+
+    await updateStats(result.data.stats, page);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('API PATCH stats error:', error);

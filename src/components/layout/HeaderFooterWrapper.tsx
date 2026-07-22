@@ -20,7 +20,7 @@ export default function HeaderFooterWrapper({ children, settings }: HeaderFooter
 
   return (
     <>
-      <Header />
+      <Header settings={settings} />
       <main className="flex-grow flex flex-col w-full">{children}</main>
       <Footer settings={settings} />
     </>

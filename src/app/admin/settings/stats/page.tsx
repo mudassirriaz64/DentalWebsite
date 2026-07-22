@@ -11,13 +11,19 @@ export default async function AdminStatsPage() {
     redirect('/admin/login');
   }
 
-  const stats = await getStatsForAdmin();
+  const reviewsStats = await getStatsForAdmin('reviews');
+  const homeStats = await getStatsForAdmin('home');
 
-  // Format Dates for safe prop transfer
-  const formattedStats = stats.map((s) => ({
-    ...s,
-    updatedAt: s.updatedAt.toISOString(),
-  }));
+  const formatStats = (items: any[]) =>
+    items.map((s) => ({
+      ...s,
+      updatedAt: s.updatedAt.toISOString(),
+    }));
 
-  return <StatsAdminContent initialStats={formattedStats} />;
+  return (
+    <StatsAdminContent
+      initialReviewsStats={formatStats(reviewsStats)}
+      initialHomeStats={formatStats(homeStats)}
+    />
+  );
 }

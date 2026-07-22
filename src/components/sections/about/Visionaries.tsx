@@ -16,7 +16,16 @@ export const Visionaries: React.FC = () => {
   useEffect(() => {
     fetch('/api/doctors')
       .then((res) => res.json())
-      .then((docs) => setFeaturedDoctors(docs.slice(0, 3)))
+      .then((docs: Doctor[]) => {
+        const featured = docs.filter((d) => d.featured);
+        if (featured.length >= 3) {
+          setFeaturedDoctors(featured.slice(0, 3));
+        } else {
+          const needed = 3 - featured.length;
+          const nonFeatured = docs.filter((d) => !d.featured).slice(0, needed);
+          setFeaturedDoctors([...featured, ...nonFeatured]);
+        }
+      })
       .catch(() => {});
   }, []);
 

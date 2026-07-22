@@ -7,10 +7,12 @@ import { ReviewInput } from '@/types/reviews';
  */
 export async function getApprovedReviews({
   category,
+  featured,
   page = 1,
   pageSize = 6,
 }: {
   category?: string;
+  featured?: boolean;
   page?: number;
   pageSize?: number;
 }) {
@@ -19,6 +21,7 @@ export async function getApprovedReviews({
       where: {
         status: 'approved',
         ...(category && category !== 'All Reviews' ? { category } : {}),
+        ...(featured !== undefined ? { featured } : {}),
       },
       orderBy: [
         { featured: 'desc' },
@@ -78,4 +81,39 @@ export async function submitReview(data: ReviewInput) {
       featured: false,
     },
   });
+}
+
+/**
+ * Renders Site Stats for a specific page.
+ */
+export async function getSiteStats(page: string) {
+  try {
+    const stats = await prisma.siteStat.findMany({
+      where: { page },
+      orderBy: { displayOrder: 'asc' },
+    });
+
+    return stats.map((s) => ({
+      ...s,
+      id: s.id,
+      updatedAt: s.updatedAt.toISOString(),
+    }));
+  } catch (error) {
+    console.error(`getSiteStats error for page ${page}:`, error);
+    return [];
+  }
+}
+
+/**
+ * Returns a live count of approved reviews.
+ */
+export async function getApprovedReviewsCount() {
+  try {
+    return await prisma.review.count({
+      where: { status: 'approved' },
+    });
+  } catch (error) {
+    console.error('getApprovedReviewsCount error:', error);
+    return 0;
+  }
 }

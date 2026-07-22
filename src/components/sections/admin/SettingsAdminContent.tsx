@@ -22,10 +22,12 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
   const [address, setAddress] = useState(initialSettings.address);
   const [phone, setPhone] = useState(initialSettings.phone);
   const [phoneNote, setPhoneNote] = useState(initialSettings.phoneNote || '');
+  const [whatsapp, setWhatsapp] = useState(initialSettings.whatsapp || '');
   const [email, setEmail] = useState(initialSettings.email);
   const [emergencyPhone, setEmergencyPhone] = useState(initialSettings.emergencyPhone || '');
   const [mapImageUrl, setMapImageUrl] = useState(initialSettings.mapImageUrl || '');
   const [mapDirectionsUrl, setMapDirectionsUrl] = useState(initialSettings.mapDirectionsUrl || '');
+  const [bookingStatusMessage, setBookingStatusMessage] = useState(initialSettings.bookingStatusMessage || '');
 
   // Repeatable rows for hours
   const [hoursRows, setHoursRows] = useState<FormHoursRow[]>(
@@ -99,10 +101,12 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
           address,
           phone,
           phoneNote: phoneNote.trim() || undefined,
+          whatsapp: whatsapp.trim() || undefined,
           email,
           emergencyPhone: emergencyPhone.trim() || undefined,
           mapImageUrl: mapImageUrl.trim() || undefined,
           mapDirectionsUrl: mapDirectionsUrl.trim() || undefined,
+          bookingStatusMessage: bookingStatusMessage.trim() || undefined,
           openingHours: hoursRows.map((row) => ({
             label: row.label,
             hours: row.hours,
@@ -123,10 +127,12 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
       setAddress(data.address);
       setPhone(data.phone);
       setPhoneNote(data.phoneNote || '');
+      setWhatsapp(data.whatsapp || '');
       setEmail(data.email);
       setEmergencyPhone(data.emergencyPhone || '');
       setMapImageUrl(data.mapImageUrl || '');
       setMapDirectionsUrl(data.mapDirectionsUrl || '');
+      setBookingStatusMessage(data.bookingStatusMessage || '');
       setHoursRows(
         (data.openingHours || []).map((oh: OpeningHoursEntry) => ({
           id: oh.id,
@@ -227,6 +233,32 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
                 onChange={(e) => setEmergencyPhone(e.target.value)}
                 placeholder="(502) 999-0000"
                 className="px-4 py-2.5 bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* WhatsApp */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-[#2A3738] uppercase">WhatsApp / Mobile Number</label>
+              <input
+                type="text"
+                value={whatsapp}
+                onChange={(e) => setWhatsapp(e.target.value)}
+                placeholder="03245021261"
+                className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs font-semibold text-slate-700"
+              />
+            </div>
+
+            {/* Booking Status Message */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-[#2A3738] uppercase">Booking status / availability message</label>
+              <input
+                type="text"
+                value={bookingStatusMessage}
+                onChange={(e) => setBookingStatusMessage(e.target.value)}
+                placeholder="Now Accepting New Patients"
+                className="px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs font-semibold text-slate-700"
               />
             </div>
           </div>
@@ -364,15 +396,14 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
           </div>
         </div>
 
-        {/* Form CTA Submit button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-fit flex items-center justify-center gap-2 font-semibold transition-all duration-300 rounded-full text-xs px-8 py-3.5 bg-primary text-white hover:bg-teal-950 btn-diagonal-stripe shadow-md cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-primary hover:bg-primary-hover text-white disabled:opacity-50 transition shadow-sm cursor-pointer w-fit"
         >
           {loading ? (
             <>
-              <Loader className="w-4.5 h-4.5 animate-spin" /> Saving Configuration...
+              <Loader className="w-4 h-4 animate-spin" /> Saving Configuration...
             </>
           ) : (
             <>

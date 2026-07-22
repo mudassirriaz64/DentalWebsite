@@ -12,10 +12,12 @@ interface UpdateSettingsPayload {
   address: string;
   phone: string;
   phoneNote?: string;
+  whatsapp?: string;
   email: string;
   emergencyPhone?: string;
   mapImageUrl?: string | null;
   mapDirectionsUrl?: string;
+  bookingStatusMessage?: string;
   openingHours: {
     label: string;
     hours: string;
@@ -45,10 +47,12 @@ export async function updateClinicSettings(payload: UpdateSettingsPayload) {
         address: payload.address,
         phone: payload.phone,
         phoneNote: payload.phoneNote || null,
+        whatsapp: payload.whatsapp || null,
         email: payload.email,
         emergencyPhone: payload.emergencyPhone || null,
         mapImageUrl: payload.mapImageUrl || null,
         mapDirectionsUrl: payload.mapDirectionsUrl || null,
+        bookingStatusMessage: payload.bookingStatusMessage || null,
         openingHours: formattedHours,
       },
     });
@@ -59,10 +63,12 @@ export async function updateClinicSettings(payload: UpdateSettingsPayload) {
       address: payload.address,
       phone: payload.phone,
       phoneNote: payload.phoneNote || null,
+      whatsapp: payload.whatsapp || null,
       email: payload.email,
       emergencyPhone: payload.emergencyPhone || null,
       mapImageUrl: payload.mapImageUrl || null,
       mapDirectionsUrl: payload.mapDirectionsUrl || null,
+      bookingStatusMessage: payload.bookingStatusMessage || null,
       openingHours: formattedHours,
     },
   });

@@ -3,15 +3,20 @@
 import React from 'react';
 import { motion, Variants } from 'framer-motion';
 import Container from '@/components/ui/Container';
+import { SiteStat } from '@/types/reviews';
 
-const stats = [
-  { value: '15+', label: 'Years Experience' },
-  { value: '5K+', label: 'Smiles Transformed' },
-  { value: '99%', label: 'Implant Success' },
-  { value: '24/7', label: 'Priority Support' },
-];
+interface StatsBarProps {
+  stats?: SiteStat[];
+}
 
-export const StatsBar: React.FC = () => {
+export const StatsBar: React.FC<StatsBarProps> = ({ stats }) => {
+  const displayStats = stats && stats.length > 0 ? stats : [
+    { value: '15+', label: 'Years Experience' },
+    { value: '5K+', label: 'Smiles Transformed' },
+    { value: '99%', label: 'Implant Success' },
+    { value: '24/7', label: 'Priority Support' },
+  ];
+
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -39,7 +44,7 @@ export const StatsBar: React.FC = () => {
           viewport={{ once: true, margin: '-50px' }}
           className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 w-full text-center"
         >
-          {stats.map((stat, idx) => (
+          {displayStats.map((stat, idx) => (
             <motion.div
               key={idx}
               variants={itemVariants}

@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText, Settings as SettingsIcon, BarChart as BarChartIcon } from 'lucide-react';
+import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText, Settings as SettingsIcon, BarChart as BarChartIcon, LayoutDashboard } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 
 function AdminSidebarNav() {
@@ -12,6 +12,7 @@ function AdminSidebarNav() {
   const tab = searchParams.get('tab');
 
   const menuItems = [
+    { label: 'Dashboard', href: '/admin', path: '/admin', icon: LayoutDashboard },
     { label: 'Appointments', href: '/admin/appointments', path: '/admin/appointments', icon: Calendar },
     { label: 'Submissions', href: '/admin/submissions', path: '/admin/submissions', icon: FileText },
     { label: 'Reviews', href: '/admin/reviews', path: '/admin/reviews', icon: MessageSquare },
@@ -31,8 +32,8 @@ function AdminSidebarNav() {
         if (item.href.includes('?tab=')) {
           const targetTab = item.href.split('?tab=')[1];
           isActive = pathname === '/admin' && tab === targetTab;
-        } else if (item.href === '/admin/submissions') {
-          isActive = pathname === '/admin/submissions' || (pathname === '/admin' && !tab);
+        } else if (item.href === '/admin') {
+          isActive = pathname === '/admin' && !tab;
         } else {
           isActive = pathname?.startsWith(item.path);
         }

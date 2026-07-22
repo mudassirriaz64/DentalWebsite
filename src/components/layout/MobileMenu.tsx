@@ -8,13 +8,16 @@ import { NavLink } from '@/types';
 import { siteConfig } from '@/data/siteConfig';
 import Button from '../ui/Button';
 
+import WhatsAppIcon from '../ui/WhatsAppIcon';
+
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   links: NavLink[];
+  settings?: any;
 }
 
-export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, links }) => {
+export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, links, settings }) => {
   const overlayVariants: Variants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
@@ -106,23 +109,42 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, links }
 
                 <div className="flex flex-col gap-4 text-sm text-slate-600">
                   <a
-                    href={siteConfig.contact.phoneFormatted}
+                    href={`tel:${(settings?.phone || siteConfig.contact.phone).replace(/\s+/g, '')}`}
                     className="flex items-center gap-3 hover:text-primary transition-colors"
                   >
                     <Phone className="w-4 h-4 text-primary" />
-                    <span>{siteConfig.contact.phone}</span>
+                    <span>{settings?.phone || siteConfig.contact.phone}</span>
                   </a>
+                  {settings?.whatsapp && (
+                    <div className="flex items-center justify-between">
+                      <a
+                        href={`tel:${settings.whatsapp.replace(/\D/g, '')}`}
+                        className="flex items-center gap-3 hover:text-primary transition-colors"
+                      >
+                        <Phone className="w-4 h-4 text-primary" />
+                        <span>{settings.whatsapp}</span>
+                      </a>
+                      <a
+                        href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors"
+                      >
+                        <WhatsAppIcon className="w-4 h-4 fill-emerald-500" /> WhatsApp
+                      </a>
+                    </div>
+                  )}
                   <a
-                    href={`mailto:${siteConfig.contact.email}`}
+                    href={`mailto:${settings?.email || siteConfig.contact.email}`}
                     className="flex items-center gap-3 hover:text-primary transition-colors"
                   >
                     <Mail className="w-4 h-4 text-primary" />
-                    <span>{siteConfig.contact.email}</span>
+                    <span>{settings?.email || siteConfig.contact.email}</span>
                   </a>
-                  <div className="flex items-start gap-3">
-                    <MapPin className="w-4 h-4 text-primary mt-0.5" />
-                    <span>{siteConfig.contact.address}</span>
-                  </div>
+                  <a href={settings?.mapDirectionsUrl || siteConfig.contact.addressMapUrl} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 hover:text-primary transition-colors">
+                    <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                    <span>{settings?.address || siteConfig.contact.address}</span>
+                  </a>
                 </div>
               </div>
             </div>

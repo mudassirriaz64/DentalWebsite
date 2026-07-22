@@ -10,6 +10,7 @@ export const footerLinks: FooterSection[] = [
       { label: 'Services', href: '/services' },
       { label: 'Our Team', href: '/team' },
       { label: 'Reviews & Stories', href: '/reviews' },
+      { label: 'Contact Us', href: '/contact' },
     ],
   },
   {

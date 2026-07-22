@@ -3,9 +3,9 @@ import { prisma } from '../db';
 /**
  * Fetches reviews site stats sorted by displayOrder.
  */
-export async function getStatsForAdmin() {
+export async function getStatsForAdmin(page: string = 'reviews') {
   return prisma.siteStat.findMany({
-    where: { page: 'reviews' },
+    where: { page },
     orderBy: { displayOrder: 'asc' },
   });
 }
@@ -18,17 +18,17 @@ interface StatPayload {
 /**
  * Updates site stats via transactional delete-and-insert.
  */
-export async function updateStats(payload: StatPayload[]) {
+export async function updateStats(payload: StatPayload[], page: string = 'reviews') {
   return prisma.$transaction(async (tx) => {
-    // 1. Delete existing reviews stats
+    // 1. Delete existing stats for the page
     await tx.siteStat.deleteMany({
-      where: { page: 'reviews' },
+      where: { page },
     });
 
     // 2. Re-insert new stats items
     return tx.siteStat.createMany({
       data: payload.map((s, idx) => ({
-        page: 'reviews',
+        page,
         label: s.label,
         value: s.value,
         displayOrder: idx + 1,

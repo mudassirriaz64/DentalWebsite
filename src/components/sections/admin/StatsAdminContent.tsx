@@ -5,7 +5,8 @@ import { Save, Plus, Trash2, Loader, CheckCircle, AlertCircle } from 'lucide-rea
 import { SiteStat } from '@/types/reviews';
 
 interface StatsAdminContentProps {
-  initialStats: SiteStat[];
+  initialReviewsStats: SiteStat[];
+  initialHomeStats: SiteStat[];
 }
 
 interface FormStatRow {
@@ -14,9 +15,22 @@ interface FormStatRow {
   value: string;
 }
 
-export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialStats }) => {
-  const [statsRows, setStatsRows] = useState<FormStatRow[]>(
-    initialStats.map((s) => ({
+export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
+  initialReviewsStats,
+  initialHomeStats,
+}) => {
+  const [activeTab, setActiveTab] = useState<'home' | 'reviews'>('home');
+
+  const [homeStats, setHomeStats] = useState<FormStatRow[]>(
+    initialHomeStats.map((s) => ({
+      id: s.id,
+      label: s.label,
+      value: s.value,
+    }))
+  );
+
+  const [reviewsStats, setReviewsStats] = useState<FormStatRow[]>(
+    initialReviewsStats.map((s) => ({
       id: s.id,
       label: s.label,
       value: s.value,
@@ -27,21 +41,24 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const currentRows = activeTab === 'home' ? homeStats : reviewsStats;
+  const setCurrentRows = activeTab === 'home' ? setHomeStats : setReviewsStats;
+
   const handleAddRow = () => {
-    setStatsRows([...statsRows, { label: '', value: '' }]);
+    setCurrentRows([...currentRows, { label: '', value: '' }]);
   };
 
   const handleDeleteRow = (index: number) => {
-    if (statsRows.length <= 1) {
+    if (currentRows.length <= 1) {
       alert('You must have at least one site statistics row.');
       return;
     }
-    setStatsRows(statsRows.filter((_, idx) => idx !== index));
+    setCurrentRows(currentRows.filter((_, idx) => idx !== index));
   };
 
   const handleRowChange = (index: number, field: keyof FormStatRow, val: string) => {
-    setStatsRows(
-      statsRows.map((row, idx) => {
+    setCurrentRows(
+      currentRows.map((row, idx) => {
         if (idx === index) {
           return { ...row, [field]: val };
         }
@@ -56,20 +73,28 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
     setErrorMsg('');
 
     // Validations
-    for (let i = 0; i < statsRows.length; i++) {
-      if (!statsRows[i].label.trim() || !statsRows[i].value.trim()) {
+    const seenLabels = new Set<string>();
+    for (let i = 0; i < currentRows.length; i++) {
+      const label = currentRows[i].label.trim();
+      const value = currentRows[i].value.trim();
+      if (!label || !value) {
         return setErrorMsg(`Row ${i + 1} contains empty label names or value details.`);
       }
+      const normLabel = label.toLowerCase();
+      if (seenLabels.has(normLabel)) {
+        return setErrorMsg(`Duplicate label "${label}" found. Each statistic must have a unique label.`);
+      }
+      seenLabels.add(normLabel);
     }
 
     setLoading(true);
 
     try {
-      const res = await fetch('/api/admin/stats', {
+      const res = await fetch(`/api/admin/stats?page=${activeTab}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          stats: statsRows.map((row) => ({
+          stats: currentRows.map((row) => ({
             label: row.label,
             value: row.value,
           })),
@@ -84,16 +109,19 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
       setSuccess(true);
       
       // Re-fetch current stats to reload IDs
-      const refetchRes = await fetch('/api/admin/stats');
+      const refetchRes = await fetch(`/api/admin/stats?page=${activeTab}`);
       if (refetchRes.ok) {
         const refetched = await refetchRes.json();
-        setStatsRows(
-          refetched.map((s: SiteStat) => ({
-            id: s.id,
-            label: s.label,
-            value: s.value,
-          }))
-        );
+        const updated = refetched.map((s: SiteStat) => ({
+          id: s.id,
+          label: s.label,
+          value: s.value,
+        }));
+        if (activeTab === 'home') {
+          setHomeStats(updated);
+        } else {
+          setReviewsStats(updated);
+        }
       }
     } catch (err: any) {
       setErrorMsg(err.message || 'An error occurred while saving.');
@@ -107,19 +135,49 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
       {/* Header */}
       <header className="mb-8">
         <h1 className="text-2xl font-bold font-sans tracking-tight text-slate-900">
-          Reviews Page Statistics Configuration
+          Site Statistics Configuration
         </h1>
         <p className="text-xs text-slate-500 mt-1">
-          Configure site metrics (e.g. Five Star Reviews, Happy Patients). These values load dynamically into the Reviews page Stats Bar.
+          Configure site metrics that load dynamically across key pages (Home and Reviews).
         </p>
       </header>
+
+      {/* Tabs */}
+      <div className="flex gap-2 border-b border-slate-100 mb-6">
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTab('home');
+            setSuccess(false);
+            setErrorMsg('');
+          }}
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider relative -mb-px transition-all cursor-pointer ${
+            activeTab === 'home' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-600'
+          }`}
+        >
+          Home Page Stats
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setActiveTab('reviews');
+            setSuccess(false);
+            setErrorMsg('');
+          }}
+          className={`px-4 py-2 text-xs font-bold uppercase tracking-wider relative -mb-px transition-all cursor-pointer ${
+            activeTab === 'reviews' ? 'text-primary border-b-2 border-primary' : 'text-slate-400 hover:text-slate-600'
+          }`}
+        >
+          Reviews Page Stats
+        </button>
+      </div>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="max-w-3xl flex flex-col gap-6 text-left">
         {success && (
           <div className="p-4 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200/50 text-xs font-semibold flex items-center gap-2">
             <CheckCircle className="w-5 h-5 shrink-0" />
-            Reviews statistics updated successfully! Public Stats Bar updated.
+            Statistics updated successfully! Changes reflect on public pages immediately.
           </div>
         )}
 
@@ -134,7 +192,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
         <div className="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm flex flex-col gap-5">
           <div className="flex justify-between items-center border-b pb-3">
             <h2 className="font-serif font-bold text-lg text-primary">
-              Active Site Statistics
+              Active Site Statistics ({activeTab === 'home' ? 'Home Page' : 'Reviews Page'})
             </h2>
             <button
               type="button"
@@ -146,10 +204,10 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
           </div>
 
           <div className="flex flex-col gap-4">
-            {statsRows.map((row, index) => (
+            {currentRows.map((row, index) => (
               <div
                 key={index}
-                className="grid grid-cols-12 gap-4 items-center p-3.5 bg-slate-50 rounded-xl border border-slate-150 relative animate-fade-in"
+                className="grid grid-cols-12 gap-3 items-center p-3 bg-slate-50 rounded-xl border border-slate-150 relative animate-fade-in"
               >
                 {/* Stat value (e.g. 2,500+) */}
                 <div className="col-span-4 flex flex-col gap-1">
@@ -162,7 +220,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
                     value={row.value}
                     onChange={(e) => handleRowChange(index, 'value', e.target.value)}
                     placeholder="2,500+ or 99%"
-                    className="px-3 py-1.5 bg-white border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs font-bold text-slate-800"
+                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs font-bold text-slate-800"
                   />
                 </div>
 
@@ -177,7 +235,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
                     value={row.label}
                     onChange={(e) => handleRowChange(index, 'label', e.target.value)}
                     placeholder="Five Star Reviews"
-                    className="px-3 py-1.5 bg-white border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs font-semibold text-slate-700"
+                    className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary text-xs font-semibold text-slate-700"
                   />
                 </div>
 
@@ -201,11 +259,11 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({ initialSta
         <button
           type="submit"
           disabled={loading}
-          className="w-fit flex items-center justify-center gap-2 font-semibold transition-all duration-300 rounded-full text-xs px-8 py-3.5 bg-primary text-white hover:bg-teal-950 btn-diagonal-stripe shadow-md cursor-pointer disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-primary hover:bg-primary-hover text-white disabled:opacity-50 transition shadow-sm cursor-pointer w-fit"
         >
           {loading ? (
             <>
-              <Loader className="w-4.5 h-4.5 animate-spin" /> Saving Configuration...
+              <Loader className="w-4 h-4 animate-spin" /> Saving Configuration...
             </>
           ) : (
             <>

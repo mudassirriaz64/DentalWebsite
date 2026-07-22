@@ -10,9 +10,10 @@ import Logo from '../ui/Logo';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
 import MobileMenu from './MobileMenu';
+import WhatsAppIcon from '../ui/WhatsAppIcon';
 import { cn } from '@/lib/utils';
 
-export const Header: React.FC = () => {
+export const Header: React.FC<{ settings?: any }> = ({ settings }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -55,7 +56,7 @@ export const Header: React.FC = () => {
           </Link>
 
           {/* Desktop Navigation - Manrope 14px bold, uppercase, tracking */}
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-6 shrink-0">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -63,7 +64,7 @@ export const Header: React.FC = () => {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    'font-sans font-bold text-[13px] tracking-wider uppercase transition-colors py-2 relative',
+                    'font-sans font-bold text-[13px] tracking-wider uppercase transition-colors py-2 relative whitespace-nowrap',
                     isActive ? 'text-primary' : 'text-body-text hover:text-primary'
                   )}
                 >
@@ -77,18 +78,35 @@ export const Header: React.FC = () => {
           </nav>
 
           {/* Action Area */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 lg:border-l lg:border-slate-200/80 lg:pl-5 xl:pl-6">
+            {/* Call Icon-only button */}
             <a
-              href={siteConfig.contact.phoneFormatted}
-              className="hidden sm:flex items-center gap-2 text-sm font-bold text-body-text hover:text-primary transition-colors"
+              href={`tel:${(settings?.phone || siteConfig.contact.phone).replace(/\s+/g, '')}`}
+              className="hidden sm:inline-flex items-center justify-center p-2 rounded-xl text-body-text hover:text-primary hover:bg-slate-50 transition-colors shrink-0"
+              title={`Call us: ${settings?.phone || siteConfig.contact.phone}`}
+              aria-label={`Call us at ${settings?.phone || siteConfig.contact.phone}`}
             >
-              <Phone className="w-4 h-4 text-primary" />
-              <span>{siteConfig.contact.phone}</span>
+              <Phone className="w-4 h-4 text-primary shrink-0" />
             </a>
 
+            {/* WhatsApp Icon-only button */}
+            {settings?.whatsapp && (
+              <a
+                href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center justify-center p-2 rounded-xl text-body-text hover:text-primary hover:bg-slate-50 transition-colors shrink-0 hover:scale-110 transition-transform"
+                title={`WhatsApp us: ${settings.whatsapp}`}
+                aria-label={`Message us on WhatsApp at ${settings.whatsapp}`}
+              >
+                <WhatsAppIcon className="w-4 h-4 fill-emerald-500 hover:fill-emerald-600 transition-colors" />
+              </a>
+            )}
+
+            {/* Book Appointment CTA */}
             <Link
               href="/book-appointment"
-              className="hidden md:inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-xs px-5 py-2.5 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer"
+              className="hidden md:inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-xs px-4 py-2 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer whitespace-nowrap shrink-0"
             >
               Book Appointment
             </Link>
@@ -96,7 +114,7 @@ export const Header: React.FC = () => {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 -mr-2 rounded-full lg:hidden text-body-text hover:bg-slate-100 focus:outline-none transition-colors cursor-pointer"
+              className="p-2 -mr-2 rounded-full lg:hidden text-body-text hover:bg-slate-100 focus:outline-none transition-colors cursor-pointer shrink-0"
               aria-label="Open menu"
             >
               <Menu className="w-6 h-6" />
@@ -110,6 +128,7 @@ export const Header: React.FC = () => {
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
         links={navLinks}
+        settings={settings}
       />
     </>
   );

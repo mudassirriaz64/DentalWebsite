@@ -43,10 +43,12 @@ export async function getClinicSettings() {
     address: '4517 Washington Ave. Manchester, Kentucky 39495',
     phone: '(502) 555-0107',
     phoneNote: 'Mon-Fri, 9am - 5pm',
+    whatsapp: null,
     email: 'office@dentalcosmetic.com',
     emergencyPhone: '(502) 999-0000',
     mapImageUrl: null,
     mapDirectionsUrl: 'https://maps.google.com',
+    bookingStatusMessage: null,
     openingHours: [
       { id: '1', label: 'Mon - Thu', hours: '09:00 - 18:00', isEmergencyNote: false, isDimmed: false, displayOrder: 1 },
       { id: '2', label: 'Friday', hours: '09:00 - 16:00', isEmergencyNote: false, isDimmed: false, displayOrder: 2 },

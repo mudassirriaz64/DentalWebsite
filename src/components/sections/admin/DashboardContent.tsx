@@ -92,7 +92,7 @@ export default function DashboardContent({ username: _username }: DashboardConte
     if (activeTab === 'services') {
       setFormFields({ title: '', shortDescription: '', description: '', slug: '', iconName: 'Sparkles', imagePath: '', bullets: [''], featured: false });
     } else if (activeTab === 'doctors') {
-      setFormFields({ name: 'Dr. ', role: 'core-team', title: '', bio: '', imagePath: '/images/home/doctor-elena.png', specialties: [''], education: [''] });
+      setFormFields({ name: 'Dr. ', role: 'core-team', title: '', bio: '', imagePath: '/images/home/doctor-elena.png', specialties: [''], education: [''], featured: false });
     }
     setIsFormOpen(true);
   };
@@ -486,6 +486,18 @@ export default function DashboardContent({ username: _username }: DashboardConte
                       onChange={(e) => setFormFields({ ...formFields, education: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
                       className="px-4 py-2.5 bg-slate-50 border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary text-xs"
                     />
+                  </div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <input
+                      type="checkbox"
+                      id="doctor-featured"
+                      checked={formFields.featured || false}
+                      onChange={(e) => setFormFields({ ...formFields, featured: e.target.checked })}
+                      className="w-4 h-4 text-primary bg-slate-50 border-slate-300 rounded focus:ring-primary"
+                    />
+                    <label htmlFor="doctor-featured" className="text-sm font-bold text-[#2A3738]">
+                      Featured on About Page preview
+                    </label>
                   </div>
                 </>
               )}

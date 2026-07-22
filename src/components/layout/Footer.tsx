@@ -17,6 +17,7 @@ import { footerLinks } from '@/data/footerLinks';
 import { siteConfig } from '@/data/siteConfig';
 import Container from '../ui/Container';
 import Logo from '../ui/Logo';
+import WhatsAppIcon from '../ui/WhatsAppIcon';
 
 interface FooterProps {
   settings?: any;
@@ -175,6 +176,25 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                   {settings?.phone || siteConfig.contact.phone}
                 </a>
               </li>
+              {settings?.whatsapp && (
+                <li className="flex items-center gap-2.5">
+                  <Phone className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+                  <a
+                    href={`tel:${settings.whatsapp.replace(/\D/g, '')}`}
+                    className="text-emerald-400 hover:underline font-semibold transition-all duration-300"
+                  >
+                    {settings.whatsapp}
+                  </a>
+                  <a
+                    href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 hover:text-emerald-300 transition-colors bg-emerald-500/10 px-2 py-1 rounded-md ml-1"
+                  >
+                    <WhatsAppIcon className="w-3 h-3 fill-emerald-400" /> WA
+                  </a>
+                </li>
+              )}
               {settings?.emergencyPhone && (
                 <li className="flex items-center gap-2.5">
                   <Phone className="w-4 h-4 text-accent-soft flex-shrink-0" />

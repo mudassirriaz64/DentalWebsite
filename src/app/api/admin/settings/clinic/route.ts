@@ -7,10 +7,12 @@ const updateSettingsSchema = z.object({
   address: z.string().min(1, 'Address is required').max(200),
   phone: z.string().min(1, 'Phone is required').max(30),
   phoneNote: z.string().max(50).optional(),
+  whatsapp: z.string().max(30).optional(),
   email: z.string().email('Please enter a valid email address').max(100),
   emergencyPhone: z.string().max(30).optional(),
   mapImageUrl: z.string().optional().or(z.literal('')).nullable(),
   mapDirectionsUrl: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
+  bookingStatusMessage: z.string().max(100).optional(),
   openingHours: z.array(
     z.object({
       label: z.string().min(1, 'Day label is required').max(50),

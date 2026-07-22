@@ -62,6 +62,7 @@ model Doctor {
   bio          String
   imagePath    String
   education    String[]      // Native Mongo String array
+  featured     Boolean       @default(false)
   displayOrder Int           @default(0)
   appointments Appointment[]
   createdAt    DateTime      @default(now())
@@ -180,10 +181,12 @@ model ClinicSettings {
   address          String
   phone            String
   phoneNote        String?
+  whatsapp         String?
   email            String
   emergencyPhone   String?
   mapImageUrl      String?
   mapDirectionsUrl String?
+  bookingStatusMessage String?
   openingHours     OpeningHoursEntry[]
   updatedAt        DateTime            @updatedAt
 }

@@ -13,10 +13,12 @@ export interface ClinicSettings {
   address: string;
   phone: string;
   phoneNote: string | null;
+  whatsapp: string | null;
   email: string;
   emergencyPhone: string | null;
   mapImageUrl: string | null;
   mapDirectionsUrl: string | null;
+  bookingStatusMessage: string | null;
   openingHours?: OpeningHoursEntry[];
   updatedAt: string;
 }

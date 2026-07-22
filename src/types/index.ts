@@ -76,6 +76,7 @@ export interface Doctor {
   specialties?: string[];
   education?: string[];
   displayOrder?: number;
+  featured?: boolean;
 }
 
 export interface Testimonial {

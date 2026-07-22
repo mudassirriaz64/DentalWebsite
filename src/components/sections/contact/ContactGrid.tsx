@@ -8,6 +8,7 @@ import { Service } from '@/types';
 import { ClinicSettings } from '@/types/settings';
 import { MapPin, Phone, Mail, Clock, CheckCircle, ArrowRight, ExternalLink, Loader } from 'lucide-react';
 import { siteConfig } from '@/data/siteConfig';
+import WhatsAppIcon from '../../ui/WhatsAppIcon';
 
 interface ContactGridProps {
   settings: ClinicSettings;
@@ -291,21 +292,43 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
                   <div className="bg-white/10 p-2.5 rounded-xl flex-shrink-0">
                     <Phone className="w-5 h-5 text-primary-light" />
                   </div>
-                  <div>
+                  <div className="w-full">
                     <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#A0E9E8] mb-1">
                       Phone
                     </h4>
-                    <a
-                      href={`tel:${settings.phone.replace(/\s+/g, '')}`}
-                      className="text-white font-bold text-base hover:underline block"
-                    >
-                      {settings.phone}
-                    </a>
-                    {settings.phoneNote && (
-                      <span className="text-[10px] text-slate-300 font-semibold mt-0.5 block">
-                        {settings.phoneNote}
-                      </span>
-                    )}
+                    <div className="flex flex-col gap-2">
+                      <div>
+                        <a
+                          href={`tel:${settings.phone.replace(/\s+/g, '')}`}
+                          className="text-white font-bold text-base hover:underline block"
+                        >
+                          {settings.phone}
+                        </a>
+                        {settings.phoneNote && (
+                          <span className="text-[10px] text-slate-300 font-semibold mt-0.5 block">
+                            {settings.phoneNote}
+                          </span>
+                        )}
+                      </div>
+                      {settings.whatsapp && (
+                        <div className="flex items-center gap-3 pt-1 border-t border-white/10">
+                          <a
+                            href={`tel:${settings.whatsapp.replace(/\D/g, '')}`}
+                            className="text-white font-bold text-base hover:underline"
+                          >
+                            {settings.whatsapp}
+                          </a>
+                          <a
+                            href={`https://wa.me/${settings.whatsapp.replace(/\D/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-400 hover:text-emerald-300 transition-colors bg-emerald-500/10 px-2 py-1 rounded-md"
+                          >
+                            <WhatsAppIcon className="w-3 h-3 fill-emerald-400" /> WhatsApp
+                          </a>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </li>
 

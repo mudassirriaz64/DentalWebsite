@@ -7,8 +7,16 @@ import { motion } from 'framer-motion';
 import { Calendar } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import Container from '@/components/ui/Container';
+import { ClinicSettings } from '@/types/settings';
+import { SiteStat } from '@/types/reviews';
 
-export const Hero: React.FC = () => {
+interface HeroProps {
+  settings?: ClinicSettings | null;
+  patientStat?: SiteStat | null;
+  liveReviewsCount?: number;
+}
+
+export const Hero: React.FC<HeroProps> = ({ settings, patientStat, liveReviewsCount }) => {
   return (
     <section className="relative pt-12 pb-20 md:pt-16 md:pb-28 overflow-hidden bg-bg">
       {/* Decorative Blur Blobs */}
@@ -23,12 +31,11 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.6, ease: 'easeOut' }}
           className="lg:col-span-6 flex flex-col items-start"
         >
-          {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-light text-primary font-sans font-bold text-xs uppercase tracking-wider mb-6 shadow-sm">
             <span className="w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[9px] font-extrabold">
               ✓
             </span>
-            <span>Trusted by 5,000+ Patients</span>
+            <span>Trusted by {patientStat?.value || '5,000+'} {patientStat?.label || 'Patients'}</span>
           </div>
 
           {/* H1 Headline */}
@@ -85,10 +92,10 @@ export const Hero: React.FC = () => {
               ))}
             </div>
             <div className="flex items-center gap-2 text-sm text-body-text">
-              <span className="font-bold text-dark-text">500+ happy patients</span>
+              <span className="font-bold text-dark-text">Trusted by {patientStat?.value || '5,000+'} Patients</span>
               <span className="w-1.5 h-1.5 rounded-full bg-accent" />
               <div className="flex items-center gap-1 bg-accent-soft px-2.5 py-0.5 rounded-full text-accent font-bold text-xs border border-accent/15">
-                ★ 50+ Reviews
+                ★ {liveReviewsCount || 50}+ Verified Reviews
               </div>
             </div>
           </div>
@@ -129,12 +136,12 @@ export const Hero: React.FC = () => {
             </div>
             <div className="flex flex-col text-left">
               <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                Appointment
+                Appointment Status
               </span>
               <span className="text-sm font-bold text-dark-text leading-tight mt-0.5">
-                Next Available
+                Availability
               </span>
-              <span className="text-xs text-accent font-bold mt-0.5">Today at 2:30 PM</span>
+              <span className="text-xs text-accent font-bold mt-0.5">{settings?.bookingStatusMessage || 'Accepting New Patients'}</span>
             </div>
           </motion.div>
         </motion.div>
