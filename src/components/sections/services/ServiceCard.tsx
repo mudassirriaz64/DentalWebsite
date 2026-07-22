@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion, Variants } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Service } from '@/types';
+import { resolveImageUrl } from '@/lib/media';
 
 interface ServiceCardProps {
   service: Service;
@@ -16,10 +17,10 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, variants }) =
   const shortDescription = service?.shortDescription || service?.description || '';
   const slug = service?.slug || service?.id || 'service';
   
-  const [imgSrc, setImgSrc] = useState(service?.imagePath || defaultFallback);
+  const [imgSrc, setImgSrc] = useState(resolveImageUrl(service?.imagePath, defaultFallback));
 
   useEffect(() => {
-    setImgSrc(service?.imagePath || defaultFallback);
+    setImgSrc(resolveImageUrl(service?.imagePath, defaultFallback));
   }, [service?.imagePath]);
 
   // Safely parse and filter bullets array

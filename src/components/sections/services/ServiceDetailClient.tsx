@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, CheckCircle2, Calendar, ShieldCheck, Clock, Award } from 'lucide-react';
 import { Service } from '@/types';
 import Container from '@/components/ui/Container';
+import { resolveImageUrl } from '@/lib/media';
 
 interface ServiceDetailClientProps {
   service: Service;
@@ -14,10 +15,10 @@ interface ServiceDetailClientProps {
 
 export const ServiceDetailClient: React.FC<ServiceDetailClientProps> = ({ service }) => {
   const defaultFallback = '/images/home/dental-tech.png';
-  const [imgSrc, setImgSrc] = useState(service.imagePath || defaultFallback);
+  const [imgSrc, setImgSrc] = useState(resolveImageUrl(service.imagePath, defaultFallback));
 
   useEffect(() => {
-    setImgSrc(service.imagePath || defaultFallback);
+    setImgSrc(resolveImageUrl(service.imagePath, defaultFallback));
   }, [service.imagePath]);
 
   const fullDescription = service.description || service.shortDescription || '';

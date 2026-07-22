@@ -8,6 +8,7 @@ import { ArrowRight } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { Doctor } from '@/types';
+import { resolveImageUrl } from '@/lib/media';
 
 export const Visionaries: React.FC = () => {
   const [featuredDoctors, setFeaturedDoctors] = useState<Doctor[]>([]);
@@ -53,9 +54,8 @@ export const Visionaries: React.FC = () => {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12"
+          animate={featuredDoctors.length > 0 ? 'visible' : 'hidden'}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12 min-h-[400px]"
         >
           {featuredDoctors.map((doc, idx) => (
             <motion.div
@@ -66,7 +66,7 @@ export const Visionaries: React.FC = () => {
               {/* Doctor Photo Container */}
               <div className="relative w-full h-[400px] sm:h-[420px] rounded-[24px] overflow-hidden shadow-card border border-slate-100 bg-slate-100 flex-shrink-0">
                 <Image
-                  src={doc.imagePath || '/images/home/doctor-elena.png'}
+                  src={resolveImageUrl(doc.imagePath, '/images/home/doctor-elena.png')}
                   alt={doc.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 400px"

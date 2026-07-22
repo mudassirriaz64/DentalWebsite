@@ -8,6 +8,7 @@ import { ArrowRight } from 'lucide-react';
 import Container from '@/components/ui/Container';
 import SectionHeading from '@/components/ui/SectionHeading';
 import { Doctor } from '@/types';
+import { resolveImageUrl } from '@/lib/media';
 
 export const DoctorsGrid: React.FC = () => {
   const [allDoctors, setAllDoctors] = useState<Doctor[]>([]);
@@ -56,9 +57,8 @@ export const DoctorsGrid: React.FC = () => {
         <motion.div
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
+          animate={allDoctors.length > 0 ? 'visible' : 'hidden'}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full min-h-[400px]"
         >
           {allDoctors.map((doc, idx) => (
             <motion.div
@@ -70,7 +70,7 @@ export const DoctorsGrid: React.FC = () => {
                 {/* Photo Frame */}
                 <div className="relative w-full h-[260px] sm:h-[280px] rounded-2xl overflow-hidden bg-slate-100 mb-6 shrink-0">
                   <Image
-                    src={doc.imagePath || '/images/home/doctor-elena.png'}
+                    src={resolveImageUrl(doc.imagePath, '/images/home/doctor-elena.png')}
                     alt={doc.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 360px"

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Container from '@/components/ui/Container';
 import HighlightText from './HighlightText';
+import { resolveImageUrl } from '@/lib/media';
 
 interface SpotlightData {
   name: string;
@@ -71,7 +72,7 @@ export const TeamHero: React.FC = () => {
           className="w-full max-w-4xl rounded-[24px] overflow-hidden shadow-card border border-slate-100 aspect-[848/400] relative bg-slate-100 group"
         >
           <Image
-            src={spotlight.imagePath}
+            src={resolveImageUrl(spotlight.imagePath, '/images/home/hero-dentist.png')}
             alt={spotlight.name}
             fill
             priority
