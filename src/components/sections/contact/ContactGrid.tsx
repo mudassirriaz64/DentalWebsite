@@ -17,6 +17,8 @@ interface ContactGridProps {
 export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
   const searchParams = useSearchParams();
   const paramService = searchParams?.get('service');
+  const paramName = searchParams?.get('name');
+  const paramEmail = searchParams?.get('email');
 
   const [availableServices, setAvailableServices] = useState<Service[]>([]);
 
@@ -29,10 +31,10 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
   const [serviceInterest, setServiceInterest] = useState('');
 
   useEffect(() => {
-    if (paramService) {
-      setServiceInterest(paramService);
-    }
-  }, [paramService]);
+    if (paramService) setServiceInterest(paramService);
+    if (paramName) setFullName(paramName);
+    if (paramEmail) setEmail(paramEmail);
+  }, [paramService, paramName, paramEmail]);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
@@ -160,8 +162,8 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
                       className="px-4 py-3 bg-[#F0F0F0] border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary text-xs font-semibold text-slate-700"
                     >
                       <option value="">Select Service</option>
-                      {availableServices.map((s) => (
-                        <option key={s.id} value={s.title}>
+                      {availableServices.map((s, i) => (
+                        <option key={s.id || `service-${i}`} value={s.title}>
                           {s.title}
                         </option>
                       ))}
@@ -360,9 +362,9 @@ export const ContactGrid: React.FC<ContactGridProps> = ({ settings }) => {
                   Opening Hours
                 </h4>
                 <div className="flex flex-col gap-2.5 text-xs">
-                  {(settings.openingHours || []).map((oh) => (
+                  {(settings.openingHours || []).map((oh, i) => (
                     <div
-                      key={oh.id}
+                      key={oh.id || `oh-${i}`}
                       className={`flex justify-between items-center gap-4 ${
                         oh.isEmergencyNote
                           ? 'text-[#5A5A5A] font-semibold' // pale pink accent

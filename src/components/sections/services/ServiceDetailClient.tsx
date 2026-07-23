@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowLeft, CheckCircle2, Calendar, ShieldCheck, Clock, Award } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ShieldCheck, Clock, Award } from 'lucide-react';
 import { Service } from '@/types';
 import Container from '@/components/ui/Container';
 import { resolveImageUrl } from '@/lib/media';
@@ -114,13 +114,6 @@ export const ServiceDetailClient: React.FC<ServiceDetailClientProps> = ({ servic
 
             {/* Dual CTAs */}
             <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-slate-200/60 w-full">
-              <Link
-                href={bookingUrl}
-                className="inline-flex items-center justify-center font-bold transition-all duration-300 rounded-full text-sm px-8 py-3.5 bg-accent text-white hover:bg-accent-hover btn-diagonal-stripe shadow-md cursor-pointer"
-              >
-                <Calendar className="w-4 h-4 mr-2" />
-                Book Appointment
-              </Link>
               <Link
                 href="/services"
                 className="inline-flex items-center justify-center font-semibold transition-all duration-300 rounded-full text-sm px-8 py-3.5 border-2 border-primary text-primary hover:bg-primary hover:text-white bg-transparent cursor-pointer"

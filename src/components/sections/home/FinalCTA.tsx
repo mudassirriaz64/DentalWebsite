@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Container from '@/components/ui/Container';
 import Button from '@/components/ui/Button';
+import { useRouter } from 'next/navigation';
 
 export const FinalCTA: React.FC = () => {
   const [fullName, setFullName] = useState('');
@@ -12,6 +13,8 @@ export const FinalCTA: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [validationError, setValidationError] = useState('');
+
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,14 +30,12 @@ export const FinalCTA: React.FC = () => {
     }
 
     setIsSubmitting(true);
-
-    setTimeout(() => {
-      console.log('Final CTA Consult Request:', { fullName, email });
-      setIsSubmitting(false);
-      setSubmitSuccess(true);
-      setFullName('');
-      setEmail('');
-    }, 1200);
+    
+    const params = new URLSearchParams();
+    params.set('name', fullName.trim());
+    params.set('email', email.trim());
+    
+    router.push(`/contact?${params.toString()}`);
   };
 
   return (
