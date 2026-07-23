@@ -3,9 +3,10 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText, Settings as SettingsIcon, BarChart as BarChartIcon, LayoutDashboard, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
+import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText, Settings as SettingsIcon, BarChart as BarChartIcon, LayoutDashboard, ChevronLeft, ChevronRight, Menu, X, User } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 import { cn } from '@/lib/utils';
+import GlobalAdminHeader from '@/components/layout/admin/GlobalAdminHeader';
 
 function AdminSidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   const pathname = usePathname();
@@ -22,6 +23,7 @@ function AdminSidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
     { label: 'Doctors', href: '/admin?tab=doctors', path: '/admin?tab=doctors', icon: Users },
     { label: 'Stats', href: '/admin/settings/stats', path: '/admin/settings/stats', icon: BarChartIcon },
     { label: 'Settings', href: '/admin/settings/clinic', path: '/admin/settings/clinic', icon: SettingsIcon },
+    { label: 'Account', href: '/admin/settings/account', path: '/admin/settings/account', icon: User },
   ];
 
   return (
@@ -49,7 +51,7 @@ function AdminSidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
               isCollapsed ? 'justify-center px-0' : '',
               isActive
                 ? 'bg-primary text-white font-extrabold shadow-sm'
-                : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
+                : 'hover:bg-[#3A3A3A] text-[#A0A0A0] hover:text-white'
             )}
           >
             <Icon className="w-4 h-4 shrink-0" />
@@ -95,13 +97,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex flex-col lg:flex-row h-screen w-full bg-slate-100 font-sans text-slate-800 overflow-hidden">
       {/* Mobile Top Navbar */}
-      <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900 text-slate-300 border-b border-slate-800 select-none shrink-0">
+      <div className="lg:hidden flex items-center justify-between p-4 bg-[#2E2E2E] text-[#A0A0A0] border-b border-[#222222] select-none shrink-0">
         <Link href="/" className="flex items-center gap-2">
           <Logo variant="dark" className="h-6 w-auto" />
         </Link>
         <button
           onClick={() => setIsMobileOpen(true)}
-          className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+          className="p-2 rounded-lg hover:bg-[#3A3A3A] text-[#A0A0A0] hover:text-white cursor-pointer"
           aria-label="Open sidebar"
         >
           <Menu className="w-6 h-6" />
@@ -119,7 +121,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar Navigation */}
       <aside
         className={cn(
-          'bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 select-none transition-all duration-300 z-50',
+          'bg-[#2E2E2E] text-[#A0A0A0] flex flex-col flex-shrink-0 select-none transition-all duration-300 z-50',
           // Desktop collapsed/expanded width
           isCollapsed ? 'lg:w-20' : 'lg:w-64',
           // Mobile responsive drawer positioning
@@ -128,7 +130,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         )}
       >
         {/* Brand Header */}
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between shrink-0">
+        <div className="p-6 border-b border-[#222222] flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3 overflow-hidden">
             {!isCollapsed ? (
               <Logo variant="dark" className="h-7 w-auto" />
@@ -140,7 +142,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Desktop Toggle Button */}
           <button
             onClick={toggleCollapse}
-            className="hidden lg:flex p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+            className="hidden lg:flex p-1.5 rounded-lg hover:bg-[#3A3A3A] text-[#A0A0A0] hover:text-white cursor-pointer"
             aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -149,7 +151,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Mobile Close Button */}
           <button
             onClick={() => setIsMobileOpen(false)}
-            className="lg:hidden p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+            className="lg:hidden p-1.5 rounded-lg hover:bg-[#3A3A3A] text-[#A0A0A0] hover:text-white cursor-pointer"
             aria-label="Close sidebar"
           >
             <X className="w-5 h-5" />
@@ -157,12 +159,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Tab Links */}
-        <Suspense fallback={<div className="p-4 text-xs text-slate-500">Loading nav...</div>}>
+          <Suspense fallback={<div className="p-4 text-xs text-[#A0A0A0]">Loading nav...</div>}>
           <AdminSidebarNav isCollapsed={isCollapsed} />
         </Suspense>
 
         {/* Footer Log Out */}
-        <div className="p-4 border-t border-slate-800 shrink-0">
+        <div className="p-4 border-t border-[#222222] shrink-0">
           <button
             onClick={handleLogout}
             title={isCollapsed ? 'Sign Out' : undefined}
@@ -178,7 +180,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Panel View Area */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-slate-50">
+      <main className="flex-1 flex flex-col overflow-hidden bg-slate-50 relative">
+        <GlobalAdminHeader />
         {children}
       </main>
     </div>

@@ -17,6 +17,7 @@ interface ImageUploadFieldProps {
   placeholder?: string;
   required?: boolean;
   className?: string;
+  accept?: string;
 }
 
 export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
@@ -24,9 +25,10 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
   onChange,
   folder = 'general',
   label,
-  placeholder = 'Paste hosted image URL e.g. https://...',
+  placeholder = 'Paste hosted media URL e.g. https://...',
   required = false,
   className = '',
+  accept = 'image/*',
 }) => {
   const [mode, setMode] = useState<'upload' | 'url'>('upload');
   const [isUploading, setIsUploading] = useState(false);
@@ -42,24 +44,109 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
     typeof value === 'object' && value ? value : { url: currentUrl, publicId: currentPublicId }
   );
 
+  const isVideoFile = (url?: string) => {
+    if (!url) return false;
+    const lowerUrl = url.toLowerCase();
+    return (
+      lowerUrl.endsWith('.mp4') ||
+      lowerUrl.endsWith('.mov') ||
+      lowerUrl.endsWith('.webm') ||
+      lowerUrl.includes('/video/upload/') ||
+      lowerUrl.includes('/raw/upload/')
+    );
+  };
+
+  // Compress image helper using HTML5 Canvas
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 1600;
+          const MAX_HEIGHT = 1600;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(file);
+            return;
+          }
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now(),
+                });
+                console.log(`[Compression] Image reduced from ${(file.size / 1024 / 1024).toFixed(2)}MB to ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`);
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            },
+            'image/jpeg',
+            0.82
+          );
+        };
+        img.onerror = () => resolve(file);
+      };
+      reader.onerror = () => resolve(file);
+    });
+  };
+
   const handleUploadFile = async (file: File) => {
     setErrorMsg('');
 
-    if (!file.type.startsWith('image/')) {
-      setErrorMsg('Please select a valid image file (PNG, JPG, WebP, SVG).');
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+
+    if (!isImage && !isVideo) {
+      setErrorMsg('Please select a valid image file (PNG, JPG, WebP, SVG) or video file (MP4, MOV, WebM).');
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      setErrorMsg('Selected file exceeds the 10MB limit.');
+    const MAX_IMAGE_SIZE = 50 * 1024 * 1024;
+    const MAX_VIDEO_SIZE = 500 * 1024 * 1024;
+    const limit = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+
+    if (file.size > limit) {
+      setErrorMsg(`Selected file exceeds the allowed limit of ${isVideo ? '500MB' : '50MB'}.`);
       return;
     }
 
     setIsUploading(true);
 
     try {
+      let fileToUpload = file;
+
+      if (isImage) {
+        // Compress image before upload
+        fileToUpload = await compressImage(file);
+      }
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', fileToUpload);
       formData.append('folder', folder);
 
       const res = await fetch('/api/admin/upload', {
@@ -70,7 +157,11 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to upload image to Cloudinary.');
+        throw new Error(data.error || 'Failed to upload media to Cloudinary.');
+      }
+
+      if (!data.secureUrl) {
+        throw new Error('Upload succeeded but no URL was returned. Please try again.');
       }
 
       onChange({
@@ -78,7 +169,8 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
         url: data.secureUrl,
       });
     } catch (err: any) {
-      setErrorMsg(err.message || 'Image upload failed. Please try again.');
+      console.error('[ImageUploadField] Upload failed:', err);
+      setErrorMsg(err.message || 'Media upload failed. Please try again.');
     } finally {
       setIsUploading(false);
     }
@@ -125,7 +217,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
           <span>{label} {required && <span className="text-accent">*</span>}</span>
           {displayPreviewUrl && (
             <span className="text-[10px] text-green-600 font-semibold uppercase tracking-wider flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Active Image Set
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Active Media Set
             </span>
           )}
         </label>
@@ -154,7 +246,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
               : 'text-slate-500 hover:text-slate-800'
           }`}
         >
-          <LinkIcon className="w-3.5 h-3.5" /> Use Image URL
+          <LinkIcon className="w-3.5 h-3.5" /> Use Media URL
         </button>
       </div>
 
@@ -171,11 +263,22 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
         <div className="flex flex-col gap-3">
           {displayPreviewUrl ? (
             <div className="relative w-full h-40 rounded-2xl overflow-hidden border border-slate-200 bg-slate-50 group">
-              <img
-                src={displayPreviewUrl}
-                alt="Image Preview"
-                className="w-full h-full object-cover"
-              />
+              {isVideoFile(displayPreviewUrl) ? (
+                <video
+                  src={displayPreviewUrl}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={displayPreviewUrl}
+                  alt="Media Preview"
+                  className="w-full h-full object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                 <button
                   type="button"
@@ -211,7 +314,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
               {isUploading ? (
                 <div className="flex flex-col items-center gap-2 text-primary py-2">
                   <Loader className="w-6 h-6 animate-spin" />
-                  <span className="text-xs font-bold">Uploading to Cloudinary...</span>
+                  <span className="text-xs font-bold">Compressing & Uploading...</span>
                 </div>
               ) : (
                 <>
@@ -219,10 +322,10 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
                     <Upload className="w-5 h-5" />
                   </div>
                   <p className="text-xs font-bold text-slate-800 mb-0.5">
-                    Click to browse or drag & drop image
+                    Click to browse or drag & drop file
                   </p>
                   <span className="text-[10px] text-slate-400">
-                    PNG, JPG, WebP, SVG up to 10MB
+                    Photos (up to 50MB) or Videos (up to 500MB)
                   </span>
                 </>
               )}
@@ -232,7 +335,7 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
           <input
             type="file"
             ref={fileInputRef}
-            accept="image/*"
+            accept={accept}
             onChange={handleFileSelect}
             className="hidden"
           />
@@ -264,17 +367,28 @@ export const ImageUploadField: React.FC<ImageUploadFieldProps> = ({
 
           {displayPreviewUrl ? (
             <div className="relative w-full h-36 rounded-2xl overflow-hidden border border-slate-200 bg-slate-50">
-              <img
-                src={displayPreviewUrl}
-                alt="URL Preview"
-                className="w-full h-full object-cover"
-                onError={() => setErrorMsg('Failed to load image preview from provided URL.')}
-              />
+              {isVideoFile(displayPreviewUrl) ? (
+                <video
+                  src={displayPreviewUrl}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              ) : (
+                <img
+                  src={displayPreviewUrl}
+                  alt="URL Preview"
+                  className="w-full h-full object-cover"
+                  onError={() => setErrorMsg('Failed to load media preview from provided URL.')}
+                />
+              )}
             </div>
           ) : (
             <div className="p-4 rounded-xl border border-dashed border-slate-200 text-center text-slate-400 text-xs flex items-center justify-center gap-2">
               <ImageIcon className="w-4 h-4" />
-              <span>Paste an image URL above to preview</span>
+              <span>Paste a media URL above to preview</span>
             </div>
           )}
         </div>

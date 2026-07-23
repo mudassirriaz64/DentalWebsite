@@ -187,17 +187,7 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
                   </a>
                 </li>
               )}
-              {settings?.emergencyPhone && (
-                <li className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-accent-soft flex-shrink-0" />
-                  <a
-                    href={`tel:${settings.emergencyPhone.replace(/\s+/g, '')}`}
-                    className="text-accent-soft hover:underline font-semibold transition-all duration-300"
-                  >
-                    Emergency: {settings.emergencyPhone}
-                  </a>
-                </li>
-              )}
+
               <li className="flex items-start gap-2.5 border-t border-white/5 pt-2 mt-0.5">
                 <Clock className="w-4 h-4 text-primary-light flex-shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1 w-full text-xs">
@@ -218,14 +208,6 @@ export const Footer: React.FC<FooterProps> = ({ settings }) => {
           <p>
             © {currentYear} {siteConfig.name}. All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <Link href="/privacy" className="hover:text-primary-light transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="hover:text-primary-light transition-colors">
-              Terms of Service
-            </Link>
-          </div>
         </div>
       </Container>
     </footer>

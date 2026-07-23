@@ -18,9 +18,6 @@ export const siteConfig: ClinicConfig = {
     ]
   },
   socialLinks: {
-    facebook: 'https://facebook.com',
-    instagram: 'https://instagram.com',
-    twitter: 'https://twitter.com',
-    linkedin: 'https://linkedin.com'
+    facebook: 'https://www.facebook.com/p/Dental-Cosmetics-and-Implant-Centre-I-8-MarkazIslamabad-100064120326094/'
   }
 };

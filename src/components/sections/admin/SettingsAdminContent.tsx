@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Save, Plus, Trash2, HelpCircle, Loader, CheckCircle, AlertCircle } from 'lucide-react';
 import { ClinicSettings, OpeningHoursEntry } from '@/types/settings';
 import ImageUploadField from '@/components/admin/ImageUploadField';
@@ -18,6 +19,7 @@ interface FormHoursRow {
 }
 
 export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ initialSettings }) => {
+  const router = useRouter();
   // Input states
   const [address, setAddress] = useState(initialSettings.address);
   const [phone, setPhone] = useState(initialSettings.phone);
@@ -39,6 +41,27 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
       isDimmed: oh.isDimmed,
     }))
   );
+
+  useEffect(() => {
+    setAddress(initialSettings.address);
+    setPhone(initialSettings.phone);
+    setPhoneNote(initialSettings.phoneNote || '');
+    setWhatsapp(initialSettings.whatsapp || '');
+    setEmail(initialSettings.email);
+    setEmergencyPhone(initialSettings.emergencyPhone || '');
+    setMapImageUrl(initialSettings.mapImageUrl || '');
+    setMapDirectionsUrl(initialSettings.mapDirectionsUrl || '');
+    setBookingStatusMessage(initialSettings.bookingStatusMessage || '');
+    setHoursRows(
+      (initialSettings.openingHours || []).map((oh) => ({
+        id: oh.id,
+        label: oh.label,
+        hours: oh.hours,
+        isEmergencyNote: oh.isEmergencyNote,
+        isDimmed: oh.isDimmed,
+      }))
+    );
+  }, [initialSettings]);
 
   // Status indicators
   const [loading, setLoading] = useState(false);
@@ -123,6 +146,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
       }
 
       setSuccess(true);
+      router.refresh();
       // Update form fields with returned details to synchronize
       setAddress(data.address);
       setPhone(data.phone);

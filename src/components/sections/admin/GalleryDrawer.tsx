@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Upload, Plus, AlertCircle, ShieldAlert } from 'lucide-react';
+import { X, AlertCircle } from 'lucide-react';
 import { GalleryItem, GalleryCategory, GALLERY_CATEGORIES } from '@/types/gallery';
 import ImageUploadField from '@/components/admin/ImageUploadField';
 
@@ -12,20 +12,11 @@ interface GalleryDrawerProps {
   onSave: (payload: any) => Promise<void>;
 }
 
-const variantsList = [
-  { value: 'comparison', label: 'Before/After Slider', desc: 'Double image comparison' },
-  { value: 'vertical', label: 'Tall Overlay', desc: 'Tall card with dark text overlay' },
-  { value: 'square', label: 'Square Card', desc: 'White block with text below' },
-  { value: 'wideSplit', label: 'Wide Teal Split', desc: 'Teal card / Image side-by-side' },
-  { value: 'small', label: 'Small Compact', desc: 'Small info card' },
-];
-
 export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onClose, onSave }) => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   // Form states
-  const [variant, setVariant] = useState<string>('comparison');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<GalleryCategory>('Veneers');
@@ -33,30 +24,29 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
   const [tagInput, setTagInput] = useState('');
   const [isVerifiedPatient, setIsVerifiedPatient] = useState(false);
   const [featured, setFeatured] = useState(false);
-  const [status, setStatus] = useState<'published' | 'draft'>('draft');
+  const [isPublished, setIsPublished] = useState(true);
+  const [uploadType, setUploadType] = useState<'single' | 'comparison'>('single');
 
-  // Images states
+  // Images/Video states
   const [beforeImage, setBeforeImage] = useState({ publicId: '', url: '', altText: '' });
   const [afterImage, setAfterImage] = useState({ publicId: '', url: '', altText: '' });
-  const [mainImage, setMainImage] = useState({ publicId: '', url: '', altText: '' });
 
   // Initialize form with edit data
   useEffect(() => {
     if (item) {
-      setVariant(item.variant);
       setTitle(item.title);
       setDescription(item.description);
       setCategory(item.category);
       setTags(item.tags || []);
       setIsVerifiedPatient(!!item.isVerifiedPatient);
       setFeatured(!!item.featured);
-      setStatus(item.status);
+      setIsPublished(item.status === 'published');
 
       setBeforeImage(item.images.before || { publicId: '', url: '', altText: '' });
-      setAfterImage(item.images.after || { publicId: '', url: '', altText: '' });
-      setMainImage(item.images.main || { publicId: '', url: '', altText: '' });
+      // Map legacy "main" image format to "afterImage" for compatibility
+      setAfterImage(item.images.after || item.images.main || { publicId: '', url: '', altText: '' });
+      setUploadType(item.images.before?.url ? 'comparison' : 'single');
     } else {
-      setVariant('comparison');
       setTitle('');
       setDescription('');
       setCategory('Veneers');
@@ -64,50 +54,14 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
       setTagInput('');
       setIsVerifiedPatient(false);
       setFeatured(false);
-      setStatus('draft');
+      setIsPublished(true);
 
       setBeforeImage({ publicId: '', url: '', altText: '' });
       setAfterImage({ publicId: '', url: '', altText: '' });
-      setMainImage({ publicId: '', url: '', altText: '' });
+      setUploadType('single');
     }
     setErrorMsg('');
   }, [item, isOpen]);
-
-  // Handle local mock image file uploading (storing path / mock asset)
-  const handleLocalImageSelect = (slot: 'before' | 'after' | 'main', e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Create a local blob object URL for instant previewing
-    const objectUrl = URL.createObjectURL(file);
-    const mockPayload = {
-      publicId: `gallery/${file.name}`,
-      url: objectUrl,
-      altText: '',
-    };
-
-    // TODO: When Cloudinary API key is set up:
-    // const formData = new FormData();
-    // formData.append('file', file);
-    // const res = await fetch('/api/admin/upload', { method: 'POST', body: formData });
-    // const cloudData = await res.json();
-    // setSlot({ publicId: cloudData.publicId, url: cloudData.secureUrl, altText: '' })
-
-    if (slot === 'before') setBeforeImage({ ...beforeImage, ...mockPayload });
-    if (slot === 'after') setAfterImage({ ...afterImage, ...mockPayload });
-    if (slot === 'main') setMainImage({ ...mainImage, ...mockPayload });
-  };
-
-  // Alternative: manual path entry (if user places assets manually in /public/images/gallery)
-  const handleManualPathInput = (slot: 'before' | 'after' | 'main', urlPath: string) => {
-    const mockPayload = {
-      publicId: urlPath.replace('/images/', ''),
-      url: urlPath,
-    };
-    if (slot === 'before') setBeforeImage({ ...beforeImage, ...mockPayload });
-    if (slot === 'after') setAfterImage({ ...afterImage, ...mockPayload });
-    if (slot === 'main') setMainImage({ ...mainImage, ...mockPayload });
-  };
 
   const handleAddTag = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ',') {
@@ -129,44 +83,52 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
     if (!title.trim() || title.length > 60) return false;
     if (!description.trim() || description.length > 160) return false;
     if (!category) return false;
-
-    if (variant === 'comparison') {
-      if (!beforeImage.url || beforeImage.altText.trim().length < 10) return false;
-      if (!afterImage.url || afterImage.altText.trim().length < 10) return false;
-    } else {
-      if (!mainImage.url || mainImage.altText.trim().length < 10) return false;
-    }
+    // After/Final media is ALWAYS required
+    if (!afterImage.url) return false;
 
     return true;
   };
 
-  const handleSubmit = async (e: React.FormEvent, forceStatus?: 'published' | 'draft') => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
-    const targetStatus = forceStatus || status;
-
-    // Strict validation check when publishing
-    if (targetStatus === 'published' && !isFormValid()) {
-      setErrorMsg('Please upload required image files and add descriptive alt texts (min 10 characters) before publishing.');
+    if (!isFormValid()) {
+      setErrorMsg('Please upload the required showcase photo or video before saving.');
       return;
     }
 
     setLoading(true);
 
+    const finalBefore = (uploadType === 'comparison' && beforeImage.url)
+      ? {
+          publicId: beforeImage.publicId,
+          url: beforeImage.url,
+          altText: beforeImage.altText.trim() || `Before: ${title} smile transformation`,
+        }
+      : null;
+
+    const finalAfter = {
+      publicId: afterImage.publicId,
+      url: afterImage.url,
+      altText: afterImage.altText.trim() || `After: ${title} smile transformation`,
+    };
+
+    // Auto-calculate the variant layout based on type selection
+    const computedVariant = (uploadType === 'comparison' && beforeImage.url) ? 'comparison' : 'square';
+
     const payload = {
-      variant,
+      variant: computedVariant,
       title,
       description,
       category,
       tags,
-      isVerifiedPatient: variant === 'square' ? isVerifiedPatient : false,
+      isVerifiedPatient,
       featured,
-      status: targetStatus,
-      images:
-        variant === 'comparison'
-          ? { before: beforeImage, after: afterImage }
-          : { main: mainImage },
+      status: isPublished ? 'published' : 'draft',
+      images: (uploadType === 'comparison' && beforeImage.url)
+        ? { before: finalBefore, after: finalAfter }
+        : { main: finalAfter },
       displayOrder: item?.displayOrder,
     };
 
@@ -203,10 +165,7 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
           </button>
         </header>
 
-        <form
-          onSubmit={(e) => handleSubmit(e)}
-          className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-sm"
-        >
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 text-sm">
           {errorMsg && (
             <div className="p-4 rounded-xl bg-accent-soft text-accent-dark font-semibold border border-accent/15 flex items-start gap-2.5">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
@@ -214,43 +173,75 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
             </div>
           )}
 
-          {/* 1. VISUAL PICKER FOR CARD LAYOUT VARIANT */}
-          <div className="flex flex-col gap-2">
-            <label className="font-bold text-dark-text tracking-wide uppercase text-xs">
-              Card shape layout
-            </label>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
-              {variantsList.map((v) => (
+          {/* 1. CASE MEDIA UPLOADS WITH TYPE SWITCHER */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <label className="font-bold text-dark-text tracking-wide uppercase text-xs">
+                Case Media Uploads
+              </label>
+
+              {/* Upload Type Tabs */}
+              <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl">
                 <button
                   type="button"
-                  key={v.value}
-                  onClick={() => setVariant(v.value)}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-center text-center cursor-pointer transition-all ${
-                    variant === v.value
-                      ? 'border-[#0B5E2F] bg-[#0B5E2F]/5 text-[#0B5E2F] font-bold shadow-sm'
-                      : 'border-slate-200 hover:border-slate-300 bg-white text-slate-500'
+                  onClick={() => setUploadType('single')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    uploadType === 'single'
+                      ? 'bg-white text-primary shadow-sm'
+                      : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
-                  <span className="text-xs leading-tight">{v.label}</span>
+                  Single Media
                 </button>
-              ))}
+                <button
+                  type="button"
+                  onClick={() => setUploadType('comparison')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition cursor-pointer ${
+                    uploadType === 'comparison'
+                      ? 'bg-white text-primary shadow-sm'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Before & After
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* 2. CONDITIONAL UPLOAD SLOTS */}
-          <div className="flex flex-col gap-3">
-            <label className="font-bold text-dark-text tracking-wide uppercase text-xs">
-              Case Media Uploads
-            </label>
-
-            {/* A. BEFORE & AFTER IMAGE SLOTS FOR COMPARISON */}
-            {variant === 'comparison' ? (
+            {uploadType === 'single' ? (
+              /* A. SINGLE MEDIA SHOWCASE FIELD */
+              <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-slate-200 rounded-2xl relative w-full">
+                <ImageUploadField
+                  label="Showcase Photo / Video *"
+                  folder="gallery"
+                  accept="image/*,video/*"
+                  value={afterImage}
+                  required
+                  onChange={(val) =>
+                    setAfterImage({
+                      publicId: val?.publicId || '',
+                      url: val?.url || '',
+                      altText: afterImage.altText,
+                    })
+                  }
+                />
+                {/* Optional alt text */}
+                <input
+                  type="text"
+                  value={afterImage.altText}
+                  onChange={(e) => setAfterImage({ ...afterImage, altText: e.target.value })}
+                  placeholder="Alt text description (Optional)"
+                  className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+            ) : (
+              /* B. BEFORE & AFTER SLIDER COMPARISON FIELDS */
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Before Image Slot */}
+                {/* Before Media Slot */}
                 <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-slate-200 rounded-2xl relative">
                   <ImageUploadField
-                    label="Before Smile Profile"
+                    label="Before Photo / Video"
                     folder="gallery"
+                    accept="image/*,video/*"
                     value={beforeImage}
                     onChange={(val) =>
                       setBeforeImage({
@@ -260,28 +251,24 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
                       })
                     }
                   />
-                  {/* Required alt text */}
+                  {/* Optional alt text */}
                   <input
                     type="text"
-                    required
                     value={beforeImage.altText}
                     onChange={(e) => setBeforeImage({ ...beforeImage, altText: e.target.value })}
-                    placeholder="Required Alt text (min 10 chars)"
-                    className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none"
+                    placeholder="Alt text description (Optional)"
+                    className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
-                  {beforeImage.altText.trim().length < 10 && beforeImage.altText.trim().length > 0 && (
-                    <span className="text-[9px] text-accent font-semibold">
-                      Need {10 - beforeImage.altText.trim().length} more characters.
-                    </span>
-                  )}
                 </div>
 
-                {/* After Image Slot */}
+                {/* After Media Slot */}
                 <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-slate-200 rounded-2xl relative">
                   <ImageUploadField
-                    label="After Smile Profile"
+                    label="After Photo / Video *"
                     folder="gallery"
+                    accept="image/*,video/*"
                     value={afterImage}
+                    required
                     onChange={(val) =>
                       setAfterImage({
                         publicId: val?.publicId || '',
@@ -290,56 +277,20 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
                       })
                     }
                   />
-                  {/* Required alt text */}
+                  {/* Optional alt text */}
                   <input
                     type="text"
-                    required
                     value={afterImage.altText}
                     onChange={(e) => setAfterImage({ ...afterImage, altText: e.target.value })}
-                    placeholder="Required Alt text (min 10 chars)"
-                    className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none"
+                    placeholder="Alt text description (Optional)"
+                    className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-primary"
                   />
-                  {afterImage.altText.trim().length < 10 && afterImage.altText.trim().length > 0 && (
-                    <span className="text-[9px] text-accent font-semibold">
-                      Need {10 - afterImage.altText.trim().length} more characters.
-                    </span>
-                  )}
                 </div>
-              </div>
-            ) : (
-              /* B. SINGLE IMAGE SLOT FOR OTHERS */
-              <div className="flex flex-col gap-2 p-4 bg-bg-alt border border-slate-200 rounded-2xl relative">
-                <ImageUploadField
-                  label="Main Case Photo"
-                  folder="gallery"
-                  value={mainImage}
-                  onChange={(val) =>
-                    setMainImage({
-                      publicId: val?.publicId || '',
-                      url: val?.url || '',
-                      altText: mainImage.altText,
-                    })
-                  }
-                />
-                {/* Required alt text */}
-                <input
-                  type="text"
-                  required
-                  value={mainImage.altText}
-                  onChange={(e) => setMainImage({ ...mainImage, altText: e.target.value })}
-                  placeholder="Required Alt text (min 10 chars)"
-                  className="w-full px-3 py-2 rounded-xl border bg-white text-xs text-dark-text placeholder-slate-400 focus:outline-none"
-                />
-                {mainImage.altText.trim().length < 10 && mainImage.altText.trim().length > 0 && (
-                  <span className="text-[9px] text-accent font-semibold">
-                    Need {10 - mainImage.altText.trim().length} more characters.
-                  </span>
-                )}
               </div>
             )}
           </div>
 
-          {/* 3. CASE TITLE */}
+          {/* 2. CASE TITLE */}
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center text-xs">
               <label className="font-bold text-dark-text tracking-wide uppercase">Title *</label>
@@ -354,11 +305,11 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="e.g. Laser Bright Whitening"
+              placeholder="e.g. Full Mouth Veneers makeover"
             />
           </div>
 
-          {/* 4. DESCRIPTION */}
+          {/* 3. DESCRIPTION */}
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center text-xs">
               <label className="font-bold text-dark-text tracking-wide uppercase">
@@ -377,11 +328,11 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="px-4 py-2.5 bg-bg-alt border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Bespoke clinical details..."
+              placeholder="Bespoke clinical details of what was done..."
             />
           </div>
 
-          {/* 5. CATEGORY SELECT */}
+          {/* 4. CATEGORY SELECT */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <label className="font-bold text-dark-text tracking-wide uppercase text-xs">
@@ -400,27 +351,25 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
               </select>
             </div>
 
-            {/* 6. VERIFIED PATIENT (Only for Square variant) */}
-            {variant === 'square' && (
-              <div className="flex items-center gap-2.5 self-end py-3">
-                <input
-                  type="checkbox"
-                  id="verified-checkbox"
-                  checked={isVerifiedPatient}
-                  onChange={(e) => setIsVerifiedPatient(e.target.checked)}
-                  className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
-                />
-                <label
-                  htmlFor="verified-checkbox"
-                  className="font-semibold text-xs text-dark-text uppercase tracking-wide cursor-pointer"
-                >
-                  Verified Patient
-                </label>
-              </div>
-            )}
+            {/* 5. VERIFIED PATIENT BADGE */}
+            <div className="flex items-center gap-2.5 self-end py-3">
+              <input
+                type="checkbox"
+                id="verified-checkbox"
+                checked={isVerifiedPatient}
+                onChange={(e) => setIsVerifiedPatient(e.target.checked)}
+                className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="verified-checkbox"
+                className="font-semibold text-xs text-dark-text uppercase tracking-wide cursor-pointer"
+              >
+                Patient Verified Case
+              </label>
+            </div>
           </div>
 
-          {/* 7. CHIP TAGS INPUT */}
+          {/* 6. CHIP TAGS INPUT */}
           <div className="flex flex-col gap-2">
             <label className="font-bold text-dark-text tracking-wide uppercase text-xs">
               Tags (optional)
@@ -454,56 +403,23 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
             )}
           </div>
 
-          {/* 8. FEATURED CHECKBOX */}
-          <div className="flex items-center gap-2.5 border-t border-slate-100 pt-5">
-            <input
-              type="checkbox"
-              id="featured-checkbox"
-              checked={featured}
-              onChange={(e) => setFeatured(e.target.checked)}
-              className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
-            />
-            <label
-              htmlFor="featured-checkbox"
-              className="font-semibold text-xs text-dark-text uppercase tracking-wide cursor-pointer"
-            >
-              Pin case as Featured item
-            </label>
-          </div>
-
-          {/* 9. PUBLISH STATUS TOGGLE */}
-          <div className="flex flex-col gap-1.5 mt-2 bg-slate-50 p-4 rounded-2xl border">
-            <label className="font-bold text-dark-text tracking-wide uppercase text-xs">
-              Document Visibility Status
-            </label>
-            <div className="flex gap-4 mt-2">
-              <label className="flex items-center gap-2 cursor-pointer font-semibold text-xs">
-                <input
-                  type="radio"
-                  name="status"
-                  value="draft"
-                  checked={status === 'draft'}
-                  onChange={() => setStatus('draft')}
-                  className="w-4 h-4 text-slate-500 focus:ring-slate-400 cursor-pointer"
-                />
-                Save as Draft
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer font-semibold text-xs text-[#0B5E2F]">
-                <input
-                  type="radio"
-                  name="status"
-                  value="published"
-                  checked={status === 'published'}
-                  onChange={() => setStatus('published')}
-                  className="w-4 h-4 text-[#0B5E2F] focus:ring-primary cursor-pointer"
-                />
-                Publish Instantly
+          {/* 7. SETTINGS TOGGLES */}
+          <div className="flex flex-col gap-3.5 border-t border-slate-100 pt-5">
+            <div className="flex items-center gap-2.5">
+              <input
+                type="checkbox"
+                id="published-checkbox"
+                checked={isPublished}
+                onChange={(e) => setIsPublished(e.target.checked)}
+                className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
+              />
+              <label
+                htmlFor="published-checkbox"
+                className="font-semibold text-xs text-dark-text uppercase tracking-wide cursor-pointer"
+              >
+                Published (Visible to patients instantly)
               </label>
             </div>
-            <p className="text-[10px] text-slate-400 mt-2 flex items-start gap-1">
-              <ShieldAlert className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
-              <span>Draft items are hidden from patients but manageable in the admin panel.</span>
-            </p>
           </div>
 
           {/* Actions */}
@@ -515,24 +431,13 @@ export const GalleryDrawer: React.FC<GalleryDrawerProps> = ({ isOpen, item, onCl
             >
               Cancel
             </button>
-            {status === 'draft' ? (
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-6 py-2.5 rounded-full bg-slate-800 text-white hover:bg-slate-900 transition cursor-pointer font-semibold shadow-sm"
-              >
-                {loading ? 'Saving...' : 'Save Draft'}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={(e) => handleSubmit(e, 'published')}
-                disabled={loading || !isFormValid()}
-                className="px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary-hover disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition cursor-pointer font-bold shadow-sm"
-              >
-                {loading ? 'Publishing...' : 'Save & Publish'}
-              </button>
-            )}
+            <button
+              type="submit"
+              disabled={loading || !isFormValid()}
+              className="px-6 py-2.5 rounded-full bg-primary text-white hover:bg-primary-hover disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed transition cursor-pointer font-bold shadow-sm"
+            >
+              {loading ? 'Saving...' : item ? 'Update Case' : 'Create Case'}
+            </button>
           </footer>
         </form>
       </div>

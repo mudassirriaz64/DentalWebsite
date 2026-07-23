@@ -9,6 +9,8 @@ cloudinary.config({
   secure: true,
 });
 
+export const maxDuration = 300;
+
 export async function POST(request: Request) {
   const session = await getSession();
   if (!session) {
@@ -25,14 +27,20 @@ export async function POST(request: Request) {
     }
 
     // Validate file type
-    if (!file.type.startsWith('image/')) {
-      return NextResponse.json({ error: 'Invalid file type. Only image files (PNG, JPG, WebP, SVG) are allowed.' }, { status: 400 });
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+
+    if (!isImage && !isVideo) {
+      return NextResponse.json({ error: 'Invalid file type. Only image files (PNG, JPG, WebP, SVG) or video files (MP4, QuickTime, WebM) are allowed.' }, { status: 400 });
     }
 
-    // Validate max file size (10MB limit)
-    const MAX_SIZE = 10 * 1024 * 1024;
-    if (file.size > MAX_SIZE) {
-      return NextResponse.json({ error: 'File size exceeds the 10MB limit.' }, { status: 400 });
+    // Validate max file size (50MB for images, 500MB for videos)
+    const MAX_IMAGE_SIZE = 50 * 1024 * 1024;
+    const MAX_VIDEO_SIZE = 500 * 1024 * 1024;
+    const sizeLimit = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+
+    if (file.size > sizeLimit) {
+      return NextResponse.json({ error: `File size exceeds the allowed limit of ${isVideo ? '500MB' : '50MB'}.` }, { status: 400 });
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -46,17 +54,23 @@ export async function POST(request: Request) {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           folder,
+          resource_type: isVideo ? 'video' : 'image',
           use_filename: true,
           unique_filename: true,
         },
         (error, res) => {
           if (error || !res) {
+            console.error('[Upload API] Cloudinary stream error:', error?.message || 'No response');
             reject(error || new Error('Cloudinary upload streaming failed'));
           } else {
             resolve({ public_id: res.public_id, secure_url: res.secure_url });
           }
         }
       );
+
+      uploadStream.on('error', (err) => {
+        console.error('[Upload API] Upload stream error event:', err.message);
+      });
 
       uploadStream.end(buffer);
     });
@@ -66,7 +80,7 @@ export async function POST(request: Request) {
       secureUrl: result.secure_url,
     });
   } catch (error: any) {
-    console.error('Cloudinary upload API error:', error);
+    console.error('[Upload API] Error:', error.message || error);
     return NextResponse.json(
       { error: error.message || 'An unexpected error occurred during image upload.' },
       { status: 500 }

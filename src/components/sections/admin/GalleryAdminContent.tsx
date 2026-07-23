@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   GripVertical,
   Plus,
@@ -17,7 +18,7 @@ import {
   MoreVertical,
 } from 'lucide-react';
 import { GalleryItem, GalleryCategory, GALLERY_CATEGORIES } from '@/types/gallery';
-import { resolveImageUrl } from '@/lib/media';
+import { resolveImageUrl, resolveThumbnailUrl } from '@/lib/media';
 import GalleryDrawer from './GalleryDrawer';
 import { Reorder } from 'framer-motion';
 
@@ -26,7 +27,12 @@ interface GalleryAdminContentProps {
 }
 
 export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initialItems }) => {
+  const router = useRouter();
   const [items, setItems] = useState<GalleryItem[]>(initialItems);
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
@@ -94,6 +100,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
       if (!res.ok) {
         throw new Error('Sort order API failed');
       }
+      router.refresh();
     } catch (err) {
       console.error(err);
       setItems(previousItems);
@@ -126,6 +133,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
         const errorData = await res.json();
         throw new Error(errorData.error || 'Failed to toggle status');
       }
+      router.refresh();
     } catch (err: any) {
       console.error(err);
       setItems(previousItems);
@@ -153,6 +161,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
 
         const updated = await res.json();
         setItems(items.map((x) => (x.id === editingItem.id ? updated : x)));
+        router.refresh();
       } else {
         // POST Add New
         const res = await fetch('/api/admin/gallery', {
@@ -168,6 +177,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
 
         const created = await res.json();
         setItems([...items, created]);
+        router.refresh();
       }
       setIsDrawerOpen(false);
       setEditingItem(null);
@@ -186,6 +196,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
       if (!res.ok) throw new Error('Failed to delete item');
       setItems(items.filter((x) => x.id !== id));
       setSelectedIds(selectedIds.filter((x) => x !== id));
+      router.refresh();
     } catch (err) {
       alert('Delete failed');
     }
@@ -215,6 +226,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
       if (!res.ok) throw new Error('Failed to duplicate item');
       const duplicated = await res.json();
       setItems([...items, duplicated]);
+      router.refresh();
     } catch (err) {
       alert('Failed to duplicate case profile.');
     }
@@ -243,6 +255,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
       const refreshed = await res.json();
       setItems(refreshed);
       setSelectedIds([]);
+      router.refresh();
       alert(`Successfully updated status for selected cases.`);
     } catch (err) {
       alert('Failed to process bulk status updates. Ensure images/alt-texts are fully valid.');
@@ -263,6 +276,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
       }
       setItems(items.filter((x) => !selectedIds.includes(x.id)));
       setSelectedIds([]);
+      router.refresh();
     } catch (err) {
       alert('Failed to delete some selected items.');
     } finally {
@@ -383,9 +397,8 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
               </div>
               <div className="col-span-1">Reorder</div>
               <div className="col-span-1">Thumbnail</div>
-              <div className="col-span-4">Title / Description</div>
+              <div className="col-span-5">Title / Description</div>
               <div className="col-span-2">Specialty</div>
-              <div className="col-span-1 text-center">Shape</div>
               <div className="col-span-1 text-center">Visibility</div>
               <div className="col-span-1 text-right">Actions</div>
             </div>
@@ -400,7 +413,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
               {filteredItems.map((item) => {
                 const isChecked = selectedIds.includes(item.id);
                 const imageObj = item.images.main || item.images.after || item.images.before;
-                const thumbUrl = imageObj ? resolveImageUrl(imageObj) : '';
+                const thumbUrl = imageObj ? resolveThumbnailUrl(imageObj) : '';
 
                 return (
                   <Reorder.Item
@@ -442,7 +455,7 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
                     </div>
 
                     {/* Title / Description info */}
-                    <div className="col-span-4 flex flex-col gap-0.5">
+                    <div className="col-span-5 flex flex-col gap-0.5">
                       <div className="font-bold text-slate-900 leading-tight flex items-center gap-1.5">
                         {item.title}
                         {item.featured && (
@@ -461,11 +474,6 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
                       <span className="inline-flex px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-semibold text-[10px]">
                         {item.category}
                       </span>
-                    </div>
-
-                    {/* Variant card variant style info */}
-                    <div className="col-span-1 text-center font-semibold text-[10px] text-slate-500">
-                      {item.variant}
                     </div>
 
                     {/* Publish Toggle Button */}

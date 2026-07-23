@@ -78,16 +78,34 @@ export const Lightbox: React.FC<LightboxProps> = ({ item, initialType = 'main', 
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.97 }}
                   transition={{ duration: 0.3 }}
-                  className="relative w-full h-[300px] sm:h-[400px] md:h-[480px] rounded-2xl overflow-hidden shadow-2xl border border-white/5 bg-slate-900"
+                  className="relative w-full h-[300px] sm:h-[400px] md:h-[480px] rounded-2xl overflow-hidden shadow-2xl border border-white/5 bg-slate-900 flex items-center justify-center"
                 >
-                  <Image
-                    src={imageUrl}
-                    alt={activeImage?.altText || item.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 650px"
-                    className="object-contain"
-                    priority
-                  />
+                  {(() => {
+                    const isVideo =
+                      imageUrl.toLowerCase().endsWith('.mp4') ||
+                      imageUrl.toLowerCase().endsWith('.mov') ||
+                      imageUrl.toLowerCase().endsWith('.webm') ||
+                      imageUrl.includes('/video/upload/') ||
+                      imageUrl.includes('/raw/upload/');
+
+                    return isVideo ? (
+                      <video
+                        src={imageUrl}
+                        controls
+                        autoPlay
+                        className="w-full h-full object-contain focus:outline-none"
+                      />
+                    ) : (
+                      <Image
+                        src={imageUrl}
+                        alt={activeImage?.altText || item.title}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 650px"
+                        className="object-contain"
+                        priority
+                      />
+                    );
+                  })()}
                 </motion.div>
               )}
             </AnimatePresence>

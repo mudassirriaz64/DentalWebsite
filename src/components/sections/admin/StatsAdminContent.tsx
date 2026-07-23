@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Save, Plus, Trash2, Loader, CheckCircle, AlertCircle } from 'lucide-react';
 import { SiteStat } from '@/types/reviews';
 
@@ -19,6 +20,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
   initialReviewsStats,
   initialHomeStats,
 }) => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'home' | 'reviews'>('home');
 
   const [homeStats, setHomeStats] = useState<FormStatRow[]>(
@@ -36,6 +38,11 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
       value: s.value,
     }))
   );
+
+  useEffect(() => {
+    setHomeStats(initialHomeStats.map((s) => ({ id: s.id, label: s.label, value: s.value })));
+    setReviewsStats(initialReviewsStats.map((s) => ({ id: s.id, label: s.label, value: s.value })));
+  }, [initialHomeStats, initialReviewsStats]);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -107,8 +114,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
       }
 
       setSuccess(true);
-      
-      // Re-fetch current stats to reload IDs
+      router.refresh();
       const refetchRes = await fetch(`/api/admin/stats?page=${activeTab}`);
       if (refetchRes.ok) {
         const refetched = await refetchRes.json();

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { 
   Trash2, 
   X, 
@@ -22,6 +22,7 @@ interface DashboardContentProps {
 }
 
 export default function DashboardContent({ username: _username, initialServices = [], initialDoctors = [] }: DashboardContentProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
   const viewParam = searchParams.get('view');
@@ -42,6 +43,11 @@ export default function DashboardContent({ username: _username, initialServices 
   // Data states — initialized from server-fetched props
   const [services, setServices] = useState<any[]>(initialServices);
   const [doctors, setDoctors] = useState<any[]>(initialDoctors);
+
+  useEffect(() => {
+    setServices(initialServices);
+    setDoctors(initialDoctors);
+  }, [initialServices, initialDoctors]);
 
   // Search & filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -79,6 +85,7 @@ export default function DashboardContent({ username: _username, initialServices 
       });
       if (!res.ok) throw new Error('Failed to delete');
       fetchData();
+      router.refresh();
     } catch (err: any) {
       alert(err.message);
     }
@@ -134,6 +141,7 @@ export default function DashboardContent({ username: _username, initialServices 
       if (!res.ok) throw new Error(data.error || 'Failed to submit form');
       setIsFormOpen(false);
       fetchData();
+      router.refresh();
     } catch (err: any) {
       setErrorMessage(err.message || 'Error submitting form');
     }

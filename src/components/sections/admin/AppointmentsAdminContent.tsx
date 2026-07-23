@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   Calendar,
   Search,
@@ -25,6 +26,7 @@ interface AppointmentsAdminContentProps {
 }
 
 export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> = ({ services, doctors }) => {
+  const router = useRouter();
   const [appointments, setAppointments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
@@ -90,6 +92,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
         setAppointments((prev) =>
           prev.map((a) => (a.id === item.id ? { ...a, isRead: true } : a))
         );
+        router.refresh();
       } catch (e) {
         console.error(e);
       }
@@ -113,6 +116,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
 
       setAppointments((prev) => prev.map((a) => (a.id === updated.id ? updated : a)));
       setSelectedItem(null);
+      router.refresh();
     } catch (err: any) {
       alert(err.message || 'Update failed');
     } finally {
@@ -127,6 +131,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
       if (!res.ok) throw new Error('Delete failed');
       setAppointments((prev) => prev.filter((a) => a.id !== id));
       if (selectedItem?.id === id) setSelectedItem(null);
+      router.refresh();
     } catch (err: any) {
       alert(err.message);
     }
@@ -164,6 +169,7 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
       if (!res.ok) throw new Error('Bulk action failed');
       setSelectedIds([]);
       fetchAppointments();
+      router.refresh();
     } catch (err: any) {
       alert(err.message);
     }

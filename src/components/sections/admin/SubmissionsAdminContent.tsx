@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Search, 
   Mail, 
@@ -26,7 +27,12 @@ interface SubmissionsAdminContentProps {
 }
 
 export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = ({ initialSubmissions }) => {
+  const router = useRouter();
   const [submissions, setSubmissions] = useState<ContactSubmission[]>(initialSubmissions);
+
+  useEffect(() => {
+    setSubmissions(initialSubmissions);
+  }, [initialSubmissions]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | SubmissionStatus>('all');
   
@@ -84,6 +90,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ isRead: true }),
         });
+        router.refresh();
       } catch (err) {
         console.error('Failed to mark submission as read:', err);
       }
@@ -107,6 +114,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
       });
 
       if (!res.ok) throw new Error('Status update failed');
+      router.refresh();
     } catch (err) {
       setSubmissions(previous);
       alert('Failed to update submission status');
@@ -132,6 +140,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
 
       if (!res.ok) throw new Error('Failed to save note');
       setSelectedSub({ ...selectedSub, internalNote });
+      router.refresh();
       alert('Internal note updated successfully.');
     } catch (err) {
       setSubmissions(previous);
@@ -156,6 +165,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
       if (selectedSub?.id === id) {
         setSelectedSub(null);
       }
+      router.refresh();
     } catch (err) {
       alert('Failed to delete submission');
     }
@@ -179,6 +189,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
         submissions.map((x) => (selectedIds.includes(x.id) ? { ...x, status: newStatus } : x))
       );
       setSelectedIds([]);
+      router.refresh();
     } catch (err) {
       alert('Failed to perform bulk status updates.');
     } finally {
@@ -203,6 +214,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
         submissions.map((x) => (selectedIds.includes(x.id) ? { ...x, isRead: true } : x))
       );
       setSelectedIds([]);
+      router.refresh();
     } catch (err) {
       alert('Failed to mark submissions as read.');
     } finally {
@@ -226,6 +238,7 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
 
       setSubmissions(submissions.filter((x) => !selectedIds.includes(x.id)));
       setSelectedIds([]);
+      router.refresh();
     } catch (err) {
       alert('Failed to delete selected submissions.');
     } finally {
