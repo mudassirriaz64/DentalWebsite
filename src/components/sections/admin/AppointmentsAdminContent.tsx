@@ -12,6 +12,9 @@ import {
   AlertCircle,
   XCircle,
   RefreshCw,
+  Eye,
+  Trash2,
+  Loader,
 } from 'lucide-react';
 import { Service, Doctor } from '@/types';
 import PatientContactInfo from '@/components/shared/PatientContactInfo';
@@ -323,109 +326,133 @@ export const AppointmentsAdminContent: React.FC<AppointmentsAdminContentProps> =
       )}
 
       {/* Data Table (CSS Grid) */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col flex-1">
-        {/* Table Headings */}
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
-          <div className="col-span-1 flex items-center justify-center">
-            <input
-              type="checkbox"
-              checked={
-                appointments.length > 0 && selectedIds.length === appointments.length
-              }
-              onChange={handleSelectAll}
-              className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
-            />
-          </div>
-          <div className="col-span-1 text-center">Read</div>
-          <div className="col-span-3">Patient Info</div>
-          <div className="col-span-2">Requested Service</div>
-          <div className="col-span-2">Assigned Doctor</div>
-          <div className="col-span-2">Date & Time</div>
-          <div className="col-span-1 text-center">Status</div>
-        </div>
-
-        {/* Table Body */}
-        <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left font-sans">
-          {loading ? (
-            <div className="p-8 text-center text-slate-400 text-xs">
-              Loading appointments...
-            </div>
-          ) : appointments.length === 0 ? (
-            <div className="p-8 text-center text-slate-400 text-xs">
-              No appointment requests found matching filters.
-            </div>
-          ) : (
-            appointments.map((a) => (
-              <div
-                key={a.id}
-                className={`grid grid-cols-12 gap-4 px-6 py-4 items-center transition-all ${
-                  !a.isRead ? 'bg-primary-light/10 hover:bg-primary-light/20' : 'bg-white'
-                }`}
-              >
-                {/* Checkbox */}
-                <div className="col-span-1 flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.includes(a.id)}
-                    onChange={() => handleSelectRow(a.id)}
-                    className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
-                  />
-                </div>
-
-                {/* Read dot */}
-                <div className="col-span-1 flex justify-center">
-                  {!a.isRead && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-primary" title="Unread" />
-                  )}
-                </div>
-
-                {/* Patient Info */}
-                <div className="col-span-3 flex flex-col">
-                  <PatientContactInfo
-                    name={a.patientName}
-                    email={a.email}
-                    phone={a.phone}
-                    whatsapp={a.whatsapp || a.phone}
-                  />
-                </div>
-
-                {/* Service */}
-                <div className="col-span-2 font-bold text-primary text-xs">
-                  {a.service?.title || 'Unknown Service'}
-                </div>
-
-                {/* Doctor */}
-                <div className="col-span-2 text-xs">
-                  {a.doctor ? (
-                    <span className="font-semibold text-slate-900">{a.doctor.name}</span>
-                  ) : (
-                    <span className="text-slate-400 italic">No preference</span>
-                  )}
-                </div>
-
-                {/* Date & Time */}
-                <div className="col-span-2 text-xs">
-                  {a.preferredDate ? (
-                    <div className="font-semibold text-slate-800">
-                      {new Date(a.preferredDate).toLocaleDateString()}
-                    </div>
-                  ) : (
-                    <div className="text-slate-400 italic">No date specified</div>
-                  )}
-                  <div className="text-[10px] text-slate-500 mt-0.5 font-medium">
-                    {a.preferredTime || 'Any Time'}
-                  </div>
-                </div>
-
-                {/* Status */}
-                <div className="col-span-1 text-center">
-                  {getStatusBadge(a.status)}
-                </div>
-
-                {/* Actions are available via click on the row to open detail */}
+      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col flex-1 w-full">
+        <div className="overflow-x-auto w-full">
+          <div className="min-w-[960px]">
+            {/* Table Headings */}
+            <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
+              <div className="col-span-1 flex items-center justify-center">
+                <input
+                  type="checkbox"
+                  checked={
+                    appointments.length > 0 && selectedIds.length === appointments.length
+                  }
+                  onChange={handleSelectAll}
+                  className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+                />
               </div>
-            ))
-          )}
+              <div className="col-span-1 text-center">Read</div>
+              <div className="col-span-3">Patient Info</div>
+              <div className="col-span-1">Service</div>
+              <div className="col-span-1">Doctor</div>
+              <div className="col-span-2">Date & Time</div>
+              <div className="col-span-1 text-center">Status</div>
+              <div className="col-span-2 text-right">Actions</div>
+            </div>
+
+            {/* Table Body */}
+            <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left font-sans">
+              {loading ? (
+                <div className="flex items-center justify-center gap-2 p-8 text-slate-400 text-xs">
+                  <Loader className="w-4 h-4 animate-spin" /> Loading appointments...
+                </div>
+              ) : appointments.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 text-xs">
+                  No appointment requests found matching filters.
+                </div>
+              ) : (
+                appointments.map((a) => (
+                  <div
+                    key={a.id}
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center transition-all ${
+                      !a.isRead ? 'bg-primary-light/10 hover:bg-primary-light/20' : 'bg-white'
+                    }`}
+                  >
+                    {/* Checkbox */}
+                    <div className="col-span-1 flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(a.id)}
+                        onChange={() => handleSelectRow(a.id)}
+                        className="rounded border-slate-300 text-primary focus:ring-primary cursor-pointer"
+                      />
+                    </div>
+
+                    {/* Read dot */}
+                    <div className="col-span-1 flex justify-center">
+                      {!a.isRead && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-primary" title="Unread" />
+                      )}
+                    </div>
+
+                    {/* Patient Info */}
+                    <div 
+                      onClick={() => handleOpenDetail(a)}
+                      className="col-span-3 flex flex-col cursor-pointer"
+                    >
+                      <PatientContactInfo
+                        name={a.patientName}
+                        email={a.email}
+                        phone={a.phone}
+                        whatsapp={a.whatsapp || a.phone}
+                      />
+                    </div>
+
+                    {/* Service */}
+                    <div className="col-span-1 font-bold text-primary text-xs truncate" title={a.service?.title || 'Unknown Service'}>
+                      {a.service?.title || 'Unknown Service'}
+                    </div>
+
+                    {/* Doctor */}
+                    <div className="col-span-1 text-xs truncate">
+                      {a.doctor ? (
+                        <span className="font-semibold text-slate-900">{a.doctor.name}</span>
+                      ) : (
+                        <span className="text-slate-400 italic">Any</span>
+                      )}
+                    </div>
+
+                    {/* Date & Time */}
+                    <div className="col-span-2 text-xs">
+                      {a.preferredDate ? (
+                        <div className="font-semibold text-slate-800">
+                          {new Date(a.preferredDate).toLocaleDateString()}
+                        </div>
+                      ) : (
+                        <div className="text-slate-400 italic">No date</div>
+                      )}
+                      <div className="text-[10px] text-slate-500 mt-0.5 font-medium">
+                        {a.preferredTime || 'Any Time'}
+                      </div>
+                    </div>
+
+                    {/* Status */}
+                    <div className="col-span-1 text-center">
+                      {getStatusBadge(a.status)}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="col-span-2 text-right flex justify-end gap-1.5">
+                      <button
+                        onClick={() => handleOpenDetail(a)}
+                        className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg cursor-pointer"
+                        title="View full details"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteOne(a.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                        title="Delete appointment"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
       </div>
 

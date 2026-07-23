@@ -4,6 +4,8 @@ import { getSession } from '@/lib/auth';
 import DashboardContent from '@/components/sections/admin/DashboardContent';
 import AdminOverviewDashboard from '@/components/sections/admin/AdminOverviewDashboard';
 import { prisma } from '@/lib/db';
+import { getServices } from '@/data/services';
+import { getDoctors } from '@/data/doctors';
 
 export const metadata = {
   title: 'Admin Dashboard - Clinic Control Panel',
@@ -55,9 +57,12 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
     );
   }
 
+  // Pre-fetch both datasets server-side so DashboardContent renders instantly
+  const [services, doctors] = await Promise.all([getServices(), getDoctors()]);
+
   return (
     <Suspense fallback={<div className="p-6 text-slate-500 font-sans">Loading panel workspace...</div>}>
-      <DashboardContent username={username} />
+      <DashboardContent username={username} initialServices={services} initialDoctors={doctors} />
     </Suspense>
   );
 }

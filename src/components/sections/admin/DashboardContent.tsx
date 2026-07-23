@@ -7,7 +7,8 @@ import {
   X, 
   Plus, 
   Edit3,
-  Search
+  Search,
+  Loader,
 } from 'lucide-react';
 
 import ServiceForm from './ServiceForm';
@@ -16,9 +17,11 @@ import ImageUploadField from '@/components/admin/ImageUploadField';
 
 interface DashboardContentProps {
   username: string;
+  initialServices?: any[];
+  initialDoctors?: any[];
 }
 
-export default function DashboardContent({ username: _username }: DashboardContentProps) {
+export default function DashboardContent({ username: _username, initialServices = [], initialDoctors = [] }: DashboardContentProps) {
   const searchParams = useSearchParams();
   const tabParam = searchParams.get('tab');
   const viewParam = searchParams.get('view');
@@ -34,11 +37,11 @@ export default function DashboardContent({ username: _username }: DashboardConte
       setDoctorView('list');
     }
   }, [tabParam, viewParam]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  // Data states
-  const [services, setServices] = useState<any[]>([]);
-  const [doctors, setDoctors] = useState<any[]>([]);
+  // Data states — initialized from server-fetched props
+  const [services, setServices] = useState<any[]>(initialServices);
+  const [doctors, setDoctors] = useState<any[]>(initialDoctors);
 
   // Search & filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -67,10 +70,6 @@ export default function DashboardContent({ username: _username }: DashboardConte
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [activeTab]);
 
   const deleteItem = async (id: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
@@ -241,142 +240,144 @@ export default function DashboardContent({ username: _username }: DashboardConte
           {activeTab === 'doctors' && doctorView === 'spotlight' ? (
             <FounderSpotlightForm />
           ) : loading ? (
-            <div className="flex items-center justify-center h-64 text-sm text-slate-500">
-              Loading administration records...
+            <div className="flex items-center justify-center gap-2 h-64 text-sm text-slate-500">
+              <Loader className="w-4 h-4 animate-spin" /> Loading administration records...
             </div>
           ) : errorMessage ? (
             <div className="p-6 rounded-2xl bg-accent-soft text-accent-dark border border-accent/10">
               {errorMessage}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1">
-
-              {/* SERVICES TABLE (CSS Grid) */}
-              {activeTab === 'services' && (
-                <>
-                  <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
-                    <div className="col-span-4">Service Title</div>
-                    <div className="col-span-2 text-center">Homepage Featured</div>
-                    <div className="col-span-4">Procedure Highlights</div>
-                    <div className="col-span-2 text-right">Actions</div>
-                  </div>
-
-                  <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left">
-                    {filteredServices.length === 0 ? (
-                      <div className="p-6 text-center text-slate-400 text-xs">
-                        No services found.
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1 w-full">
+              <div className="overflow-x-auto w-full">
+                <div className="min-w-[960px]">
+                  {/* SERVICES TABLE (CSS Grid) */}
+                  {activeTab === 'services' && (
+                    <>
+                      <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
+                        <div className="col-span-4">Service Title</div>
+                        <div className="col-span-2 text-center">Homepage Featured</div>
+                        <div className="col-span-4">Procedure Highlights</div>
+                        <div className="col-span-2 text-right">Actions</div>
                       </div>
-                    ) : (
-                      filteredServices.map((s) => (
-                        <div key={s.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors">
-                          <div className="col-span-4">
-                            <div className="font-bold text-slate-900">{s.title}</div>
-                            <div className="text-xs text-slate-500 mt-0.5 max-w-xs truncate" title={s.shortDescription}>
-                              {s.shortDescription}
-                            </div>
-                          </div>
-                          <div className="col-span-2 text-center text-xs">
-                            {s.featured ? (
-                              <span className="inline-flex items-center gap-1 font-bold text-accent bg-accent-soft px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
-                                ★ Featured
-                              </span>
-                            ) : (
-                              <span className="text-slate-400 font-normal">Standard</span>
-                            )}
-                          </div>
-                          <div className="col-span-4 text-xs">
-                            <div className="flex flex-wrap gap-1 max-w-xs">
-                              {(s.bullets || []).map((b: string, idx: number) => (
-                                <span key={idx} className="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 text-[10px] text-slate-600">
-                                  {b}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="col-span-2 text-right">
-                            <div className="flex justify-end gap-1">
-                              <button
-                                onClick={() => openEditForm(s)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-primary cursor-pointer"
-                                title="Edit"
-                              >
-                                <Edit3 className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => deleteItem(s.id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-accent cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </>
-              )}
 
-              {activeTab === 'doctors' && doctorView === 'list' && (
-                <>
-                  <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
-                    <div className="col-span-3">Doctor Name</div>
-                    <div className="col-span-1 text-center">Order</div>
-                    <div className="col-span-4">Title / Specialties</div>
-                    <div className="col-span-2">Photo Path</div>
-                    <div className="col-span-2 text-right">Actions</div>
-                  </div>
-
-                  <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left">
-                    {filteredDoctors.length === 0 ? (
-                      <div className="p-6 text-center text-slate-400 text-xs">
-                        No doctor profiles found.
+                      <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left">
+                        {filteredServices.length === 0 ? (
+                          <div className="p-6 text-center text-slate-400 text-xs">
+                            No services found.
+                          </div>
+                        ) : (
+                          filteredServices.map((s) => (
+                            <div key={s.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors">
+                              <div className="col-span-4">
+                                <div className="font-bold text-slate-900">{s.title}</div>
+                                <div className="text-xs text-slate-500 mt-0.5 max-w-xs truncate" title={s.shortDescription}>
+                                  {s.shortDescription}
+                                </div>
+                              </div>
+                              <div className="col-span-2 text-center text-xs">
+                                {s.featured ? (
+                                  <span className="inline-flex items-center gap-1 font-bold text-accent bg-accent-soft px-2 py-0.5 rounded text-[10px] uppercase tracking-wider">
+                                    ★ Featured
+                                  </span>
+                                ) : (
+                                  <span className="text-slate-400 font-normal">Standard</span>
+                                )}
+                              </div>
+                              <div className="col-span-4 text-xs">
+                                <div className="flex flex-wrap gap-1 max-w-xs">
+                                  {(s.bullets || []).map((b: string, idx: number) => (
+                                    <span key={idx} className="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 text-[10px] text-slate-600">
+                                      {b}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="col-span-2 text-right">
+                                <div className="flex justify-end gap-1">
+                                  <button
+                                    onClick={() => openEditForm(s)}
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-primary cursor-pointer"
+                                    title="Edit"
+                                  >
+                                    <Edit3 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => deleteItem(s.id)}
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-accent cursor-pointer"
+                                    title="Delete"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        )}
                       </div>
-                    ) : (
-                      filteredDoctors.map((d) => (
-                        <div key={d.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors">
-                          <div className="col-span-3">
-                            <div className="font-bold text-slate-900">{d.name}</div>
-                            <div className="text-xs text-slate-500 mt-0.5 max-w-xs truncate">{d.bio}</div>
-                          </div>
-                          <div className="col-span-1 text-center text-xs font-semibold text-primary font-mono">#{d.displayOrder || 0}</div>
-                          <div className="col-span-4 text-xs">
-                            <div className="font-semibold text-slate-900">{d.title}</div>
-                            <div className="flex flex-wrap gap-1 mt-1 max-w-xs">
-                              {(d.specialties || []).map((s: string, idx: number) => (
-                                <span key={idx} className="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 text-[10px] text-slate-600">
-                                  {s}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="col-span-2 text-xs text-slate-500 font-mono truncate max-w-[150px]">{d.imagePath}</div>
-                          <div className="col-span-2 text-right">
-                            <div className="flex justify-end gap-1">
-                              <button
-                                onClick={() => openEditForm(d)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-primary cursor-pointer"
-                                title="Edit"
-                              >
-                                <Edit3 className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => deleteItem(d.id)}
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-accent cursor-pointer"
-                                title="Delete"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </>
-              )}
+                    </>
+                  )}
 
+                  {activeTab === 'doctors' && doctorView === 'list' && (
+                    <>
+                      <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
+                        <div className="col-span-3">Doctor Name</div>
+                        <div className="col-span-1 text-center">Order</div>
+                        <div className="col-span-4">Title / Specialties</div>
+                        <div className="col-span-2">Photo Path</div>
+                        <div className="col-span-2 text-right">Actions</div>
+                      </div>
+
+                      <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left">
+                        {filteredDoctors.length === 0 ? (
+                          <div className="p-6 text-center text-slate-400 text-xs">
+                            No doctor profiles found.
+                          </div>
+                        ) : (
+                          filteredDoctors.map((d) => (
+                            <div key={d.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors">
+                              <div className="col-span-3">
+                                <div className="font-bold text-slate-900">{d.name}</div>
+                                <div className="text-xs text-slate-500 mt-0.5 max-w-xs truncate">{d.bio}</div>
+                              </div>
+                              <div className="col-span-1 text-center text-xs font-semibold text-primary font-mono">#{d.displayOrder || 0}</div>
+                              <div className="col-span-4 text-xs">
+                                <div className="font-semibold text-slate-900">{d.title}</div>
+                                <div className="flex flex-wrap gap-1 mt-1 max-w-xs">
+                                  {(d.specialties || []).map((s: string, idx: number) => (
+                                    <span key={idx} className="px-2 py-0.5 rounded bg-slate-50 border border-slate-200 text-[10px] text-slate-600">
+                                      {s}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                              <div className="col-span-2 text-xs text-slate-500 font-mono truncate max-w-[150px]">{d.imagePath}</div>
+                              <div className="col-span-2 text-right">
+                                <div className="flex justify-end gap-1">
+                                  <button
+                                    onClick={() => openEditForm(d)}
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-primary cursor-pointer"
+                                    title="Edit"
+                                  >
+                                    <Edit3 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={() => deleteItem(d.id)}
+                                    className="p-1.5 rounded-lg text-slate-400 hover:text-accent cursor-pointer"
+                                    title="Delete"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
           )}
         </div>

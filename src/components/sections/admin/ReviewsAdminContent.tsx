@@ -358,227 +358,231 @@ export const ReviewsAdminContent: React.FC<ReviewsAdminContentProps> = ({ initia
       </div>
 
       {/* Main Table view */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1">
-        {/* Table headings */}
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
-          <div className="col-span-1 text-center">Reorder</div>
-          <div className="col-span-2">Patient</div>
-          <div className="col-span-3">Review Detail</div>
-          <div className="col-span-2 text-center">Category</div>
-          <div className="col-span-1 text-center">Status</div>
-          <div className="col-span-1 text-center">Featured</div>
-          <div className="col-span-2 text-right">Moderation</div>
-        </div>
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1 w-full">
+        <div className="overflow-x-auto w-full">
+          <div className="min-w-[960px]">
+            {/* Table headings */}
+            <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
+              <div className="col-span-1 text-center">Reorder</div>
+              <div className="col-span-2">Patient</div>
+              <div className="col-span-3">Review Detail</div>
+              <div className="col-span-2 text-center">Category</div>
+              <div className="col-span-1 text-center">Status</div>
+              <div className="col-span-1 text-center">Featured</div>
+              <div className="col-span-2 text-right">Moderation</div>
+            </div>
 
-        {/* Dynamic Drag Reorder List */}
-        {canReorder ? (
-          <Reorder.Group
-            values={filteredReviews}
-            onReorder={handleReorder}
-            className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left"
-          >
-            {filteredReviews.map((rev) => (
-              <Reorder.Item
-                key={rev.id}
-                value={rev}
-                className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors select-none"
+            {/* Dynamic Drag Reorder List */}
+            {canReorder ? (
+              <Reorder.Group
+                values={filteredReviews}
+                onReorder={handleReorder}
+                className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left"
               >
-                {/* Drag handle */}
-                <div className="col-span-1 flex items-center justify-center cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 font-semibold">
-                  ☰
-                </div>
-
-                {/* Patient Profile */}
-                <div className="col-span-2 flex flex-col">
-                  <span className="font-bold text-slate-900 leading-tight">
-                    {rev.patientName}
-                  </span>
-                  {rev.treatmentType && (
-                    <span className="text-[10px] text-slate-400 font-sans mt-0.5 leading-none">
-                      {rev.treatmentType}
-                    </span>
-                  )}
-                </div>
-
-                {/* Title & Body review content */}
-                <div className="col-span-3 flex flex-col cursor-pointer" onClick={() => handleOpenEdit(rev)}>
-                  <div className="flex gap-1 mb-1">
-                    {renderRatingStars(rev.rating)}
-                  </div>
-                  <span className="font-bold text-slate-800 text-xs truncate">
-                    {rev.title}
-                  </span>
-                  <p className="text-[10px] text-slate-500 line-clamp-1 font-sans mt-0.5">
-                    {rev.body}
-                  </p>
-                </div>
-
-                {/* Category */}
-                <div className="col-span-2 text-center">
-                  <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-bold text-[10px]">
-                    {rev.category}
-                  </span>
-                </div>
-
-                {/* Status */}
-                <div className="col-span-1 text-center">
-                  <span className={getStatusBadge(rev.status)}>
-                    {rev.status}
-                  </span>
-                </div>
-
-                {/* Featured indicator */}
-                <div className="col-span-1 flex justify-center">
-                  {rev.status === 'approved' ? (
-                    <button
-                      onClick={() => handleToggleFeatured(rev.id, rev.featured)}
-                      className={`p-1.5 rounded-full cursor-pointer transition-colors ${
-                        rev.featured
-                          ? 'text-[#FFB020] hover:text-yellow-500'
-                          : 'text-slate-200 hover:text-slate-400'
-                      }`}
-                      title={rev.featured ? 'Featured case' : 'Mark featured'}
-                    >
-                      <Star className={`w-4 h-4 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
-                    </button>
-                  ) : (
-                    <span className="text-[10px] text-slate-300 select-none">-</span>
-                  )}
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-2 flex justify-end items-center gap-1.5 text-right">
-                  {rev.status === 'pending' && (
-                    <>
-                      <button
-                        onClick={() => handleApprove(rev.id)}
-                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg cursor-pointer"
-                        title="Approve Review"
-                      >
-                        <Check className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => handleReject(rev.id)}
-                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
-                        title="Reject Review"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => handleDelete(rev.id)}
-                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded-lg cursor-pointer"
-                    title="Delete permanently"
+                {filteredReviews.map((rev) => (
+                  <Reorder.Item
+                    key={rev.id}
+                    value={rev}
+                    className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors select-none"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </Reorder.Item>
-            ))}
-          </Reorder.Group>
-        ) : (
-          /* Normal static list (when filters are active) */
-          <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left">
-            {filteredReviews.map((rev) => (
-              <div
-                key={rev.id}
-                className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors"
-              >
-                <div className="col-span-1 text-center text-slate-300 font-sans text-xs font-semibold select-none">
-                  -
-                </div>
+                    {/* Drag handle */}
+                    <div className="col-span-1 flex items-center justify-center cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 font-semibold">
+                      ☰
+                    </div>
 
-                <div className="col-span-2 flex flex-col">
-                  <span className="font-bold text-slate-900 leading-tight">
-                    {rev.patientName}
-                  </span>
-                  {rev.treatmentType && (
-                    <span className="text-[10px] text-slate-400 font-sans mt-0.5 leading-none">
-                      {rev.treatmentType}
-                    </span>
-                  )}
-                </div>
+                    {/* Patient Profile */}
+                    <div className="col-span-2 flex flex-col">
+                      <span className="font-bold text-slate-900 leading-tight">
+                        {rev.patientName}
+                      </span>
+                      {rev.treatmentType && (
+                        <span className="text-[10px] text-slate-400 font-sans mt-0.5 leading-none">
+                          {rev.treatmentType}
+                        </span>
+                      )}
+                    </div>
 
-                <div className="col-span-3 flex flex-col cursor-pointer" onClick={() => handleOpenEdit(rev)}>
-                  <div className="flex gap-1 mb-1">
-                    {renderRatingStars(rev.rating)}
-                  </div>
-                  <span className="font-bold text-slate-800 text-xs truncate">
-                    {rev.title}
-                  </span>
-                  <p className="text-[10px] text-slate-500 line-clamp-1 font-sans mt-0.5">
-                    {rev.body}
-                  </p>
-                </div>
+                    {/* Title & Body review content */}
+                    <div className="col-span-3 flex flex-col cursor-pointer" onClick={() => handleOpenEdit(rev)}>
+                      <div className="flex gap-1 mb-1">
+                        {renderRatingStars(rev.rating)}
+                      </div>
+                      <span className="font-bold text-slate-800 text-xs truncate">
+                        {rev.title}
+                      </span>
+                      <p className="text-[10px] text-slate-500 line-clamp-1 font-sans mt-0.5">
+                        {rev.body}
+                      </p>
+                    </div>
 
-                <div className="col-span-2 text-center">
-                  <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-bold text-[10px]">
-                    {rev.category}
-                  </span>
-                </div>
+                    {/* Category */}
+                    <div className="col-span-2 text-center">
+                      <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-bold text-[10px]">
+                        {rev.category}
+                      </span>
+                    </div>
 
-                <div className="col-span-1 text-center">
-                  <span className={getStatusBadge(rev.status)}>
-                    {rev.status}
-                  </span>
-                </div>
+                    {/* Status */}
+                    <div className="col-span-1 text-center">
+                      <span className={getStatusBadge(rev.status)}>
+                        {rev.status}
+                      </span>
+                    </div>
 
-                <div className="col-span-1 flex justify-center">
-                  {rev.status === 'approved' ? (
-                    <button
-                      onClick={() => handleToggleFeatured(rev.id, rev.featured)}
-                      className={`p-1.5 rounded-full cursor-pointer transition-colors ${
-                        rev.featured
-                          ? 'text-[#FFB020] hover:text-yellow-500'
-                          : 'text-slate-200 hover:text-slate-400'
-                      }`}
-                      title={rev.featured ? 'Featured case' : 'Mark featured'}
-                    >
-                      <Star className={`w-4 h-4 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
-                    </button>
-                  ) : (
-                    <span className="text-[10px] text-slate-300 select-none">-</span>
-                  )}
-                </div>
+                    {/* Featured indicator */}
+                    <div className="col-span-1 flex justify-center">
+                      {rev.status === 'approved' ? (
+                        <button
+                          onClick={() => handleToggleFeatured(rev.id, rev.featured)}
+                          className={`p-1.5 rounded-full cursor-pointer transition-colors ${
+                            rev.featured
+                              ? 'text-[#FFB020] hover:text-yellow-500'
+                              : 'text-slate-200 hover:text-slate-400'
+                          }`}
+                          title={rev.featured ? 'Featured case' : 'Mark featured'}
+                        >
+                          <Star className={`w-4 h-4 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
+                        </button>
+                      ) : (
+                        <span className="text-[10px] text-slate-300 select-none">-</span>
+                      )}
+                    </div>
 
-                <div className="col-span-2 flex justify-end items-center gap-1.5 text-right">
-                  {rev.status === 'pending' && (
-                    <>
+                    {/* Actions */}
+                    <div className="col-span-2 flex justify-end items-center gap-1.5 text-right">
+                      {rev.status === 'pending' && (
+                        <>
+                          <button
+                            onClick={() => handleApprove(rev.id)}
+                            className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg cursor-pointer"
+                            title="Approve Review"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleReject(rev.id)}
+                            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
+                            title="Reject Review"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
                       <button
-                        onClick={() => handleApprove(rev.id)}
-                        className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg cursor-pointer"
-                        title="Approve Review"
+                        onClick={() => handleDelete(rev.id)}
+                        className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded-lg cursor-pointer"
+                        title="Delete permanently"
                       >
-                        <Check className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={() => handleReject(rev.id)}
-                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
-                        title="Reject Review"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => handleDelete(rev.id)}
-                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded-lg cursor-pointer"
-                    title="Delete permanently"
+                    </div>
+                  </Reorder.Item>
+                ))}
+              </Reorder.Group>
+            ) : (
+              /* Normal static list (when filters are active) */
+              <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left">
+                {filteredReviews.map((rev) => (
+                  <div
+                    key={rev.id}
+                    className="grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+                    <div className="col-span-1 text-center text-slate-300 font-sans text-xs font-semibold select-none">
+                      -
+                    </div>
+
+                    <div className="col-span-2 flex flex-col">
+                      <span className="font-bold text-slate-900 leading-tight">
+                        {rev.patientName}
+                      </span>
+                      {rev.treatmentType && (
+                        <span className="text-[10px] text-slate-400 font-sans mt-0.5 leading-none">
+                          {rev.treatmentType}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="col-span-3 flex flex-col cursor-pointer" onClick={() => handleOpenEdit(rev)}>
+                      <div className="flex gap-1 mb-1">
+                        {renderRatingStars(rev.rating)}
+                      </div>
+                      <span className="font-bold text-slate-800 text-xs truncate">
+                        {rev.title}
+                      </span>
+                      <p className="text-[10px] text-slate-500 line-clamp-1 font-sans mt-0.5">
+                        {rev.body}
+                      </p>
+                    </div>
+
+                    <div className="col-span-2 text-center">
+                      <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full font-bold text-[10px]">
+                        {rev.category}
+                      </span>
+                    </div>
+
+                    <div className="col-span-1 text-center">
+                      <span className={getStatusBadge(rev.status)}>
+                        {rev.status}
+                      </span>
+                    </div>
+
+                    <div className="col-span-1 flex justify-center">
+                      {rev.status === 'approved' ? (
+                        <button
+                          onClick={() => handleToggleFeatured(rev.id, rev.featured)}
+                          className={`p-1.5 rounded-full cursor-pointer transition-colors ${
+                            rev.featured
+                              ? 'text-[#FFB020] hover:text-yellow-500'
+                              : 'text-slate-200 hover:text-slate-400'
+                          }`}
+                          title={rev.featured ? 'Featured case' : 'Mark featured'}
+                        >
+                          <Star className={`w-4 h-4 ${rev.featured ? 'fill-[#FFB020]' : ''}`} />
+                        </button>
+                      ) : (
+                        <span className="text-[10px] text-slate-300 select-none">-</span>
+                      )}
+                    </div>
+
+                    <div className="col-span-2 flex justify-end items-center gap-1.5 text-right">
+                      {rev.status === 'pending' && (
+                        <>
+                          <button
+                            onClick={() => handleApprove(rev.id)}
+                            className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg cursor-pointer"
+                            title="Approve Review"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleReject(rev.id)}
+                            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg cursor-pointer"
+                            title="Reject Review"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => handleDelete(rev.id)}
+                        className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-50 rounded-lg cursor-pointer"
+                        title="Delete permanently"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        {filteredReviews.length === 0 && (
-          <div className="py-24 text-center text-slate-400 font-sans font-semibold">
-            No reviews found matching filters.
+            {filteredReviews.length === 0 && (
+              <div className="py-24 text-center text-slate-400 font-sans font-semibold">
+                No reviews found matching filters.
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* EDIT/ADD SLIDE-OVER DRAWER */}

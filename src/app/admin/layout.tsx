@@ -1,12 +1,13 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText, Settings as SettingsIcon, BarChart as BarChartIcon, LayoutDashboard } from 'lucide-react';
+import { Image as ImageIcon, Calendar, Sparkles, Users, MessageSquare, LogOut, FileText, Settings as SettingsIcon, BarChart as BarChartIcon, LayoutDashboard, ChevronLeft, ChevronRight, Menu, X } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
+import { cn } from '@/lib/utils';
 
-function AdminSidebarNav() {
+function AdminSidebarNav({ isCollapsed }: { isCollapsed: boolean }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const tab = searchParams.get('tab');
@@ -42,14 +43,17 @@ function AdminSidebarNav() {
           <Link
             key={item.label}
             href={item.href}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all ${
+            title={isCollapsed ? item.label : undefined}
+            className={cn(
+              'flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all',
+              isCollapsed ? 'justify-center px-0' : '',
               isActive
                 ? 'bg-primary text-white font-extrabold shadow-sm'
                 : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'
-            }`}
+            )}
           >
             <Icon className="w-4 h-4 shrink-0" />
-            {item.label}
+            {!isCollapsed && <span>{item.label}</span>}
           </Link>
         );
       })}
@@ -60,6 +64,21 @@ function AdminSidebarNav() {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('admin_sidebar_collapsed');
+    if (saved !== null) {
+      setIsCollapsed(saved === 'true');
+    }
+  }, []);
+
+  const toggleCollapse = () => {
+    const newVal = !isCollapsed;
+    setIsCollapsed(newVal);
+    localStorage.setItem('admin_sidebar_collapsed', String(newVal));
+  };
 
   const isLoginPage = pathname === '/admin/login';
 
@@ -74,33 +93,86 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="flex h-screen w-full bg-slate-100 font-sans text-slate-800">
+    <div className="flex flex-col lg:flex-row h-screen w-full bg-slate-100 font-sans text-slate-800 overflow-hidden">
+      {/* Mobile Top Navbar */}
+      <div className="lg:hidden flex items-center justify-between p-4 bg-slate-900 text-slate-300 border-b border-slate-800 select-none shrink-0">
+        <Link href="/" className="flex items-center gap-2">
+          <Logo variant="dark" className="h-6 w-auto" />
+        </Link>
+        <button
+          onClick={() => setIsMobileOpen(true)}
+          className="p-2 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+          aria-label="Open sidebar"
+        >
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Mobile drawer backdrop overlay */}
+      {isMobileOpen && (
+        <div
+          onClick={() => setIsMobileOpen(false)}
+          className="lg:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+        />
+      )}
+
       {/* Sidebar Navigation */}
-      <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 select-none">
+      <aside
+        className={cn(
+          'bg-slate-900 text-slate-300 flex flex-col flex-shrink-0 select-none transition-all duration-300 z-50',
+          // Desktop collapsed/expanded width
+          isCollapsed ? 'lg:w-20' : 'lg:w-64',
+          // Mobile responsive drawer positioning
+          'fixed inset-y-0 left-0 w-64 transform lg:relative lg:translate-x-0 lg:flex',
+          isMobileOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
         {/* Brand Header */}
-        <div className="p-6 border-b border-slate-800 flex items-center gap-3">
-          <div className="bg-white rounded-lg p-1 flex-shrink-0">
-            <Logo className="w-8 h-8" />
+        <div className="p-6 border-b border-slate-800 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-3 overflow-hidden">
+            {!isCollapsed ? (
+              <Logo variant="dark" className="h-7 w-auto" />
+            ) : (
+              <Logo variant="icon" className="h-6 w-6" />
+            )}
           </div>
-          <div>
-            <h2 className="text-white font-bold text-sm tracking-wide">Dental Panel</h2>
-            <p className="text-[10px] text-slate-500 font-semibold uppercase">Administrator</p>
-          </div>
+          
+          {/* Desktop Toggle Button */}
+          <button
+            onClick={toggleCollapse}
+            className="hidden lg:flex p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+          </button>
+
+          {/* Mobile Close Button */}
+          <button
+            onClick={() => setIsMobileOpen(false)}
+            className="lg:hidden p-1.5 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer"
+            aria-label="Close sidebar"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Tab Links */}
         <Suspense fallback={<div className="p-4 text-xs text-slate-500">Loading nav...</div>}>
-          <AdminSidebarNav />
+          <AdminSidebarNav isCollapsed={isCollapsed} />
         </Suspense>
 
         {/* Footer Log Out */}
-        <div className="p-4 border-t border-slate-800">
+        <div className="p-4 border-t border-slate-800 shrink-0">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-xs font-bold text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+            title={isCollapsed ? 'Sign Out' : undefined}
+            className={cn(
+              'flex items-center gap-3 w-full px-4 py-3 rounded-xl text-xs font-bold text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer',
+              isCollapsed ? 'justify-center px-0' : ''
+            )}
           >
             <LogOut className="w-4 h-4" />
-            Sign Out
+            {!isCollapsed && <span>Sign Out</span>}
           </button>
         </div>
       </aside>

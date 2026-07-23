@@ -9,43 +9,39 @@ import { getApprovedReviews, getSiteStats, getApprovedReviewsCount } from '@/lib
 import { getServices } from '@/data/services';
 import { getClinicSettings } from '@/lib/contact';
 import { Testimonial, Service } from '@/types';
+import { SiteStat } from '@/types/reviews';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  let mappedTestimonials: Testimonial[] = [];
-  let initialServices: Service[] = [];
-  let settings = null;
-  let homeStats: any[] = [];
-  let liveReviewsCount = 0;
+  // Fire all 5 independent queries in parallel instead of sequentially
+  const [settingsResult, statsResult, countResult, reviewsResult, servicesResult] =
+    await Promise.allSettled([
+      getClinicSettings(),
+      getSiteStats('home'),
+      getApprovedReviewsCount(),
+      getApprovedReviews({ page: 1, pageSize: 6, featured: true }),
+      getServices(),
+    ]);
 
-  try {
-    settings = await getClinicSettings();
-    homeStats = await getSiteStats('home');
-    liveReviewsCount = await getApprovedReviewsCount();
-  } catch (error) {
-    console.warn('Failed to load clinic settings/stats for home:', error);
-  }
+  const settings = settingsResult.status === 'fulfilled' ? settingsResult.value : null;
+  const homeStats: SiteStat[] = statsResult.status === 'fulfilled' ? statsResult.value : [];
+  const liveReviewsCount = countResult.status === 'fulfilled' ? countResult.value : 0;
 
-  try {
-    const dbReviews = await getApprovedReviews({ page: 1, pageSize: 6, featured: true });
-    mappedTestimonials = dbReviews.map((r) => ({
-      id:     r.id,
-      author: r.patientName,
-      role:   r.treatmentType ?? r.category,
-      rating: r.rating,
-      text:   r.body,
-      date:   r.createdAt,
-    }));
-  } catch (error) {
-    console.warn('Database query failed for reviews on homepage:', error);
-  }
+  const mappedTestimonials: Testimonial[] =
+    reviewsResult.status === 'fulfilled'
+      ? reviewsResult.value.map((r) => ({
+          id: r.id,
+          author: r.patientName,
+          role: r.treatmentType ?? r.category,
+          rating: r.rating,
+          text: r.body,
+          date: r.createdAt,
+        }))
+      : [];
 
-  try {
-    initialServices = await getServices();
-  } catch (error) {
-    console.warn('Database query failed for services on homepage:', error);
-  }
+  const initialServices: Service[] =
+    servicesResult.status === 'fulfilled' ? servicesResult.value : [];
 
   // Find Smiles Transformed / Patient trust stat for Hero
   const patientStat = homeStats.find(
@@ -56,7 +52,7 @@ export default async function Home() {
   const filteredHomeStats = homeStats.filter(
     (s) => !s.label.toLowerCase().includes('review')
   );
-  const statsList = [
+  const statsList: SiteStat[] = [
     ...filteredHomeStats,
     {
       id: 'live-reviews-stat',
@@ -64,6 +60,7 @@ export default async function Home() {
       label: 'Five Star Reviews',
       page: 'home',
       displayOrder: 99,
+      updatedAt: new Date().toISOString(),
     },
   ];
 

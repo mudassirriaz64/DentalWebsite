@@ -345,14 +345,15 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
             </span>
             <button
               onClick={handleBulkMarkRead}
-              className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold cursor-pointer"
+              disabled={loading}
+              className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
             >
-              Mark Read
+              {loading && <Loader className="w-3 h-3 animate-spin" />} Mark Read
             </button>
             
             <div className="relative inline-block text-left group">
-              <button className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer">
-                Status <ChevronDown className="w-3.5 h-3.5" />
+              <button disabled={loading} className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                {loading && <Loader className="w-3 h-3 animate-spin" />} Status <ChevronDown className="w-3.5 h-3.5" />
               </button>
               <div className="absolute right-0 mt-1.5 w-32 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none hidden group-hover:block z-30 font-semibold text-xs border">
                 <div className="p-1 flex flex-col">
@@ -360,7 +361,8 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
                     <button
                       key={st}
                       onClick={() => handleBulkStatusChange(st as SubmissionStatus)}
-                      className="text-left w-full px-2.5 py-1.5 hover:bg-slate-50 text-slate-700 capitalize rounded"
+                      disabled={loading}
+                      className="text-left w-full px-2.5 py-1.5 hover:bg-slate-50 text-slate-700 capitalize rounded disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {st}
                     </button>
@@ -371,7 +373,8 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
 
             <button
               onClick={handleBulkDelete}
-              className="px-3 py-1.5 bg-accent-soft hover:bg-accent/15 text-accent rounded-lg text-xs font-bold cursor-pointer"
+              disabled={loading}
+              className="px-3 py-1.5 bg-accent-soft hover:bg-accent/15 text-accent rounded-lg text-xs font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
             >
               Delete
             </button>
@@ -380,133 +383,137 @@ export const SubmissionsAdminContent: React.FC<SubmissionsAdminContentProps> = (
       </div>
 
       {/* Main Table view */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1">
-        {/* Table Headings */}
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
-          <div className="col-span-1 flex items-center justify-center">
-            <input
-              type="checkbox"
-              onChange={handleSelectAll}
-              checked={filteredItems.length > 0 && selectedIds.length === filteredItems.length}
-              className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
-            />
-          </div>
-          <div className="col-span-1 text-center">Read</div>
-          <div className="col-span-3">Patient Name / Email</div>
-          <div className="col-span-3">Requested Treatment</div>
-          <div className="col-span-2 text-center">Status</div>
-          <div className="col-span-1 text-right">Age</div>
-          <div className="col-span-1 text-right">Action</div>
-        </div>
-
-        {/* Dynamic Table Body */}
-        <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left font-sans">
-          {filteredItems.map((sub) => {
-            const isChecked = selectedIds.includes(sub.id);
-
-            return (
-              <div
-                key={sub.id}
-                className={`grid grid-cols-12 gap-4 px-6 py-4 items-center transition-all ${
-                  sub.isRead ? 'bg-white' : 'bg-primary-light/10 hover:bg-primary-light/20'
-                }`}
-              >
-                {/* Select Checkbox */}
-                <div className="col-span-1 flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={(e) => handleSelectOne(sub.id, e.target.checked)}
-                    className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
-                  />
-                </div>
-
-                {/* Read status dot */}
-                <div className="col-span-1 flex justify-center">
-                  {!sub.isRead && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-primary" title="Unread query log" />
-                  )}
-                </div>
-
-                {/* Patient Name / Email details */}
-                <div 
-                  onClick={() => handleOpenDetail(sub)}
-                  className="col-span-3 flex flex-col cursor-pointer"
-                >
-                  <PatientContactInfo
-                    name={sub.fullName}
-                    email={sub.email}
-                    phone={sub.phone}
-                    whatsapp={sub.whatsapp}
-                  />
-                </div>
-
-                {/* Treatment category choice */}
-                <div className="col-span-3">
-                  <span className="font-semibold text-slate-700 text-xs">
-                    {sub.serviceInterest}
-                  </span>
-                </div>
-
-                {/* Status selector pill */}
-                <div className="col-span-2 text-center">
-                  {updatingId === sub.id ? (
-                    <Loader className="w-4 h-4 animate-spin text-slate-400 mx-auto" />
-                  ) : (
-                    <div className="relative inline-block group">
-                      <button className={getStatusBadgeClass(sub.status)}>
-                        {sub.status}
-                      </button>
-                      {/* Inline Status update triggers on hover */}
-                      <div className="absolute left-1/2 -translate-x-1/2 mt-1 w-28 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none hidden group-hover:block z-30 font-semibold text-[10px] border">
-                        <div className="p-1 flex flex-col">
-                          {['new', 'contacted', 'scheduled', 'closed'].map((st) => (
-                            <button
-                              key={st}
-                              onClick={() => handleStatusChange(sub.id, st as SubmissionStatus)}
-                              className="text-left w-full px-2 py-1 hover:bg-slate-50 text-slate-600 rounded font-bold capitalize"
-                            >
-                              {st}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Relative age */}
-                <div className="col-span-1 text-right text-xs text-slate-400 font-sans font-semibold">
-                  {formatRelativeTime(sub.createdAt)}
-                </div>
-
-                {/* Actions */}
-                <div className="col-span-1 text-right flex justify-end gap-1.5">
-                  <button
-                    onClick={() => handleOpenDetail(sub)}
-                    className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg cursor-pointer"
-                    title="View Full details"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteOne(sub.id)}
-                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-100 rounded-lg cursor-pointer"
-                    title="Delete record"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1 w-full">
+        <div className="overflow-x-auto w-full">
+          <div className="min-w-[960px]">
+            {/* Table Headings */}
+            <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
+              <div className="col-span-1 flex items-center justify-center">
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAll}
+                  checked={filteredItems.length > 0 && selectedIds.length === filteredItems.length}
+                  className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
+                />
               </div>
-            );
-          })}
-        </div>
+              <div className="col-span-1 text-center">Read</div>
+              <div className="col-span-3">Patient Name / Email</div>
+              <div className="col-span-3">Requested Treatment</div>
+              <div className="col-span-2 text-center">Status</div>
+              <div className="col-span-1 text-right">Age</div>
+              <div className="col-span-1 text-right">Action</div>
+            </div>
 
-        {filteredItems.length === 0 && (
-          <div className="py-24 text-center text-slate-400 font-sans">
-            No submissions found matching criteria.
+            {/* Dynamic Table Body */}
+            <div className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left font-sans">
+              {filteredItems.map((sub) => {
+                const isChecked = selectedIds.includes(sub.id);
+
+                return (
+                  <div
+                    key={sub.id}
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center transition-all ${
+                      sub.isRead ? 'bg-white' : 'bg-primary-light/10 hover:bg-primary-light/20'
+                    }`}
+                  >
+                    {/* Select Checkbox */}
+                    <div className="col-span-1 flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => handleSelectOne(sub.id, e.target.checked)}
+                        className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
+                      />
+                    </div>
+
+                    {/* Read status dot */}
+                    <div className="col-span-1 flex justify-center">
+                      {!sub.isRead && (
+                        <span className="w-2.5 h-2.5 rounded-full bg-primary" title="Unread query log" />
+                      )}
+                    </div>
+
+                    {/* Patient Name / Email details */}
+                    <div 
+                      onClick={() => handleOpenDetail(sub)}
+                      className="col-span-3 flex flex-col cursor-pointer"
+                    >
+                      <PatientContactInfo
+                        name={sub.fullName}
+                        email={sub.email}
+                        phone={sub.phone}
+                        whatsapp={sub.whatsapp}
+                      />
+                    </div>
+
+                    {/* Treatment category choice */}
+                    <div className="col-span-3">
+                      <span className="font-semibold text-slate-700 text-xs">
+                        {sub.serviceInterest}
+                      </span>
+                    </div>
+
+                    {/* Status selector pill */}
+                    <div className="col-span-2 text-center">
+                      {updatingId === sub.id ? (
+                        <Loader className="w-4 h-4 animate-spin text-slate-400 mx-auto" />
+                      ) : (
+                        <div className="relative inline-block group">
+                          <button className={getStatusBadgeClass(sub.status)}>
+                            {sub.status}
+                          </button>
+                          {/* Inline Status update triggers on hover */}
+                          <div className="absolute left-1/2 -translate-x-1/2 mt-1 w-28 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none hidden group-hover:block z-30 font-semibold text-[10px] border">
+                            <div className="p-1 flex flex-col">
+                              {['new', 'contacted', 'scheduled', 'closed'].map((st) => (
+                                <button
+                                  key={st}
+                                  onClick={() => handleStatusChange(sub.id, st as SubmissionStatus)}
+                                  className="text-left w-full px-2 py-1 hover:bg-slate-50 text-slate-600 rounded font-bold capitalize"
+                                >
+                                  {st}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Relative age */}
+                    <div className="col-span-1 text-right text-xs text-slate-400 font-sans font-semibold">
+                      {formatRelativeTime(sub.createdAt)}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="col-span-1 text-right flex justify-end gap-1.5">
+                      <button
+                        onClick={() => handleOpenDetail(sub)}
+                        className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg cursor-pointer"
+                        title="View Full details"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteOne(sub.id)}
+                        className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-100 rounded-lg cursor-pointer"
+                        title="Delete record"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {filteredItems.length === 0 && (
+              <div className="py-24 text-center text-slate-400 font-sans">
+                No submissions found matching criteria.
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* SLIDE-OVER DETAIL DRAWER */}

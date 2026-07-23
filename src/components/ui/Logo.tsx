@@ -10,22 +10,15 @@ interface LogoProps {
 export const Logo: React.FC<LogoProps> = ({ className, variant = 'horizontal' }) => {
   if (variant === 'dark') {
     return (
-      <div
-        className={cn(
-          'w-40 h-[60px] sm:w-44 sm:h-[72px] rounded-2xl bg-white p-2.5 flex items-center justify-center shadow-md select-none flex-shrink-0',
-          className
-        )}
-      >
-        <div className="relative w-full h-full">
-          <Image
-            src="/logo-full.png"
-            alt="Dental Cosmetics & Implantology Logo"
-            fill
-            priority
-            sizes="(max-width: 640px) 120px, 160px"
-            className="object-contain"
-          />
-        </div>
+      <div className={cn('relative h-14 sm:h-16 lg:h-20 aspect-[2.55/1] select-none flex-shrink-0', className)}>
+        <Image
+          src="/logo-full-light-text.png"
+          alt="Dental Cosmetics & Implantology Logo"
+          fill
+          priority
+          sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 200px"
+          className="object-contain"
+        />
       </div>
     );
   }

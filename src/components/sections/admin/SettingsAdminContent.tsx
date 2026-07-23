@@ -150,19 +150,21 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
   };
 
   return (
-    <div className="flex-1 p-6 font-sans text-sm text-slate-800">
-      {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold font-sans tracking-tight text-slate-900">
-          Clinic Configuration Settings
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Edit global contact details, physical address, and schedule tables. These values update across public footers and forms.
-        </p>
-      </header>
+    <div className="flex-1 flex flex-col bg-slate-50 text-slate-800 overflow-hidden h-full">
+      <main className="flex-grow flex flex-col overflow-y-auto">
+        <div className="flex-1 flex flex-col font-sans p-6 text-sm">
+          {/* Header */}
+          <header className="mb-8">
+            <h1 className="text-2xl font-bold font-sans tracking-tight text-slate-900">
+              Clinic Configuration Settings
+            </h1>
+            <p className="text-xs text-slate-500 mt-1">
+              Edit global contact details, physical address, and schedule tables. These values update across public footers and forms.
+            </p>
+          </header>
 
-      {/* Settings Form */}
-      <form onSubmit={handleSubmit} className="max-w-4xl flex flex-col gap-6 text-left">
+          {/* Settings Form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6 text-left">
         {success && (
           <div className="p-4 rounded-xl bg-green-50 text-green-700 border border-green-200/50 text-xs font-semibold flex items-center gap-2">
             <CheckCircle className="w-5 h-5 shrink-0" />
@@ -323,10 +325,10 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
             {hoursRows.map((row, index) => (
               <div
                 key={index}
-                className="grid grid-cols-12 gap-3 items-center p-3 bg-slate-50 rounded-xl border border-slate-150 relative animate-fade-in"
+                className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center p-3 bg-slate-50 rounded-xl border border-slate-150 relative animate-fade-in"
               >
                 {/* Day label (e.g. Mon-Fri) */}
-                <div className="col-span-4 flex flex-col gap-1">
+                <div className="col-span-12 md:col-span-4 flex flex-col gap-1">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">
                     Schedule Day Label
                   </span>
@@ -341,7 +343,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
                 </div>
 
                 {/* Hours Details */}
-                <div className="col-span-4 flex flex-col gap-1">
+                <div className="col-span-12 md:col-span-4 flex flex-col gap-1">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">
                     Hours Detail Text
                   </span>
@@ -356,7 +358,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
                 </div>
 
                 {/* Checkboxes parameters */}
-                <div className="col-span-3 flex flex-col gap-2 pl-2">
+                <div className="col-span-10 md:col-span-3 flex flex-col gap-2 pl-2 md:pl-0 mt-2 md:mt-0">
                   {/* Emergency checkbox */}
                   <label className="flex items-center gap-1.5 select-none text-xs font-semibold text-slate-600 cursor-pointer">
                     <input
@@ -381,7 +383,7 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
                 </div>
 
                 {/* Delete row widget */}
-                <div className="col-span-1 flex justify-center mt-3">
+                <div className="col-span-2 md:col-span-1 flex justify-end md:justify-center mt-3 md:mt-0">
                   <button
                     type="button"
                     onClick={() => handleDeleteRow(index)}
@@ -412,6 +414,8 @@ export const SettingsAdminContent: React.FC<SettingsAdminContentProps> = ({ init
           )}
         </button>
       </form>
+        </div>
+      </main>
     </div>
   );
 };

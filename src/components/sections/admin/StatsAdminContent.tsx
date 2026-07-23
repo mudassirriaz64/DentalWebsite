@@ -131,16 +131,18 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
   };
 
   return (
-    <div className="flex-1 p-6 font-sans text-sm text-slate-800">
-      {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-2xl font-bold font-sans tracking-tight text-slate-900">
-          Site Statistics Configuration
-        </h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Configure site metrics that load dynamically across key pages (Home and Reviews).
-        </p>
-      </header>
+    <div className="flex-1 flex flex-col bg-slate-50 text-slate-800 overflow-hidden h-full">
+      <main className="flex-grow flex flex-col overflow-y-auto">
+        <div className="flex-1 flex flex-col font-sans p-6 text-sm">
+          {/* Header */}
+          <header className="mb-8">
+            <h1 className="text-2xl font-bold font-sans tracking-tight text-slate-900">
+              Site Statistics Configuration
+            </h1>
+            <p className="text-xs text-slate-500 mt-1">
+              Configure site metrics that load dynamically across key pages (Home and Reviews).
+            </p>
+          </header>
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-slate-100 mb-6">
@@ -173,7 +175,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="max-w-3xl flex flex-col gap-6 text-left">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 text-left">
         {success && (
           <div className="p-4 rounded-xl bg-green-50 text-green-700 border border-green-200/50 text-xs font-semibold flex items-center gap-2">
             <CheckCircle className="w-5 h-5 shrink-0" />
@@ -207,10 +209,10 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
             {currentRows.map((row, index) => (
               <div
                 key={index}
-                className="grid grid-cols-12 gap-3 items-center p-3 bg-slate-50 rounded-xl border border-slate-150 relative animate-fade-in"
+                className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center p-3 bg-slate-50 rounded-xl border border-slate-150 relative animate-fade-in"
               >
                 {/* Stat value (e.g. 2,500+) */}
-                <div className="col-span-4 flex flex-col gap-1">
+                <div className="col-span-12 md:col-span-4 flex flex-col gap-1">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">
                     Stat Metric Value
                   </span>
@@ -225,7 +227,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
                 </div>
 
                 {/* Stat label (e.g. Five Star Reviews) */}
-                <div className="col-span-7 flex flex-col gap-1">
+                <div className="col-span-10 md:col-span-7 flex flex-col gap-1">
                   <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">
                     Stat Metric Label
                   </span>
@@ -240,7 +242,7 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
                 </div>
 
                 {/* Delete button */}
-                <div className="col-span-1 flex justify-center mt-3">
+                <div className="col-span-2 md:col-span-1 flex justify-end md:justify-center mt-3 md:mt-0">
                   <button
                     type="button"
                     onClick={() => handleDeleteRow(index)}
@@ -272,6 +274,8 @@ export const StatsAdminContent: React.FC<StatsAdminContentProps> = ({
           )}
         </button>
       </form>
+        </div>
+      </main>
     </div>
   );
 };

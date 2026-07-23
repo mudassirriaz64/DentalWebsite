@@ -344,19 +344,22 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
             </span>
             <button
               onClick={() => handleBulkStatusChange('published')}
-              className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold cursor-pointer"
+              disabled={loading}
+              className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
             >
-              Publish
+              {loading && <Loader className="w-3 h-3 animate-spin" />} Publish
             </button>
             <button
               onClick={() => handleBulkStatusChange('draft')}
-              className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold cursor-pointer"
+              disabled={loading}
+              className="px-3 py-1.5 border bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-semibold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
             >
-              Unpublish
+              {loading && <Loader className="w-3 h-3 animate-spin" />} Unpublish
             </button>
             <button
               onClick={handleBulkDelete}
-              className="px-3 py-1.5 bg-accent-soft hover:bg-accent/15 text-accent rounded-lg text-xs font-bold cursor-pointer"
+              disabled={loading}
+              className="px-3 py-1.5 bg-accent-soft hover:bg-accent/15 text-accent rounded-lg text-xs font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-1.5"
             >
               Delete
             </button>
@@ -365,158 +368,162 @@ export const GalleryAdminContent: React.FC<GalleryAdminContentProps> = ({ initia
       </div>
 
       {/* Main Drag-Reorder Table container */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1">
-        {/* Table Headings */}
-        <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
-          <div className="col-span-1 flex items-center justify-center">
-            <input
-              type="checkbox"
-              onChange={handleSelectAll}
-              checked={filteredItems.length > 0 && selectedIds.length === filteredItems.length}
-              className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
-            />
-          </div>
-          <div className="col-span-1">Reorder</div>
-          <div className="col-span-1">Thumbnail</div>
-          <div className="col-span-4">Title / Description</div>
-          <div className="col-span-2">Specialty</div>
-          <div className="col-span-1 text-center">Shape</div>
-          <div className="col-span-1 text-center">Visibility</div>
-          <div className="col-span-1 text-right">Actions</div>
-        </div>
+      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col flex-1 w-full">
+        <div className="overflow-x-auto w-full">
+          <div className="min-w-[960px]">
+            {/* Table Headings */}
+            <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50/75 border-b border-slate-100 font-bold text-xs text-slate-500 uppercase tracking-wider select-none text-left">
+              <div className="col-span-1 flex items-center justify-center">
+                <input
+                  type="checkbox"
+                  onChange={handleSelectAll}
+                  checked={filteredItems.length > 0 && selectedIds.length === filteredItems.length}
+                  className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
+                />
+              </div>
+              <div className="col-span-1">Reorder</div>
+              <div className="col-span-1">Thumbnail</div>
+              <div className="col-span-4">Title / Description</div>
+              <div className="col-span-2">Specialty</div>
+              <div className="col-span-1 text-center">Shape</div>
+              <div className="col-span-1 text-center">Visibility</div>
+              <div className="col-span-1 text-right">Actions</div>
+            </div>
 
-        {/* Dynamic Drag Reorder Rows */}
-        <Reorder.Group
-          axis="y"
-          values={filteredItems}
-          onReorder={handleReorder}
-          className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left"
-        >
-          {filteredItems.map((item) => {
-            const isChecked = selectedIds.includes(item.id);
-            const imageObj = item.images.main || item.images.after || item.images.before;
-            const thumbUrl = imageObj ? resolveImageUrl(imageObj) : '';
+            {/* Dynamic Drag Reorder Rows */}
+            <Reorder.Group
+              axis="y"
+              values={filteredItems}
+              onReorder={handleReorder}
+              className="divide-y divide-slate-50 overflow-y-auto max-h-[60vh] flex flex-col text-left"
+            >
+              {filteredItems.map((item) => {
+                const isChecked = selectedIds.includes(item.id);
+                const imageObj = item.images.main || item.images.after || item.images.before;
+                const thumbUrl = imageObj ? resolveImageUrl(imageObj) : '';
 
-            return (
-              <Reorder.Item
-                key={item.id}
-                value={item}
-                dragListener={true}
-                className={`grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors ${
-                  item.status === 'draft' ? 'opacity-85' : ''
-                }`}
-              >
-                {/* Select Checkbox */}
-                <div className="col-span-1 flex items-center justify-center">
-                  <input
-                    type="checkbox"
-                    checked={isChecked}
-                    onChange={(e) => handleSelectOne(item.id, e.target.checked)}
-                    className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
-                  />
-                </div>
+                return (
+                  <Reorder.Item
+                    key={item.id}
+                    value={item}
+                    dragListener={true}
+                    className={`grid grid-cols-12 gap-4 px-6 py-4 items-center bg-white hover:bg-slate-50/50 transition-colors ${
+                      item.status === 'draft' ? 'opacity-85' : ''
+                    }`}
+                  >
+                    {/* Select Checkbox */}
+                    <div className="col-span-1 flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={(e) => handleSelectOne(item.id, e.target.checked)}
+                        className="w-4 h-4 text-primary focus:ring-primary border-slate-300 rounded cursor-pointer"
+                      />
+                    </div>
 
-                {/* Drag Handle */}
-                <div className="col-span-1 flex justify-start items-center pl-2">
-                  <div className="cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 p-1.5 hover:bg-slate-100 rounded">
-                    <GripVertical className="w-4 h-4" />
-                  </div>
-                </div>
-
-                {/* Thumbnail */}
-                <div className="col-span-1">
-                  <div className="w-12 h-12 rounded-lg bg-slate-50 border overflow-hidden relative">
-                    {thumbUrl ? (
-                      <img src={thumbUrl} className="object-cover w-full h-full" alt="" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[10px] text-slate-300">
-                        No image
+                    {/* Drag Handle */}
+                    <div className="col-span-1 flex justify-start items-center pl-2">
+                      <div className="cursor-grab active:cursor-grabbing text-slate-400 hover:text-slate-600 p-1.5 hover:bg-slate-100 rounded">
+                        <GripVertical className="w-4 h-4" />
                       </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
 
-                {/* Title / Description info */}
-                <div className="col-span-4 flex flex-col gap-0.5">
-                  <div className="font-bold text-slate-900 leading-tight flex items-center gap-1.5">
-                    {item.title}
-                    {item.featured && (
-                      <span className="text-[9px] uppercase bg-yellow-50 text-yellow-600 border border-yellow-200/50 px-1.5 py-0.2 rounded font-bold">
-                        PIN
+                    {/* Thumbnail */}
+                    <div className="col-span-1">
+                      <div className="w-12 h-12 rounded-lg bg-slate-50 border overflow-hidden relative">
+                        {thumbUrl ? (
+                          <img src={thumbUrl} className="object-cover w-full h-full" alt="" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[10px] text-slate-300">
+                            No image
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Title / Description info */}
+                    <div className="col-span-4 flex flex-col gap-0.5">
+                      <div className="font-bold text-slate-900 leading-tight flex items-center gap-1.5">
+                        {item.title}
+                        {item.featured && (
+                          <span className="text-[9px] uppercase bg-yellow-50 text-yellow-600 border border-yellow-200/50 px-1.5 py-0.2 rounded font-bold">
+                            PIN
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs text-slate-500 font-sans line-clamp-1">
+                        {item.description}
+                      </div>
+                    </div>
+
+                    {/* Category tag */}
+                    <div className="col-span-2">
+                      <span className="inline-flex px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-semibold text-[10px]">
+                        {item.category}
                       </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-slate-500 font-sans line-clamp-1">
-                    {item.description}
-                  </div>
-                </div>
+                    </div>
 
-                {/* Category tag */}
-                <div className="col-span-2">
-                  <span className="inline-flex px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-semibold text-[10px]">
-                    {item.category}
-                  </span>
-                </div>
+                    {/* Variant card variant style info */}
+                    <div className="col-span-1 text-center font-semibold text-[10px] text-slate-500">
+                      {item.variant}
+                    </div>
 
-                {/* Variant card variant style info */}
-                <div className="col-span-1 text-center font-semibold text-[10px] text-slate-500">
-                  {item.variant}
-                </div>
+                    {/* Publish Toggle Button */}
+                    <div className="col-span-1 flex justify-center">
+                      <button
+                        onClick={() => handleToggleStatus(item)}
+                        disabled={updatingId === item.id}
+                        className="cursor-pointer"
+                      >
+                        {updatingId === item.id ? (
+                          <Loader className="w-4 h-4 animate-spin text-slate-400" />
+                        ) : item.status === 'published' ? (
+                          <CheckCircle className="w-4 h-4 text-green-500 fill-green-50" />
+                        ) : (
+                          <XCircle className="w-4 h-4 text-slate-300 fill-slate-50" />
+                        )}
+                      </button>
+                    </div>
 
-                {/* Publish Toggle Button */}
-                <div className="col-span-1 flex justify-center">
-                  <button
-                    onClick={() => handleToggleStatus(item)}
-                    disabled={updatingId === item.id}
-                    className="cursor-pointer"
-                  >
-                    {updatingId === item.id ? (
-                      <Loader className="w-4 h-4 animate-spin text-slate-400" />
-                    ) : item.status === 'published' ? (
-                      <CheckCircle className="w-4 h-4 text-green-500 fill-green-50" />
-                    ) : (
-                      <XCircle className="w-4 h-4 text-slate-300 fill-slate-50" />
-                    )}
-                  </button>
-                </div>
+                    {/* Inline Action Dropdown */}
+                    <div className="col-span-1 text-right flex justify-end gap-1.5 relative">
+                      <button
+                        onClick={() => {
+                          setEditingItem(item);
+                          setIsDrawerOpen(true);
+                        }}
+                        className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg cursor-pointer"
+                        title="Edit Case"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDuplicate(item)}
+                        className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
+                        title="Duplicate Case"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteOne(item.id)}
+                        className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-100 rounded-lg cursor-pointer"
+                        title="Delete Case"
+                      >
+                        <Trash className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </Reorder.Item>
+                );
+              })}
+            </Reorder.Group>
 
-                {/* Inline Action Dropdown */}
-                <div className="col-span-1 text-right flex justify-end gap-1.5 relative">
-                  <button
-                    onClick={() => {
-                      setEditingItem(item);
-                      setIsDrawerOpen(true);
-                    }}
-                    className="p-1.5 text-slate-400 hover:text-primary hover:bg-slate-100 rounded-lg cursor-pointer"
-                    title="Edit Case"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDuplicate(item)}
-                    className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg cursor-pointer"
-                    title="Duplicate Case"
-                  >
-                    <Copy className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteOne(item.id)}
-                    className="p-1.5 text-slate-400 hover:text-accent hover:bg-slate-100 rounded-lg cursor-pointer"
-                    title="Delete Case"
-                  >
-                    <Trash className="w-4 h-4" />
-                  </button>
-                </div>
-              </Reorder.Item>
-            );
-          })}
-        </Reorder.Group>
-
-        {filteredItems.length === 0 && (
-          <div className="py-24 text-center text-slate-400 font-sans">
-            No gallery items found matching filters.
+            {filteredItems.length === 0 && (
+              <div className="py-24 text-center text-slate-400 font-sans">
+                No gallery items found matching filters.
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* Editor Drawer */}
